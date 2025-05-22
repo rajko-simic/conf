@@ -175,4 +175,43 @@ return {
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
+
+  {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require "nvchad.configs.dap"
+    end,
+  },
+
+  {
+    "nvim-neotest/nvim-nio",
+    requires = { "mfussenegger/nvim-dap" },
+  },
+
+  {
+    "rcarriga/nvim-dap-ui",
+    requires = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    config = function()
+      local dap, dapui = require("dap"), require("dapui")
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+      dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+      dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+    end,
+  },
+
+  {
+    "rcarriga/nvim-notify",
+    config = function()
+      require("notify").setup {
+        stages = "fade",
+        timeout = 3000,
+        max_height = 5,
+        top_down = false, -- false = grows upward, placing it above the statusline
+        background_colour = "#000000", -- optional: make it opaque
+      }
+
+      vim.notify = require("notify") -- override default `vim.notify`
+    end,
+  }
 }

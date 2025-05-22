@@ -4,6 +4,8 @@ if not ok then return end
 project.setup({
   manual_mode = false,
   silent_chdir = false,
+  display_type = 'full',
+  sync_with_nvim_tree = true,
   detection_methods = { "lsp", "pattern" },
   patterns = { ".csproj", ".sln", "Cargo.toml", "go.mod", ".git" },
 })
