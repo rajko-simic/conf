@@ -37,7 +37,7 @@ M.nvdash = {
     },
 
     buttons = {
-      { txt = "  Open Projects", keys = "fp", cmd = "Telescope projects" },
+      { txt = "  Open Projects", keys = "fp", cmd = "Telescope project" },
       { txt = "  Find File", keys = "ff", cmd = "Telescope find_files" },
       { txt = "  Recent Files", keys = "fo", cmd = "Telescope oldfiles" },
       { txt = "󰈭  Find Word", keys = "fw", cmd = "Telescope live_grep" },
