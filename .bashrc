@@ -56,12 +56,20 @@ PS1+="\n${ARROW_COLOR}└──\$ ${RESET}"
 
 unset rc
 
+export EDITOR="nvim"
+export VISUAL="nvim"
 export PATH=$PATH:/home/rajko/.flutter/flutter/bin
 export PATH=$PATH:'/home/rajko/Documents/Test/quickemu'
 . "$HOME/.cargo/env"
 
-alias azurite='azurite -l /home/rajko/.azurite/'
+alias azurite='azurite -l /home/rajko/.azurite/ '
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
-
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
 

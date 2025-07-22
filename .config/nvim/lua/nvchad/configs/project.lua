@@ -6,7 +6,6 @@ project.setup({
   silent_chdir = false,
   display_type = 'full',
   sync_with_nvim_tree = true,
-  detection_methods = { "lsp", "pattern" },
-  patterns = { ".csproj", ".sln", "Cargo.toml", "go.mod", ".git" },
+  detection_methods = { "pattern", "lsp" },
+  patterns = { "." },
 })
-
