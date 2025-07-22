@@ -13,5 +13,15 @@ use = "Lil-Dank/lazygit"
 rev = "7a08a09"
 hash = "a1fa2b3e1826c3a34804ea8c548e9f80"
 
+[[plugin.deps]]
+use = "Deepak22903/kdeconnect-send"
+rev = "bb5d4ab"
+hash = "47adcd68e4b368cb0fb183cc11bac4dd"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "1ab21d4"
+hash = "63b6c222bf2103b3023389dde5e2ecfe"
+
 [flavor]
 deps = []
