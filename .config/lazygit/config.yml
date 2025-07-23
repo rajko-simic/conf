@@ -1,0 +1,5 @@
+gui:
+  showIcons: true
+  showFileIcons: true
+  nerdFontsVersion: "3"
+  splitDiff: auto
