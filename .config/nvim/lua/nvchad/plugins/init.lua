@@ -168,6 +168,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+    dependencies = { "OXY2DEV/markview.nvim" },
     build = ":TSUpdate",
     opts = function()
       return require "nvchad.configs.treesitter"
@@ -272,5 +273,11 @@ return {
     },
     lazy = false,
     opts = {},
-  }
+  },
+
+  {
+      "OXY2DEV/markview.nvim",
+      lazy = false,
+      priority = 49,
+  },
 }
