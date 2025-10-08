@@ -19,6 +19,6 @@ return {
     },
   },
 
-  extensions_list = { "themes", "terms", "project" },
+  extensions_list = { "themes", "terms", "projects" },
   extensions = {},
 }

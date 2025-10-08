@@ -1,7 +1,4 @@
-local ok, project = pcall(require, "project_nvim")
-if not ok then return end
-
-project.setup({
+return {
   manual_mode = false,
   silent_chdir = false,
   display_type = 'full',
@@ -24,6 +21,5 @@ project.setup({
     "*.dart",           -- Flutter/Dart files
     "*.kt",             -- Kotlin files:
     "build.gradle",     -- Kotlin/Android build
-    "*"
   },
-})
+}

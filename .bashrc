@@ -61,9 +61,14 @@ export VISUAL="nvim"
 export PATH=$PATH:/home/rajko/.flutter/flutter/bin
 export PATH=$PATH:'/home/rajko/Documents/Test/quickemu'
 . "$HOME/.cargo/env"
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 alias azurite='azurite -l /home/rajko/.azurite/ '
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias ldf='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias cointop='flatpak run --branch=stable --arch=x86_64 --command=cointop com.github.miguelmota.Cointop'
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd

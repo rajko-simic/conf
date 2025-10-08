@@ -49,6 +49,7 @@ return {
   -- file managing , picker etc
   {
     "nvim-tree/nvim-tree.lua",
+    lazy = false,
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     opts = function()
       return require "nvchad.configs.nvimtree"
@@ -155,16 +156,6 @@ return {
   },
 
   {
-    "nvim-telescope/telescope-project.nvim",
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    lazy = false,
-    config = function()
-      require("nvchad.configs.project") -- or path to your project.lua
-      require("telescope").load_extension("project")
-    end,
-  },
-
-  {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
@@ -217,7 +208,6 @@ return {
     end,
   },
 
-  -- lazy.nvim
   {
     "GustavEikaas/easy-dotnet.nvim",
     ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
@@ -229,7 +219,7 @@ return {
 
   {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    opts = {},
     cmd = "Trouble",
     keys = {
       {
@@ -280,4 +270,76 @@ return {
       lazy = false,
       priority = 49,
   },
+
+  {
+    "coffebar/neovim-project",
+    lazy = false,
+    priority = 100,
+    opts = function()
+      return require "nvchad.configs.neovim-project"
+    end,
+    init = function()
+      -- enable saving the state of plugins in the session
+      vim.opt.sessionoptions:append("globals")
+    end,
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-telescope/telescope.nvim" },
+      { "Shatur/neovim-session-manager" },
+    },
+  },
+
+  -- {
+  --   "ahmedkhalf/project.nvim",
+  --   lazy = false,
+  --   opts = function()
+  --     return require("nvchad.configs.project") -- path to your project.lua
+  --   end,
+  --   config = function(_, opts)
+  --     require("project_nvim").setup(opts)
+  --     require("telescope").load_extension("projects")
+  --   end,
+  -- },
+
+  -- {
+  --   'DrKJeff16/project.nvim',
+  --   version = false, -- Get the latest release
+  --   opts = function()
+  --     return require("nvchad.configs.project") -- path to your project.lua
+  --   end,
+  --   dependencies = { -- OPTIONAL
+  --     'nvim-lua/plenary.nvim',
+  --     'nvim-telescope/telescope.nvim',
+  --     'ibhagwan/fzf-lua',
+  --   },
+  --   config = function(_, opts)
+  --     require("project_nvim").setup(opts)       -- actually apply the config
+  --     require("telescope").load_extension("projects")  -- enable Telescope picker
+  --   end,
+  -- },
+
+  -- {
+  --   'DrKJeff16/project.nvim',
+  --   lazy = true,
+  --   version = false,
+  --   cmd = {
+  --     'Project',
+  --     'ProjectAdd',
+  --     'ProjectConfig',
+  --     'ProjectDelete',
+  --     'ProjectHistory',
+  --     'ProjectRecents',
+  --     'ProjectRoot',
+  --     'ProjectSession',
+  --   },
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     'nvim-telescope/telescope.nvim',
+  --   },
+  --   ---@module 'project'
+  --
+  --   opts = function()
+  --     return require("nvchad.configs.project")
+  --   end,
+  -- }
 }

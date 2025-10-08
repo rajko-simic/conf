@@ -61,7 +61,6 @@ map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = 
 map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
 map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
-map("n", "<leader>fp", "<cmd>Telescope project<CR>", { desc = "telescope projects" })
 
 map("n", "<leader>th", function()
   require("nvchad.themes").open()
@@ -74,6 +73,14 @@ map(
   "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
   { desc = "telescope find all files" }
 )
+
+-- telescope projects
+
+map("n", "<leader>pl", "<cmd>NeovimProjectLoadRecent<CR>", { desc = "Open Last Project" })
+map("n", "<leader>ph", "<cmd>NeovimProjectHistory<CR>", { desc = "Recent Projects" })
+map("n", "<leader>pda", "<cmd>NeovimProjectDiscover alphabetical_name<CR>", { desc = "Projects (Alphabet)" })
+map("n", "<leader>pdh", "<cmd>NeovimProjectDiscover history<CR>", { desc = "Projects (History)" })
+map("n", "<leader>pdp", "<cmd>NeovimProjectDiscover alphabetical_path<CR>", { desc = "Projects (Path)" })
 
 -- terminal
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })

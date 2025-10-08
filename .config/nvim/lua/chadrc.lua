@@ -37,7 +37,11 @@ M.nvdash = {
     },
 
     buttons = {
-      { txt = "  Open Projects", keys = "fp", cmd = "Telescope project" },
+      { txt = "  Last Project", keys = "pl", cmd = "NeovimProjectLoadRecent" },
+      { txt = "  Recent Projects", keys = "ph", cmd = "NeovimProjectHistory" },
+      { txt = "  Projects (Alphabet)", keys = "pda", cmd = "NeovimProjectDiscover alphabetical_name" },
+      { txt = "  Projects (History)", keys = "pdh", cmd = "NeovimProjectDiscover history" },
+      { txt = "  Projects (Path)", keys = "pdp", cmd = "NeovimProjectDiscover alphabetical_path" },
       { txt = "  Find File", keys = "ff", cmd = "Telescope find_files" },
       { txt = "  Recent Files", keys = "fo", cmd = "Telescope oldfiles" },
       { txt = "󰈭  Find Word", keys = "fw", cmd = "Telescope live_grep" },
