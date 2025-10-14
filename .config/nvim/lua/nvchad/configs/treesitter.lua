@@ -11,6 +11,7 @@ return {
     "vim",
     "vimdoc",
     "c_sharp",
+    "css",
     "bash",
     "dart",
     "desktop",
@@ -22,6 +23,8 @@ return {
     "graphql",
     "groovy",
     "http",
+    "html",
+    "javascript",
     "json",
     "json5",
     "kotlin",
@@ -40,6 +43,8 @@ return {
     "ssh_config",
     "terraform",
     "textproto",
+    "typescript",
+    "tsx",
     "yaml" },
 
   highlight = {

@@ -14,11 +14,14 @@ return {
     "sql-formatter",
     "stylua",
     "yamllint",
+    "eslint_d",
+    "prettier",
 
     -- Debuggers
     "kotlin-debug-adapter",
     "bash-debug-adapter",
     "dart-debug-adapter",
+    "js-debug-adapter",
     "chrome-debug-adapter",
     "go-debug-adapter",
     "local-lua-debugger-vscode",
@@ -52,6 +55,7 @@ return {
     "sqls",
     "terraform",
     "terraform-ls",
+    "typescript-language-server",
     "wasm-language-tools",
     "yaml-language-server",
   },

@@ -20,6 +20,8 @@ local servers = {
   "terraformls",
   "vimls",
   "yamlls",
+  "ts_ls",
+  "eslint",
 }
 
 vim.lsp.enable(servers)

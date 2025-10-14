@@ -272,6 +272,14 @@ return {
   },
 
   {
+    "simrat39/symbols-outline.nvim",
+    lazy = false;
+    opts = function()
+      require("nvchad.configs.outline")
+    end,
+  },
+
+  {
     "coffebar/neovim-project",
     lazy = false,
     priority = 100,
@@ -288,58 +296,4 @@ return {
       { "Shatur/neovim-session-manager" },
     },
   },
-
-  -- {
-  --   "ahmedkhalf/project.nvim",
-  --   lazy = false,
-  --   opts = function()
-  --     return require("nvchad.configs.project") -- path to your project.lua
-  --   end,
-  --   config = function(_, opts)
-  --     require("project_nvim").setup(opts)
-  --     require("telescope").load_extension("projects")
-  --   end,
-  -- },
-
-  -- {
-  --   'DrKJeff16/project.nvim',
-  --   version = false, -- Get the latest release
-  --   opts = function()
-  --     return require("nvchad.configs.project") -- path to your project.lua
-  --   end,
-  --   dependencies = { -- OPTIONAL
-  --     'nvim-lua/plenary.nvim',
-  --     'nvim-telescope/telescope.nvim',
-  --     'ibhagwan/fzf-lua',
-  --   },
-  --   config = function(_, opts)
-  --     require("project_nvim").setup(opts)       -- actually apply the config
-  --     require("telescope").load_extension("projects")  -- enable Telescope picker
-  --   end,
-  -- },
-
-  -- {
-  --   'DrKJeff16/project.nvim',
-  --   lazy = true,
-  --   version = false,
-  --   cmd = {
-  --     'Project',
-  --     'ProjectAdd',
-  --     'ProjectConfig',
-  --     'ProjectDelete',
-  --     'ProjectHistory',
-  --     'ProjectRecents',
-  --     'ProjectRoot',
-  --     'ProjectSession',
-  --   },
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim',
-  --     'nvim-telescope/telescope.nvim',
-  --   },
-  --   ---@module 'project'
-  --
-  --   opts = function()
-  --     return require("nvchad.configs.project")
-  --   end,
-  -- }
 }

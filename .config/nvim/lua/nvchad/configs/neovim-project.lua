@@ -6,6 +6,7 @@ return  {
     "~/Documents/Projects/*",
     "~/Documents/Projects/*/*",
     "~/Documents/Work/*/*",
+    "~/Documents/Work/*/*/*",
     "/shared/Private/Rajko/Practice/*",
     "/shared/Private/Rajko/Practice/*/*"
   },
