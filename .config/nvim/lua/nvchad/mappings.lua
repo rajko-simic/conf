@@ -114,6 +114,12 @@ map("n", "<leader>wk", function()
   vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ")
 end, { desc = "whichkey query lookup" })
 
+-- LSP references
+map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "LSP references" })
+map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "Go to definition" })
+map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "Go to implementation" })
+map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "Go to type definition" })
+map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "Hover info" })
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function() require("dap").continue() end, { desc = "Start/Continue Debugging" })
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Step Over" })
