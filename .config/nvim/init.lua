@@ -40,3 +40,10 @@ require "nvchad.autocmds"
 vim.schedule(function()
   require "mappings"
 end)
+
+-- add neotest for dotnet
+require("neotest").setup({
+  adapters = {
+    require("neotest-dotnet")
+  }
+})

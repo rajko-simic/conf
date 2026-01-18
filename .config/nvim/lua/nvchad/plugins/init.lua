@@ -192,7 +192,27 @@ return {
       dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
     end,
   },
-
+  {
+    "nvim-neotest/neotest",
+    requires = {
+      {
+        "Issafalcon/neotest-dotnet",
+      }
+    },
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter"
+    }
+  },
+  {
+    "Issafalcon/neotest-dotnet",
+    lazy = false,
+    dependencies = {
+      "nvim-neotest/neotest"
+    }
+  },
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -208,14 +228,14 @@ return {
     end,
   },
 
-  {
-    "GustavEikaas/easy-dotnet.nvim",
-    ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
-    dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
-    config = function()
-      require("easy-dotnet").setup()
-    end
-  },
+  -- {
+  --   "GustavEikaas/easy-dotnet.nvim",
+  --   ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
+  --   dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+  --   config = function()
+  --     require("easy-dotnet").setup()
+  --   end
+  -- },
 
   {
     "folke/trouble.nvim",
@@ -296,4 +316,24 @@ return {
       { "Shatur/neovim-session-manager" },
     },
   },
+
+  {
+    "tris203/precognition.nvim",
+    opts = {},
+  },
+
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {},
+  },
+
+  {
+    "seblyng/roslyn.nvim",
+    lazy= false;
+    ---@module 'roslyn.config'
+    ---@type RoslynNvimConfig
+    opts = {
+        -- your configuration comes here; leave empty for default settings
+    },
+  }
 }

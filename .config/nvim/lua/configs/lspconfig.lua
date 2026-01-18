@@ -2,7 +2,6 @@ require("nvchad.configs.lspconfig").defaults()
 
 local servers = {
   "bashls",
-  "bufls",
   "dartls",
   "dockerls",
   "gopls",
@@ -13,7 +12,7 @@ local servers = {
   "lua_ls",
   "marksman",
   "nginx_language_server",
-  "omnisharp",
+  "roslyn",
   "pyright",
   "rust_analyzer",
   "sqlls",
@@ -25,5 +24,5 @@ local servers = {
 }
 
 vim.lsp.enable(servers)
-
+-- vim.lsp.config("roslyn", {})
 -- read :h vim.lsp.config for changing options of lsp servers 
