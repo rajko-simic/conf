@@ -28,5 +28,30 @@ use = "boydaihungst/gvfs"
 rev = "e1e0df3"
 hash = "7e4fdb9b48b5e792af034142b5381714"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "1962818"
+hash = "91937a4a9b779eabc6983e258befdfe9"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "1962818"
+hash = "8b1af6b5a69797ee951f2a80ce570818"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:lsar"
+rev = "1962818"
+hash = "c1c66e28145e28e581e74e2d6da4fdf1"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mime-ext"
+rev = "1962818"
+hash = "8b177921e50732b2c8e9d71aa5956270"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-filter"
+rev = "1962818"
+hash = "c887903a63a2ff520081b6d90a4b3392"
+
 [flavor]
 deps = []

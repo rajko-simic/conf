@@ -29,4 +29,12 @@ on   = [ "<C-s>" ]
 run  = "plugin kdeconnect-send"
 desc = "Send selected files via KDE Connect"
 
+[[mgr.prepend_keymap]]
+on  = "M"
+run = "plugin mount"
+desc = "Mount, unmount, and eject functionality"
 
+[[mgr.prepend_keymap]]
+on   = "F"
+run  = "plugin smart-filter"
+desc = "Smart filter"
