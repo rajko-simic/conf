@@ -335,5 +335,11 @@ return {
     opts = {
         -- your configuration comes here; leave empty for default settings
     },
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {}
   }
 }
