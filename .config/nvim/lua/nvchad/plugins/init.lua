@@ -260,10 +260,11 @@ return {
   },
 
   {
-    "simrat39/symbols-outline.nvim",
-    lazy = false;
+    "hedyhli/outline.nvim",
+    -- lazy = false;
+    cmd = {"Outline", "OutlineOpen"},
     opts = function()
-      require("nvchad.configs.outline")
+      return require("nvchad.configs.outline")
     end,
   },
 
@@ -309,5 +310,25 @@ return {
     "nvim-treesitter/nvim-treesitter-context",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {}
+  },
+
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+        "LazyGit",
+        "LazyGitConfig",
+        "LazyGitCurrentFile",
+        "LazyGitFilter",
+        "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+    },
   }
+
+
+
+
 }

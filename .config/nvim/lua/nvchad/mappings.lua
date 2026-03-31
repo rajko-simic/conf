@@ -105,3 +105,12 @@ map("n", "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "
 map("n", "<leader>cl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", { desc = "Trouble LSP Definitions / references / ..." })
 map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Trouble Location List" })
 map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quickfix List" })
+
+--Outline
+map("n", "<leader>oo", "<cmd>Outline!<cr>", {desc = "Outline Open"})
+map("n", "<leader>of", "<cmd>OutlineFocus<cr>", {desc = "Outline Focus"})
+map("n", "<leader>os", "<cmd>OutlineStatus<cr>", {desc = "Outline Status"})
+
+--Lazygit
+map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Lazygit"})
+map("n", "<leader>gc", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Lazygit Current File"})
