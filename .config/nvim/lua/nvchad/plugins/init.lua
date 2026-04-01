@@ -86,9 +86,13 @@ return {
   -- lsp stuff
   {
     "mason-org/mason.nvim",
+    -- lazy = false,
     cmd = { "Mason", "MasonInstall", "MasonUpdate" },
     opts = function()
-      return require "nvchad.configs.mason"
+      return require("nvchad.configs.mason").opts
+    end,
+    config = function(_, opts)
+      require("nvchad.configs.mason").config(_, opts)
     end,
   },
 
@@ -157,15 +161,10 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile" },
-    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
-    dependencies = { "OXY2DEV/markview.nvim" },
+    lazy = false,
     build = ":TSUpdate",
-    opts = function()
-      return require "nvchad.configs.treesitter"
-    end,
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+    config = function()
+      require("nvim-treesitter").setup(require("nvchad.configs.treesitter"))
     end,
   },
 
