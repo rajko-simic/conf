@@ -6,6 +6,8 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 -- vim.o.timeout = true
 -- vim.o.timeoutlen = 800
 
+vim.lsp.inlay_hint.enable(true)
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 

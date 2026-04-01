@@ -229,6 +229,20 @@ return {
     end,
   },
 
+{
+    "theHamsta/nvim-dap-virtual-text",
+    lazy = false,
+    dependencies = { "mfussenegger/nvim-dap", "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("nvim-dap-virtual-text").setup({
+        enabled = true,
+        commented = false,
+        all_frames = false,
+        highlight_changed_variables = true,
+      })
+    end,
+  },
+
   --A library for asynchronous IO in Neovim
   {
     "nvim-neotest/nvim-nio",
