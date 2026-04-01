@@ -67,6 +67,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 alias azurite='azurite -l /home/rajko/.azurite/ '
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias ldn='dotnet Lazydotnet'
 alias ldf='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias cointop='flatpak run --branch=stable --arch=x86_64 --command=cointop com.github.miguelmota.Cointop'
 
