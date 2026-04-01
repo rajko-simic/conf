@@ -35,6 +35,7 @@ M.opts = {
     "prettier",
 
     -- Debuggers
+    "codelldb",
     "kotlin-debug-adapter",
     "bash-debug-adapter",
     "dart-debug-adapter",

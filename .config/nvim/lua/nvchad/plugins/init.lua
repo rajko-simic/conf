@@ -20,6 +20,7 @@ return {
   "nvzone/menu",
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
 
+  --Provides Nerd Font 1 icons (glyphs) for use by Neovim plugins:
   {
     "nvim-tree/nvim-web-devicons",
     opts = function()
@@ -28,6 +29,7 @@ return {
     end,
   },
 
+  --This plugin adds indentation guides to Neovim
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "User FilePost",
@@ -56,17 +58,24 @@ return {
     end,
   },
 
+  --WhichKey helps you remember your Neovim keymaps, by showing available keybindings in a popup as you type.
   {
     "folke/which-key.nvim",
-    keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    event = "VeryLazy",
+    -- keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
     cmd = "WhichKey",
     opts = function()
       dofile(vim.g.base46_cache .. "whichkey")
-      return {}
+      return {
+        defer = function()
+          return false
+        end,
+      }
     end,
   },
 
-  -- formatting!
+
+  --Lightweight yet powerful formatter plugin for Neovim
   {
     "stevearc/conform.nvim",
     opts = {
@@ -81,6 +90,15 @@ return {
     opts = function()
       return require "nvchad.configs.gitsigns"
     end,
+  },
+
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile" },
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+    },
   },
 
   -- lsp stuff
@@ -105,6 +123,7 @@ return {
   },
 
   -- load luasnips + cmp related in insert mode only
+  --A completion engine
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
@@ -160,6 +179,24 @@ return {
   },
 
   {
+    "coffebar/neovim-project",
+    lazy = false,
+    priority = 100,
+    opts = function()
+      return require "nvchad.configs.neovim-project"
+    end,
+    init = function()
+      -- enable saving the state of plugins in the session
+      vim.opt.sessionoptions:append("globals")
+    end,
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-telescope/telescope.nvim" },
+      { "Shatur/neovim-session-manager" },
+    },
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
     build = ":TSUpdate",
@@ -169,28 +206,35 @@ return {
   },
 
   {
+    "nvim-treesitter/nvim-treesitter-context",
+    lazy = false;
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {}
+  },
+
+  {
     "mfussenegger/nvim-dap",
+    lazy = false;
     config = function()
       require "nvchad.configs.dap"
     end,
   },
 
   {
+    "rcarriga/nvim-dap-ui",
+    lazy = false;
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    config = function()
+      require "nvchad.configs.dapui"
+    end,
+  },
+
+  --A library for asynchronous IO in Neovim
+  {
     "nvim-neotest/nvim-nio",
     requires = { "mfussenegger/nvim-dap" },
   },
 
-  {
-    "rcarriga/nvim-dap-ui",
-    requires = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
-    config = function()
-      local dap, dapui = require("dap"), require("dapui")
-      dapui.setup()
-      dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-      dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-      dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
-    end,
-  },
   {
     "nvim-neotest/neotest",
     requires = {
@@ -205,6 +249,7 @@ return {
       "nvim-treesitter/nvim-treesitter"
     }
   },
+
   {
     "Issafalcon/neotest-dotnet",
     lazy = false,
@@ -212,6 +257,7 @@ return {
       "nvim-neotest/neotest"
     }
   },
+
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -236,6 +282,7 @@ return {
   --   end
   -- },
 
+  --A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
   {
     "folke/trouble.nvim",
     opts = {},
@@ -252,44 +299,31 @@ return {
     opts = {},
   },
 
+  --A hackable Markdown, HTML, LaTeX, Typst & YAML previewer for Neovim
   {
       "OXY2DEV/markview.nvim",
       lazy = false,
       priority = 49,
   },
 
+  --A sidebar with a tree-like outline of symbols from your code, powered by LSP.
   {
     "hedyhli/outline.nvim",
     -- lazy = false;
-    cmd = {"Outline", "OutlineOpen"},
+    cmd = {"Outline", "OutlineOpen", "OutlineStatus"},
     opts = function()
       return require("nvchad.configs.outline")
     end,
   },
 
-  {
-    "coffebar/neovim-project",
-    lazy = false,
-    priority = 100,
-    opts = function()
-      return require "nvchad.configs.neovim-project"
-    end,
-    init = function()
-      -- enable saving the state of plugins in the session
-      vim.opt.sessionoptions:append("globals")
-    end,
-    dependencies = {
-      { "nvim-lua/plenary.nvim" },
-      { "nvim-telescope/telescope.nvim" },
-      { "Shatur/neovim-session-manager" },
-    },
-  },
-
+  --precognition.nvim assists with discovering motions (Both vertical and horizontal) to navigate your current buffer
   {
     "tris203/precognition.nvim",
+    cmd = {"Precognition"},
     opts = {},
   },
 
+  --Neovim plugin to animate the cursor with a smear effect in all terminals.
   {
     "sphamba/smear-cursor.nvim",
     opts = {},
@@ -304,30 +338,4 @@ return {
         -- your configuration comes here; leave empty for default settings
     },
   },
-
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {}
-  },
-
-  {
-    "kdheepak/lazygit.nvim",
-    lazy = true,
-    cmd = {
-        "LazyGit",
-        "LazyGitConfig",
-        "LazyGitCurrentFile",
-        "LazyGitFilter",
-        "LazyGitFilterCurrentFile",
-    },
-    -- optional for floating window border decoration
-    dependencies = {
-        "nvim-lua/plenary.nvim",
-    },
-  }
-
-
-
-
 }

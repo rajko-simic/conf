@@ -78,6 +78,7 @@ map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "LSP Go to defi
 map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP Go to implementation" })
 map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Go to type definition" })
 map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover info" })
+
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start/Continue" })
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug Step Over" })
@@ -114,3 +115,7 @@ map("n", "<leader>os", "<cmd>OutlineStatus<cr>", {desc = "Outline Status"})
 --Lazygit
 map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Lazygit"})
 map("n", "<leader>gc", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Lazygit Current File"})
+
+--Precognition
+map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
+

@@ -1,10 +1,4 @@
 local dap = require("dap")
-local dapui = require("dapui")
-
-vim.fn.sign_define('DapBreakpoint', {
-  text = '',
-  texthl = 'DiagnosticError',
-})
 
 dap.adapters.go = {
   type = "server",
@@ -24,6 +18,65 @@ dap.configurations.go = {
   },
 }
 
+-- Adapter
+dap.adapters.codelldb = {
+  type = "server",
+  port = "${port}",
+  executable = {
+    command = vim.fn.stdpath("data") .. "/mason/bin/codelldb",
+    args = { "--port", "${port}" },
+  },
+}
+
+-- Configuration
+dap.configurations.rust = {
+  {
+    name = "Launch binary",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      -- Auto-detect binary from Cargo.toml project name
+      local metadata = vim.fn.system("cargo metadata --no-deps --format-version 1 2>/dev/null")
+      local ok, decoded = pcall(vim.fn.json_decode, metadata)
+      local target_name = (ok and decoded.packages[1] and decoded.packages[1].name) or nil
+
+      if target_name then
+        local bin = "target/debug/" .. target_name
+        if vim.fn.filereadable(bin) == 1 then
+          return vim.fn.getcwd() .. "/" .. bin
+        end
+      end
+
+      -- Fallback: prompt user
+      return vim.fn.input("Path to binary: ", vim.fn.getcwd() .. "/target/debug/", "file")
+    end,
+    cwd = "${workspaceFolder}",
+    stopOnEntry = false,
+    args = {},
+  },
+  {
+    name = "Launch binary (with args)",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input("Path to binary: ", vim.fn.getcwd() .. "/target/debug/", "file")
+    end,
+    args = function()
+      local input = vim.fn.input("Program arguments: ")
+      return vim.split(input, " ", { trimempty = true })
+    end,
+    cwd = "${workspaceFolder}",
+    stopOnEntry = false,
+  },
+  {
+    name = "Attach to process",
+    type = "codelldb",
+    request = "attach",
+    pid = require("dap.utils").pick_process,
+    cwd = "${workspaceFolder}",
+  },
+}
+
 local mason_path = vim.fn.stdpath("data") .. "/mason/packages/netcoredbg/netcoredbg"
 
 local netcoredbg_adapter = {
@@ -35,14 +88,6 @@ local netcoredbg_adapter = {
 dap.adapters.netcoredbg = netcoredbg_adapter -- needed for normal debugging
 dap.adapters.coreclr = netcoredbg_adapter    -- needed for unit test debugging
 
---- open ui immediately when debugging starts
-dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
-
--- default configuration
-dapui.setup()
-
 dap.configurations.cs = {
   {
     type = "coreclr",
@@ -50,7 +95,7 @@ dap.configurations.cs = {
     request = "launch",
 program = function()
       -- return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/src/", "file")
-      return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/net9.0/", "file")
+      return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/net10.0/", "file")
     end,
 
     -- justMyCode = false,
