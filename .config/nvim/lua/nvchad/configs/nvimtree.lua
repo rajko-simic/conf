@@ -19,6 +19,21 @@ return {
       resize_window = false,
     },
   },
+  diagnostics = {
+    enable = true,
+    show_on_dirs = true,
+    show_on_open_dirs = true,
+    severity = {
+      min = vim.diagnostic.severity.WARN,
+      max = vim.diagnostic.severity.ERROR,
+    }
+    -- icons = {
+    --   hint = "",
+    --   info = "",
+    --   warning = "",
+    --   error = "",
+    -- },
+  },
   renderer = {
     root_folder_label = false,
     highlight_git = true,

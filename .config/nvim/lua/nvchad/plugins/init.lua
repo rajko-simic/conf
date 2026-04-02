@@ -251,11 +251,11 @@ return {
 
   {
     "nvim-neotest/neotest",
-    requires = {
-      {
-        "Issafalcon/neotest-dotnet",
-      }
-    },
+    -- requires = {
+    --   {
+    --     "Issafalcon/neotest-dotnet",
+    --   }
+    -- },
     dependencies = {
       "nvim-neotest/nvim-nio",
       "nvim-lua/plenary.nvim",
@@ -264,13 +264,13 @@ return {
     }
   },
 
-  {
-    "Issafalcon/neotest-dotnet",
-    lazy = false,
-    dependencies = {
-      "nvim-neotest/neotest"
-    }
-  },
+  -- {
+  --   "Issafalcon/neotest-dotnet",
+  --   lazy = false,
+  --   dependencies = {
+  --     "nvim-neotest/neotest"
+  --   }
+  -- },
 
   {
     "rcarriga/nvim-notify",
@@ -287,14 +287,24 @@ return {
     end,
   },
 
-  -- {
-  --   "GustavEikaas/easy-dotnet.nvim",
-  --   ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
-  --   dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
-  --   config = function()
-  --     require("easy-dotnet").setup()
-  --   end
-  -- },
+  {
+    "GustavEikaas/easy-dotnet.nvim",
+    ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
+    dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+    config = function()
+      require("easy-dotnet").setup({
+        lsp = {
+          enabled = true, -- Enable builtin roslyn lsp
+          preload_roslyn = true, -- Start loading roslyn before any buffer is opened
+          roslynator_enabled = true, -- Automatically enable roslynator analyzer
+          easy_dotnet_analyzer_enabled = true, -- Enable roslyn analyzer from easy-dotnet-server
+          auto_refresh_codelens = true,
+          analyzer_assemblies = {}, -- Any additional roslyn analyzers you might use like SonarAnalyzer.CSharp
+          config = {},
+        },
+      })
+    end
+  },
 
   --A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
   {
@@ -337,19 +347,18 @@ return {
     opts = {},
   },
 
-  --Neovim plugin to animate the cursor with a smear effect in all terminals.
-  {
-    "sphamba/smear-cursor.nvim",
-    opts = {},
-  },
-
-  {
-    "seblyng/roslyn.nvim",
-    lazy= false;
-    ---@module 'roslyn.config'
-    ---@type RoslynNvimConfig
-    opts = {
-        -- your configuration comes here; leave empty for default settings
-    },
-  },
+  -- {
+  --   "seblyng/roslyn.nvim",
+  --   lazy= false;
+  --   ---@module 'roslyn.config'
+  --   ---@type roslynnvimconfig
+  --   opts = {
+  --     filewatching = "roslyn",  -- let roslyn own it, stops neovim adding redundant watches
+  --
+  --     root_dir = function(fname)
+  --       local util = require("lspconfig.util")
+  --       return util.root_pattern("*.sln", "*.csproj")(fname)
+  --     end,
+  --   }
+  -- },
 }

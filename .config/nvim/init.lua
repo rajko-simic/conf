@@ -45,7 +45,7 @@ end)
 
 -- add neotest for dotnet
 require("neotest").setup({
-  adapters = {
-    require("neotest-dotnet")
-  }
+  -- adapters = {
+  --   require("neotest-dotnet")
+  -- }
 })
