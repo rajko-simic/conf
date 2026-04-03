@@ -2,7 +2,7 @@ require("nvchad.configs.lspconfig").defaults()
 
 local servers = {
   "bashls",
-  "dartls",
+    -- "dartls",
   "dockerls",
   "gopls",
   "graphql",

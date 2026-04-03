@@ -251,11 +251,6 @@ return {
 
   {
     "nvim-neotest/neotest",
-    -- requires = {
-    --   {
-    --     "Issafalcon/neotest-dotnet",
-    --   }
-    -- },
     dependencies = {
       "nvim-neotest/nvim-nio",
       "nvim-lua/plenary.nvim",
@@ -263,14 +258,6 @@ return {
       "nvim-treesitter/nvim-treesitter"
     }
   },
-
-  -- {
-  --   "Issafalcon/neotest-dotnet",
-  --   lazy = false,
-  --   dependencies = {
-  --     "nvim-neotest/neotest"
-  --   }
-  -- },
 
   {
     "rcarriga/nvim-notify",
@@ -285,25 +272,6 @@ return {
 
       vim.notify = require("notify") -- override default `vim.notify`
     end,
-  },
-
-  {
-    "GustavEikaas/easy-dotnet.nvim",
-    ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
-    dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
-    config = function()
-      require("easy-dotnet").setup({
-        lsp = {
-          enabled = true, -- Enable builtin roslyn lsp
-          preload_roslyn = true, -- Start loading roslyn before any buffer is opened
-          roslynator_enabled = true, -- Automatically enable roslynator analyzer
-          easy_dotnet_analyzer_enabled = true, -- Enable roslyn analyzer from easy-dotnet-server
-          auto_refresh_codelens = true,
-          analyzer_assemblies = {}, -- Any additional roslyn analyzers you might use like SonarAnalyzer.CSharp
-          config = {},
-        },
-      })
-    end
   },
 
   --A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
@@ -347,18 +315,45 @@ return {
     opts = {},
   },
 
-  -- {
-  --   "seblyng/roslyn.nvim",
-  --   lazy= false;
-  --   ---@module 'roslyn.config'
-  --   ---@type roslynnvimconfig
-  --   opts = {
-  --     filewatching = "roslyn",  -- let roslyn own it, stops neovim adding redundant watches
-  --
-  --     root_dir = function(fname)
-  --       local util = require("lspconfig.util")
-  --       return util.root_pattern("*.sln", "*.csproj")(fname)
-  --     end,
-  --   }
-  -- },
+  --Dotnet
+  {
+    "GustavEikaas/easy-dotnet.nvim",
+    ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
+    dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+    config = function()
+      require("easy-dotnet").setup({
+        lsp = {
+          enabled = true, -- Enable builtin roslyn lsp
+          preload_roslyn = true, -- Start loading roslyn before any buffer is opened
+          roslynator_enabled = true, -- Automatically enable roslynator analyzer
+          easy_dotnet_analyzer_enabled = true, -- Enable roslyn analyzer from easy-dotnet-server
+          auto_refresh_codelens = true,
+          analyzer_assemblies = {}, -- Any additional roslyn analyzers you might use like SonarAnalyzer.CSharp
+          config = {},
+        },
+      })
+    end
+  },
+
+  --Flutter
+  {
+      'nvim-flutter/flutter-tools.nvim',
+      -- lazy = false,
+      ft = {"dart", "pubspec.yaml"},
+      dependencies = {
+          'nvim-lua/plenary.nvim',
+          'stevearc/dressing.nvim', -- optional for vim.ui.select
+      },
+      config = true,
+  },
+
+  {
+      'akinsho/pubspec-assist.nvim',
+      -- lazy = false,
+      ft = {"dart", "pubspec.yaml"},
+      dependencies = {
+          'nvim-lua/plenary.nvim'
+      },
+      config = true,
+  }
 }
