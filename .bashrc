@@ -64,6 +64,7 @@ export PATH=$PATH:'/home/rajko/Documents/Test/quickemu'
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$(go env GOPATH)/bin
 
 alias azurite='azurite -l /home/rajko/.azurite/ '
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
