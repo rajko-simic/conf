@@ -1,4 +1,5 @@
 local map = vim.keymap.set
+local dap = require("dap")
 
 map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
 map("i", "<C-e>", "<End>", { desc = "move end of line" })
@@ -53,7 +54,6 @@ map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find
 map("n", "<leader>fa", "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>", { desc = "telescope find all files" })
 
 -- telescope projects
-
 map("n", "<leader>pl", "<cmd>NeovimProjectLoadRecent<CR>", { desc = "Projects Open Last" })
 map("n", "<leader>ph", "<cmd>NeovimProjectHistory<CR>", { desc = "Projects Recent" })
 map("n", "<leader>pda", "<cmd>NeovimProjectDiscover alphabetical_name<CR>", { desc = "Projects (Alphabet)" })
@@ -77,17 +77,23 @@ map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "LSP references
 map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "LSP Go to definition" })
 map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP Go to implementation" })
 map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Go to type definition" })
-map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover info" })
+-- map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover info" })
+
+--LSP Signiture
+map('n', '<C-k>', function() require('lsp_signature').toggle_float_win() end, { silent = true, noremap = true, desc = 'toggle signature' })
+map('n', '<Leader>k', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
+map('n', '<leader>a', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
+map('n', 'K', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
 
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start/Continue" })
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug Step Over" })
 map("n", "<F11>", function() require("dap").step_into() end, { desc = "Debug Step Into" })
 map("n", "<F12>", function() require("dap").step_out() end, { desc = "Debug Step Out" })
-map("n", "<leader>br", function() require("dap").toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
-map("n", "<leader>Br", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
-map("n", "<leader>dr", function() require("dap").repl.toggle() end, { desc = "Debug Toggle REPL" })
-map("n", "<leader>dl", function() require("dap").run_last() end, { desc = "Debug Run Last Session" })
+map("n", "<leader>br", function() dap.toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
+map("n", "<leader>Br", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
+map("n", "<leader>dr", function() dap.repl.toggle() end, { desc = "Debug Toggle REPL" })
+map("n", "<leader>dl", function() dap.run_last() end, { desc = "Debug Run Last Session" })
 
 -- DAP UI (Debug UI)
 map("n", "<leader>du", function() require("dapui").toggle() end, { desc = "DAPUI Toggle" })
@@ -109,7 +115,7 @@ map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quick
 
 --Outline
 map("n", "<leader>oo", "<cmd>Outline!<cr>", {desc = "Outline Open"})
-map("n", "<leader>of", "<cmd>OutlineFocus<cr>", {desc = "Outline Focus"})
+map("n", "<leader>of", "<cmd>OutlineOpen<cr>", {desc = "Outline Focus"})
 map("n", "<leader>os", "<cmd>OutlineStatus<cr>", {desc = "Outline Status"})
 
 --Lazygit
@@ -118,4 +124,10 @@ map("n", "<leader>gc", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Lazygit Cur
 
 --Precognition
 map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
+
+
+
+
+
+
 
