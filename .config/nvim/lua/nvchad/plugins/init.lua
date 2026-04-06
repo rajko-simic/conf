@@ -227,7 +227,7 @@ return {
 
   {
     "mfussenegger/nvim-dap",
-    lazy = false;
+    event = "VeryLazy",
     config = function()
       require "nvchad.configs.dap"
     end,
@@ -235,7 +235,7 @@ return {
 
   {
     "rcarriga/nvim-dap-ui",
-    lazy = false;
+    event = "VeryLazy",
     dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
     config = function()
       require "nvchad.configs.dapui"
@@ -244,7 +244,7 @@ return {
 
 {
     "theHamsta/nvim-dap-virtual-text",
-    lazy = false,
+    event = "VeryLazy",
     dependencies = { "mfussenegger/nvim-dap", "nvim-treesitter/nvim-treesitter" },
     config = function()
       require("nvim-dap-virtual-text").setup({
@@ -296,6 +296,7 @@ return {
 
   {
     "ThePrimeagen/refactoring.nvim",
+    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -307,6 +308,7 @@ return {
   --A hackable Markdown, HTML, LaTeX, Typst & YAML previewer for Neovim
   {
       "OXY2DEV/markview.nvim",
+      ft = { "markdown", "rmd", "quarto", "mdx", "html", "latex" },
       lazy = false,
       priority = 49,
   },

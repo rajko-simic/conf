@@ -43,12 +43,12 @@ map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window"
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
-map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
-map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
-map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
+map("n", "<leader>fc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+map("n", "<leader>fs", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
+map("n", "<leader>ft", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
 map("n", "<leader>th", function() require("nvchad.themes").open() end, { desc = "telescope nvchad themes" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "<leader>fa", "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>", { desc = "telescope find all files" })
@@ -81,8 +81,8 @@ map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Go to
 
 --LSP Signiture
 map('n', '<C-k>', function() require('lsp_signature').toggle_float_win() end, { silent = true, noremap = true, desc = 'toggle signature' })
-map('n', '<Leader>k', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
-map('n', '<leader>a', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
+map('n', '<Leader>a', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
+-- map('n', '<leader>a', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
 map('n', 'K', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
 
 -- DAP (Debug Adapter Protocol) keybindings
@@ -90,8 +90,8 @@ map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug Step Over" })
 map("n", "<F11>", function() require("dap").step_into() end, { desc = "Debug Step Into" })
 map("n", "<F12>", function() require("dap").step_out() end, { desc = "Debug Step Out" })
-map("n", "<leader>br", function() dap.toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
-map("n", "<leader>Br", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
+map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
+map("n", "<leader>dc", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
 map("n", "<leader>dr", function() dap.repl.toggle() end, { desc = "Debug Toggle REPL" })
 map("n", "<leader>dl", function() dap.run_last() end, { desc = "Debug Run Last Session" })
 
@@ -106,12 +106,12 @@ map("n", "<leader>dt", function() require("dapui").float_element("threads") end,
 map("n", "<leader>dc", function() require("dapui").float_element("console") end, { desc = "DAPUI Show Console" })
 
 --Trouble
-map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Trouble Diagnostics" })
-map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Trouble Buffer Diagnostics" })
-map("n", "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Trouble Symbols" })
-map("n", "<leader>cl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", { desc = "Trouble LSP Definitions / references / ..." })
-map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>", { desc = "Trouble Location List" })
-map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quickfix List" })
+map("n", "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Trouble Diagnostics" })
+map("n", "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Trouble Buffer Diagnostics" })
+map("n", "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Trouble Symbols" })
+map("n", "<leader>tl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", { desc = "Trouble LSP Definitions / references / ..." })
+map("n", "<leader>tL", "<cmd>Trouble loclist toggle<cr>", { desc = "Trouble Location List" })
+map("n", "<leader>tQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quickfix List" })
 
 --Outline
 map("n", "<leader>oo", "<cmd>Outline!<cr>", {desc = "Outline Open"})
