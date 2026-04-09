@@ -223,8 +223,8 @@ return {
   -- Diagnostics list
   {
     "folke/trouble.nvim",
-    opts = {},
     cmd = "Trouble",
+    config = function() require "nvchad.configs.trouble" end,
   },
 
   -- Refactoring tools
