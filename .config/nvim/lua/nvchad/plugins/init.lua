@@ -20,7 +20,7 @@ return {
   "nvzone/menu",
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
 
-  --Provides Nerd Font 1 icons (glyphs) for use by Neovim plugins:
+  -- Provides Nerd Font icons (glyphs) for use by Neovim plugins
   {
     "nvim-tree/nvim-web-devicons",
     opts = function()
@@ -29,26 +29,15 @@ return {
     end,
   },
 
-  --This plugin adds indentation guides to Neovim
+  -- Indentation guides
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "User FilePost",
-    opts = {
-      indent = { char = "│", highlight = "IblChar" },
-      scope = { char = "│", highlight = "IblScopeChar" },
-    },
-    config = function(_, opts)
-      dofile(vim.g.base46_cache .. "blankline")
-
-      local hooks = require "ibl.hooks"
-      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
-      require("ibl").setup(opts)
-
-      dofile(vim.g.base46_cache .. "blankline")
-    end,
+    opts = function() return require("nvchad.configs.indentblankline").opts end,
+    config = function(_, opts) require("nvchad.configs.indentblankline").config(_, opts) end,
   },
 
-  -- file managing , picker etc
+  -- File tree
   {
     "nvim-tree/nvim-tree.lua",
     lazy = false,
@@ -58,24 +47,15 @@ return {
     end,
   },
 
-  --WhichKey helps you remember your Neovim keymaps, by showing available keybindings in a popup as you type.
+  -- Keymap hints popup
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    -- keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
     cmd = "WhichKey",
-    opts = function()
-      dofile(vim.g.base46_cache .. "whichkey")
-      return {
-        defer = function()
-          return false
-        end,
-      }
-    end,
+    opts = require("nvchad.configs.whichkey"),
   },
 
-
-  --Lightweight yet powerful formatter plugin for Neovim
+  -- Formatter
   {
     "stevearc/conform.nvim",
     opts = {
@@ -83,7 +63,7 @@ return {
     },
   },
 
-  -- git stuff
+  -- Git signs in the gutter
   {
     "lewis6991/gitsigns.nvim",
     event = "User FilePost",
@@ -92,19 +72,17 @@ return {
     end,
   },
 
+  -- Git UI
   {
     "kdheepak/lazygit.nvim",
     lazy = true,
     cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile" },
-    dependencies = {
-        "nvim-lua/plenary.nvim",
-    },
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
 
-  -- lsp stuff
+  -- LSP package manager
   {
     "mason-org/mason.nvim",
-    -- lazy = false,
     cmd = { "Mason", "MasonInstall", "MasonUpdate" },
     opts = function()
       return require("nvchad.configs.mason").opts
@@ -114,6 +92,7 @@ return {
     end,
   },
 
+  -- LSP config
   {
     "neovim/nvim-lspconfig",
     event = "User FilePost",
@@ -122,6 +101,7 @@ return {
     end,
   },
 
+  -- Completion
   {
     "saghen/blink.cmp",
     version = "1.*",
@@ -131,66 +111,7 @@ return {
     opts = require("nvchad.configs.blink"),
   },
 
--- {
---     "ray-x/lsp_signature.nvim",
---     event = "InsertEnter",
---     opts = {
---       bind = true,
---       handler_opts = {
---         border = "rounded"
---       }
---     },
---     -- or use config
---     -- config = function(_, opts) require'lsp_signature'.setup({you options}) end
---   },
-
-  -- load luasnips + cmp related in insert mode only
-  --A completion engine
-  -- {
-  --   "hrsh7th/nvim-cmp",
-  --   event = "InsertEnter",
-  --   dependencies = {
-  --     {
-  --       -- snippet plugin
-  --       "L3MON4D3/LuaSnip",
-  --       dependencies = "rafamadriz/friendly-snippets",
-  --       opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-  --       config = function(_, opts)
-  --         require("luasnip").config.set_config(opts)
-  --         require "nvchad.configs.luasnip"
-  --       end,
-  --     },
-  --
-  --     -- autopairing of (){}[] etc
-  --     {
-  --       "windwp/nvim-autopairs",
-  --       opts = {
-  --         fast_wrap = {},
-  --         disable_filetype = { "TelescopePrompt", "vim" },
-  --       },
-  --       config = function(_, opts)
-  --         require("nvim-autopairs").setup(opts)
-  --
-  --         -- setup cmp for autopairs
-  --         local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-  --         require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-  --       end,
-  --     },
-  --
-  --     -- cmp sources plugins
-  --     {
-  --       "saadparwaiz1/cmp_luasnip",
-  --       "hrsh7th/cmp-nvim-lua",
-  --       "hrsh7th/cmp-nvim-lsp",
-  --       "hrsh7th/cmp-buffer",
-  --       "hrsh7th/cmp-path",
-  --     },
-  --   },
-  --   opts = function()
-  --     return require "nvchad.configs.cmp"
-  --   end,
-  -- },
-
+  -- Fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -200,6 +121,7 @@ return {
     end,
   },
 
+  -- Project manager
   {
     "coffebar/neovim-project",
     lazy = false,
@@ -208,7 +130,6 @@ return {
       return require "nvchad.configs.neovim-project"
     end,
     init = function()
-      -- enable saving the state of plugins in the session
       vim.opt.sessionoptions:append("globals")
     end,
     dependencies = {
@@ -218,6 +139,7 @@ return {
     },
   },
 
+  -- Syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
@@ -227,13 +149,15 @@ return {
     end,
   },
 
+  -- Sticky context header
   {
     "nvim-treesitter/nvim-treesitter-context",
-    lazy = false;
+    lazy = false,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {}
+    opts = {},
   },
 
+  -- Debug adapter protocol
   {
     "mfussenegger/nvim-dap",
     event = "VeryLazy",
@@ -242,181 +166,133 @@ return {
     end,
   },
 
+  -- DAP UI
   {
-      "igorlfs/nvim-dap-view",
-      -- let the plugin lazy load itself
-      lazy = false,
-      version = "1.*",
-      ---@module 'dap-view'
-      ---@type dapview.Config
-      opts = {},
-    },
-
-  -- {
-  --   "rcarriga/nvim-dap-ui",
-  --   lazy = false;
-  --   dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
-  --   config = function()
-  --     require "nvchad.configs.dapui"
-  --   end,
-  -- },
-
-  {
-    "https://codeberg.org/Jorenar/nvim-dap-disasm.git",
-    lazy=false;
-    dependencies = "igorlfs/nvim-dap-view",
-    config = function ()
-      require "nvchad.configs.dapview"
-    end
+    "igorlfs/nvim-dap-view",
+    lazy = false,
+    version = "1.*",
+    ---@module 'dap-view'
+    ---@type dapview.Config
+    opts = {},
   },
 
-{
+  -- DAP disassembly view
+  {
+    "https://codeberg.org/Jorenar/nvim-dap-disasm.git",
+    lazy = false,
+    dependencies = "igorlfs/nvim-dap-view",
+    config = function()
+      require "nvchad.configs.dapview"
+    end,
+  },
+
+  -- DAP virtual text (variable values inline while debugging)
+  {
     "theHamsta/nvim-dap-virtual-text",
     event = "VeryLazy",
     dependencies = { "mfussenegger/nvim-dap", "nvim-treesitter/nvim-treesitter" },
     config = function()
-      require("nvim-dap-virtual-text").setup({
-        enabled = true,
-        commented = false,
-        all_frames = false,
-        highlight_changed_variables = true,
-      })
+      require "nvchad.configs.dapvirtualtext"
     end,
   },
 
-  --A library for asynchronous IO in Neovim
+  -- Async IO library
   {
     "nvim-neotest/nvim-nio",
     requires = { "mfussenegger/nvim-dap" },
   },
 
+  -- Test runner
   {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-neotest/nvim-nio",
       "nvim-lua/plenary.nvim",
       "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter"
-    }
+      "nvim-treesitter/nvim-treesitter",
+    },
   },
 
+  -- Notification UI
   {
     "rcarriga/nvim-notify",
     config = function()
-      require("notify").setup {
-        stages = "fade",
-        timeout = 3000,
-        max_height = 5,
-        top_down = false, -- false = grows upward, placing it above the statusline
-        background_colour = "#000000", -- optional: make it opaque
-      }
-
-      vim.notify = require("notify") -- override default `vim.notify`
+      require "nvchad.configs.notify"
     end,
   },
 
-  --A pretty list for showing diagnostics, references, telescope results, quickfix and location lists
+  -- Diagnostics list
   {
     "folke/trouble.nvim",
     opts = {},
     cmd = "Trouble",
   },
 
+  -- Refactoring tools
   {
     "ThePrimeagen/refactoring.nvim",
     event = "VeryLazy",
+    lazy = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
-    lazy = false,
     opts = {},
   },
 
-  --A hackable Markdown, HTML, LaTeX, Typst & YAML previewer for Neovim
+  -- Markdown / HTML / LaTeX previewer
   {
-      "OXY2DEV/markview.nvim",
-      ft = { "markdown", "rmd", "quarto", "mdx", "html", "latex" },
-      lazy = false,
-      priority = 49,
+    "OXY2DEV/markview.nvim",
+    ft = { "markdown", "rmd", "quarto", "mdx", "html", "latex" },
+    lazy = false,
+    priority = 49,
   },
 
-  --A sidebar with a tree-like outline of symbols from your code, powered by LSP.
+  -- Code outline sidebar
   {
     "hedyhli/outline.nvim",
-    -- lazy = false;
-    cmd = {"Outline", "OutlineOpen", "OutlineStatus"},
+    cmd = { "Outline", "OutlineOpen", "OutlineStatus" },
     opts = function()
       return require("nvchad.configs.outline")
     end,
   },
 
-  --precognition.nvim assists with discovering motions (Both vertical and horizontal) to navigate your current buffer
+  -- Motion hints
   {
     "tris203/precognition.nvim",
-    cmd = {"Precognition"},
+    cmd = { "Precognition" },
     opts = {},
   },
 
-  --Dotnet
+  -- Dotnet / C#
   {
     "GustavEikaas/easy-dotnet.nvim",
     ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
-    dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
     config = function()
-      require("easy-dotnet").setup({
-        lsp = {
-          enabled = true, -- Enable builtin roslyn lsp
-          preload_roslyn = false, -- Roslyn starts when a cs file is opened (matches ft lazy-loading)
-          roslynator_enabled = true, -- Automatically enable roslynator analyzer
-          easy_dotnet_analyzer_enabled = true, -- Enable roslyn analyzer from easy-dotnet-server
-          auto_refresh_codelens = true,
-          analyzer_assemblies = {}, -- Any additional roslyn analyzers you might use like SonarAnalyzer.CSharp
-          config = {
-            settings = {
-              ["csharp|inlay_hints"] = {
-                csharp_enable_inlay_hints_for_implicit_object_creation = true,
-                csharp_enable_inlay_hints_for_implicit_variable_types = true,
-                csharp_enable_inlay_hints_for_lambda_parameter_types = true,
-                csharp_enable_inlay_hints_for_types = true,
-                dotnet_enable_inlay_hints_for_parameters = true,
-                dotnet_enable_inlay_hints_for_literal_parameters = true,
-                dotnet_enable_inlay_hints_for_indexer_parameters = true,
-                dotnet_enable_inlay_hints_for_object_creation_parameters = true,
-                dotnet_enable_inlay_hints_for_other_parameters = true,
-                dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = false,
-                dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
-                dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
-              },
-            },
-          },
-        },
-      })
-    end
+      require "nvchad.configs.easydotnet"
+    end,
   },
 
-  --Flutter
+  -- Flutter
   {
-      'nvim-flutter/flutter-tools.nvim',
-      -- lazy = false,
-      ft = {"dart", "pubspec.yaml"},
-      dependencies = {
-          'nvim-lua/plenary.nvim',
-          'stevearc/dressing.nvim', -- optional for vim.ui.select
-      },
-      config = true,
+    "nvim-flutter/flutter-tools.nvim",
+    ft = { "dart", "pubspec.yaml" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "stevearc/dressing.nvim",
+    },
+    config = true,
   },
 
   {
-      'akinsho/pubspec-assist.nvim',
-      -- lazy = false,
-      ft = {"dart", "pubspec.yaml"},
-      dependencies = {
-          'nvim-lua/plenary.nvim'
-      },
-      config = true,
+    "akinsho/pubspec-assist.nvim",
+    ft = { "dart", "pubspec.yaml" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = true,
   },
 
+  -- AI assistant
   {
     "nickjvandyke/opencode.nvim",
     lazy = false,

@@ -6,8 +6,8 @@
 local M = {}
 
 M.base46 = {
-	theme = "default-light",
-  theme_toggle = { "everblush", "default-light" },
+	theme = "material-deep-ocean",
+  theme_toggle = { "material-deep-ocean", "default-light" },
 	hl_override = {
 		Comment = { italic = true },
 		["@comment"] = { italic = true },
