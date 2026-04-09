@@ -264,6 +264,15 @@ return {
     opts = {},
   },
 
+  -- References, definitions and implementations above symbols
+  {
+    'Wansmer/symbol-usage.nvim',
+    event = 'LspAttach',
+    config = function()
+      require 'nvchad.configs.symbolusage'
+    end,
+  },
+
   -- Dotnet / C#
   {
     "GustavEikaas/easy-dotnet.nvim",
