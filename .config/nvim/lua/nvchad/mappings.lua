@@ -125,9 +125,14 @@ map("n", "<leader>gc", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Lazygit Cur
 --Precognition
 map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
 
-
-
-
+--Opencode
+map({ "n", "x" }, "<leader>qa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
+map({ "n", "x" }, "<leader>qx", function() require("opencode").select() end, { desc = "Execute opencode action" })
+map({ "n", "t" }, "<leader>qt", function() require("opencode").toggle() end, { desc = "Toggle opencode" })
+map({ "n", "x" }, "qr",  function() return require("opencode").operator("@this ") end, { desc = "Add range to opencode", expr = true })
+map("n",          "ql", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
+map("n", "<leader>qu", function() require("opencode").command("session.half.page.up") end, { desc = "Scroll opencode up" })
+map("n", "<leader>qd", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
 
 
 
