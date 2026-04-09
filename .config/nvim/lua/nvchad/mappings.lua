@@ -80,7 +80,7 @@ map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Go to
 -- map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover info" })
 
 --LSP Signiture
-map('n', '<C-k>', function() require('lsp_signature').toggle_float_win() end, { silent = true, noremap = true, desc = 'toggle signature' })
+map('n', '<C-k>', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
 map('n', '<Leader>a', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
 -- map('n', '<leader>a', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
 map('n', 'K', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
