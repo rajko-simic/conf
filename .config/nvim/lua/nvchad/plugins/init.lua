@@ -143,10 +143,9 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
-    build = ":TSUpdate",
-    config = function()
-      require("nvim-treesitter").setup(require("nvchad.configs.treesitter"))
-    end,
+    build = function() require("nvchad.configs.treesitter").build() end,
+    init = function() require("nvchad.configs.treesitter").init() end,
+    config = function() require("nvchad.configs.treesitter").config() end,
   },
 
   -- Sticky context header
