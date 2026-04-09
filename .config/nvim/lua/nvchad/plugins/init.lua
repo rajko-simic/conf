@@ -130,6 +130,7 @@ return {
     dependencies = { "rafamadriz/friendly-snippets" },
     opts = require("nvchad.configs.blink"),
   },
+
 -- {
 --     "ray-x/lsp_signature.nvim",
 --     event = "InsertEnter",
@@ -366,7 +367,7 @@ return {
       require("easy-dotnet").setup({
         lsp = {
           enabled = true, -- Enable builtin roslyn lsp
-          preload_roslyn = true, -- Start loading roslyn before any buffer is opened
+          preload_roslyn = false, -- Roslyn starts when a cs file is opened (matches ft lazy-loading)
           roslynator_enabled = true, -- Automatically enable roslynator analyzer
           easy_dotnet_analyzer_enabled = true, -- Enable roslyn analyzer from easy-dotnet-server
           auto_refresh_codelens = true,
