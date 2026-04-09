@@ -52,9 +52,13 @@ M.defaults = function()
   dofile(vim.g.base46_cache .. "lsp")
   require("nvchad.lsp").diagnostic_config()
 
+  -- Disable native LSP signature help — blink.cmp handles this
+  vim.lsp.handlers["textDocument/signatureHelp"] = function() end
+
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
       M.on_attach(_, args.buf)
+      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end,
   })
 

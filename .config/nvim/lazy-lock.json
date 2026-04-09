@@ -3,7 +3,6 @@
   "NvChad": { "branch": "v2.5", "commit": "f437558f23c8f50c36cd09748121ab2c822e8ec9" },
   "base46": { "branch": "v3.0", "commit": "884b990dcdbe07520a0892da6ba3e8d202b46337" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
-  "blink.nvim": { "branch": "main", "commit": "d1e7c7c45d45c6b6a25427bf62db4db73b03ff3d" },
   "conform.nvim": { "branch": "master", "commit": "086a40dc7ed8242c03be9f47fbcee68699cc2395" },
   "dressing.nvim": { "branch": "master", "commit": "2d7c2db2507fa3c4956142ee607431ddb2828639" },
   "easy-dotnet.nvim": { "branch": "main", "commit": "dfeed365b0c0be6841239d3e280ce3665ee80265" },

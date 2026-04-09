@@ -79,11 +79,8 @@ map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP Go to 
 map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Go to type definition" })
 -- map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover info" })
 
---LSP Signiture
-map('n', '<C-k>', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
-map('n', '<Leader>a', function() vim.lsp.buf.signature_help() end, { silent = true, noremap = true, desc = 'toggle signature' })
--- map('n', '<leader>a', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
-map('n', 'K', vim.lsp.buf.signature_help, { desc = "Toggle details", noremap = true, silent = true })
+-- LSP hover (blink.cmp handles signature help in insert mode)
+map('n', 'K', vim.lsp.buf.hover, { desc = "LSP Hover", noremap = true, silent = true })
 
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start/Continue" })

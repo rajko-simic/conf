@@ -1,9 +1,23 @@
 ---@module 'blink.cmp'
 ---@type blink.cmp.Config
 return {
-  keymap = { preset = 'super-tab' },
+  keymap = {
+    preset = 'super-tab',
+    ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+    ['<C-s>'] = { 'scroll_signature_down', 'fallback' },
+    ['<C-S-s>'] = { 'scroll_signature_up', 'fallback' },
+  },
 
-  signature = { enabled = true },
+  signature = {
+    enabled = true,
+    window = {
+      max_height = 30,
+      max_width = 120,
+      border = 'rounded',
+      show_documentation = true,
+      direction_priority = { 's', 'n' },
+    },
+  },
 
   appearance = {
     nerd_font_variant = 'mono',
