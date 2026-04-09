@@ -71,7 +71,7 @@ M.defaults = function()
     },
   }
 
-  -- Support 0.10 temporarily
+  local capabilities = require('blink.cmp').get_lsp_capabilities()
 
   if vim.lsp.config then
     vim.lsp.config("*", { capabilities = M.capabilities, on_init = M.on_init })
@@ -79,7 +79,7 @@ M.defaults = function()
     vim.lsp.enable "lua_ls"
   else
     require("lspconfig").lua_ls.setup {
-      capabilities = M.capabilities,
+      capabilities = capabilities,
       on_init = M.on_init,
       settings = lua_lsp_settings,
     }

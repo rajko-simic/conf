@@ -1,5 +1,37 @@
 local dap = require("dap")
 
+-- https://emojipedia.org/en/stickers/search?q=circle
+vim.fn.sign_define('DapBreakpoint',
+  {
+    text = '🔴',
+    texthl = 'DapBreakpointSymbol',
+    linehl = 'DapBreakpoint',
+    numhl = 'DapBreakpoint'
+  })
+
+vim.fn.sign_define('DapStopped',
+  {
+    text = '🟢',
+    texthl = 'yellow',
+    linehl = 'DapBreakpoint',
+    numhl = 'DapBreakpoint'
+  })
+
+vim.fn.sign_define('DapBreakpointRejected',
+  {
+    text = '🟡',
+    texthl = 'DapStoppedSymbol',
+    linehl = 'DapBreakpoint',
+    numhl = 'DapBreakpoint'
+  })
+
+vim.fn.sign_define('DapBreakpointCondition', {
+  text    = '⭕',
+  texthl  = 'DapBreakpointSymbol',
+  linehl  = 'DapBreakpoint',
+  numhl   = 'DapBreakpoint',
+})
+
 --Golang
 dap.adapters.go = {
   type = "server",

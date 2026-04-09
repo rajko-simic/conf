@@ -7,8 +7,13 @@ return  {
     "~/Documents/Work/*/*",
     "~/Documents/Work/*/*/*",
     "/shared/Private/Rajko/Practice/*",
-    "/shared/Private/Rajko/Practice/*/*"
+    "/shared/Private/Rajko/Practice/*/*",
+    "/shared/Private/Rajko/Practice/*/*/*"
   },
+  -- ignore_projects = {
+  --   "~/Documents/**/bin/",
+  --   "~/Documents/**/obj/"
+  -- },
   last_session_on_startup = false,
   dashboard_mode = true,
   picker = {
@@ -17,7 +22,7 @@ return  {
     preview = {
       enabled = true, -- show directory structure in Telescope preview
       git_status = true, -- show branch name, an ahead/behind counter, and the git status of each file/folder
-      git_fetch = false, -- fetch from remote, used to display the number of commits ahead/behind, requires git authorization
+      git_fetch = true, -- fetch from remote, used to display the number of commits ahead/behind, requires git authorization
       show_hidden = true, -- show hidden files/folders
     },
   }

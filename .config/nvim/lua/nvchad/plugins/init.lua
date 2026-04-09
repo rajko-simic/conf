@@ -122,65 +122,71 @@ return {
     end,
   },
 
-{
-    "ray-x/lsp_signature.nvim",
-    event = "InsertEnter",
-    opts = {
-      bind = true,
-      handler_opts = {
-        border = "rounded"
-      }
-    },
-    -- or use config
-    -- config = function(_, opts) require'lsp_signature'.setup({you options}) end
+  {
+    "saghen/blink.cmp",
+    config = function ()
+      require "nvchad.configs.blink"
+    end
   },
+-- {
+--     "ray-x/lsp_signature.nvim",
+--     event = "InsertEnter",
+--     opts = {
+--       bind = true,
+--       handler_opts = {
+--         border = "rounded"
+--       }
+--     },
+--     -- or use config
+--     -- config = function(_, opts) require'lsp_signature'.setup({you options}) end
+--   },
 
   -- load luasnips + cmp related in insert mode only
   --A completion engine
-  {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      {
-        -- snippet plugin
-        "L3MON4D3/LuaSnip",
-        dependencies = "rafamadriz/friendly-snippets",
-        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-        config = function(_, opts)
-          require("luasnip").config.set_config(opts)
-          require "nvchad.configs.luasnip"
-        end,
-      },
-
-      -- autopairing of (){}[] etc
-      {
-        "windwp/nvim-autopairs",
-        opts = {
-          fast_wrap = {},
-          disable_filetype = { "TelescopePrompt", "vim" },
-        },
-        config = function(_, opts)
-          require("nvim-autopairs").setup(opts)
-
-          -- setup cmp for autopairs
-          local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-          require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-        end,
-      },
-
-      -- cmp sources plugins
-      {
-        "saadparwaiz1/cmp_luasnip",
-        "hrsh7th/cmp-nvim-lua",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-      },
-    },
-    opts = function()
-      return require "nvchad.configs.cmp"
-    end,
-  },
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   event = "InsertEnter",
+  --   dependencies = {
+  --     {
+  --       -- snippet plugin
+  --       "L3MON4D3/LuaSnip",
+  --       dependencies = "rafamadriz/friendly-snippets",
+  --       opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+  --       config = function(_, opts)
+  --         require("luasnip").config.set_config(opts)
+  --         require "nvchad.configs.luasnip"
+  --       end,
+  --     },
+  --
+  --     -- autopairing of (){}[] etc
+  --     {
+  --       "windwp/nvim-autopairs",
+  --       opts = {
+  --         fast_wrap = {},
+  --         disable_filetype = { "TelescopePrompt", "vim" },
+  --       },
+  --       config = function(_, opts)
+  --         require("nvim-autopairs").setup(opts)
+  --
+  --         -- setup cmp for autopairs
+  --         local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+  --         require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+  --       end,
+  --     },
+  --
+  --     -- cmp sources plugins
+  --     {
+  --       "saadparwaiz1/cmp_luasnip",
+  --       "hrsh7th/cmp-nvim-lua",
+  --       "hrsh7th/cmp-nvim-lsp",
+  --       "hrsh7th/cmp-buffer",
+  --       "hrsh7th/cmp-path",
+  --     },
+  --   },
+  --   opts = function()
+  --     return require "nvchad.configs.cmp"
+  --   end,
+  -- },
 
   {
     "nvim-telescope/telescope.nvim",
@@ -234,12 +240,31 @@ return {
   },
 
   {
-    "rcarriga/nvim-dap-ui",
-    event = "VeryLazy",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
-    config = function()
-      require "nvchad.configs.dapui"
-    end,
+      "igorlfs/nvim-dap-view",
+      -- let the plugin lazy load itself
+      lazy = false,
+      version = "1.*",
+      ---@module 'dap-view'
+      ---@type dapview.Config
+      opts = {},
+    },
+
+  -- {
+  --   "rcarriga/nvim-dap-ui",
+  --   lazy = false;
+  --   dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+  --   config = function()
+  --     require "nvchad.configs.dapui"
+  --   end,
+  -- },
+
+  {
+    "https://codeberg.org/Jorenar/nvim-dap-disasm.git",
+    lazy=false;
+    dependencies = "igorlfs/nvim-dap-view",
+    config = function ()
+      require "nvchad.configs.dapview"
+    end
   },
 
 {
