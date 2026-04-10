@@ -115,9 +115,14 @@ map("n", "<leader>oo", "<cmd>Outline!<cr>", {desc = "Outline Open"})
 map("n", "<leader>of", "<cmd>OutlineOpen<cr>", {desc = "Outline Focus"})
 map("n", "<leader>os", "<cmd>OutlineStatus<cr>", {desc = "Outline Status"})
 
---Lazygit
-map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Lazygit"})
-map("n", "<leader>gc", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Lazygit Current File"})
+--Git
+map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Git LazyGit"})
+map("n", "<leader>gf", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Git Current File"})
+map("n", "<leader>gb", "<cmd>Gitsigns blame<cr>", {desc = "Git Toggle Blame"})
+map("n", "<leader>gl", "<cmd>Gitsigns blame_line<cr>", {desc = "Git Blame Line"})
+map("n", "<leader>gd", "<cmd>Gitsigns toggle_deleted<cr>", {desc = "Git Toggle Deleted"})
+map("n", "<leader>ga", "<cmd>Gitsigns attach<cr>", {desc = "Gitlens Attach"})
+map("n", "<leader>gc", "<cmd>Gitsigns show_commit<cr>", {desc = "Git Show Commit"})
 
 --Precognition
 map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
