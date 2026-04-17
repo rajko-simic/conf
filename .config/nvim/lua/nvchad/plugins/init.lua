@@ -247,15 +247,6 @@ return {
     priority = 49,
   },
 
-  -- Code outline sidebar
-  {
-    "hedyhli/outline.nvim",
-    cmd = { "Outline", "OutlineOpen", "OutlineStatus" },
-    opts = function()
-      return require("nvchad.configs.outline")
-    end,
-  },
-
   -- Motion hints
   {
     "tris203/precognition.nvim",

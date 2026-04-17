@@ -16,9 +16,6 @@ map("n", "<C-k>", "<C-w>k", { desc = "window switch up" })
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
-map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "general toggle line number" })
-map("n", "<leader>rn", "<cmd>set rnu!<CR>", { desc = "general toggle relative number" })
-map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "general toggle nvcheatsheet" })
 map({ "n", "x" }, "<leader>fm", function() require("conform").format { lsp_fallback = true } end, { desc = "general format file" })
 
 -- global lsp mappings
@@ -49,7 +46,6 @@ map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = 
 map("n", "<leader>fc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 map("n", "<leader>fs", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
 map("n", "<leader>ft", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
-map("n", "<leader>th", function() require("nvchad.themes").open() end, { desc = "telescope nvchad themes" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "<leader>fa", "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>", { desc = "telescope find all files" })
 
@@ -110,11 +106,6 @@ map("n", "<leader>tl", "<cmd>Trouble lsp_bottom toggle<cr>", { desc = "Trouble L
 map("n", "<leader>tL", "<cmd>Trouble loclist toggle<cr>", { desc = "Trouble Location List" })
 map("n", "<leader>tQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quickfix List" })
 
---Outline
-map("n", "<leader>oo", "<cmd>Outline!<cr>", {desc = "Outline Open"})
-map("n", "<leader>of", "<cmd>OutlineOpen<cr>", {desc = "Outline Focus"})
-map("n", "<leader>os", "<cmd>OutlineStatus<cr>", {desc = "Outline Status"})
-
 --Git
 map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Git LazyGit"})
 map("n", "<leader>gf", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Git Current File"})
@@ -127,14 +118,8 @@ map("n", "<leader>gc", "<cmd>Gitsigns show_commit<cr>", {desc = "Git Show Commit
 --Precognition
 map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
 
---Opencode
-map({ "n", "x" }, "<leader>qa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
-map({ "n", "x" }, "<leader>qx", function() require("opencode").select() end, { desc = "Execute opencode action" })
-map({ "n", "t" }, "<leader>qt", function() require("opencode").toggle() end, { desc = "Toggle opencode" })
-map({ "n", "x" }, "qr",  function() return require("opencode").operator("@this ") end, { desc = "Add range to opencode", expr = true })
-map("n",          "ql", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
-map("n", "<leader>qu", function() require("opencode").command("session.half.page.up") end, { desc = "Scroll opencode up" })
-map("n", "<leader>qd", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
-
-
-
+--Basic Settings
+map("n", "<leader>sn", "<cmd>set nu!<CR>", { desc = "general toggle line number" })
+map("n", "<leader>sr", "<cmd>set rnu!<CR>", { desc = "general toggle relative number" })
+map("n", "<leader>sc", "<cmd>NvCheatsheet<CR>", { desc = "general toggle nvcheatsheet" })
+map("n", "<leader>st", function() require("nvchad.themes").open() end, { desc = "telescope nvchad themes" })
