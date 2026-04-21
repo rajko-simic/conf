@@ -81,3 +81,6 @@ function y() {
 	rm -f -- "$tmp"
 }
 
+
+# opencode
+export PATH=/home/rajko/.opencode/bin:$PATH
