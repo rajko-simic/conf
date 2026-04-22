@@ -29,6 +29,14 @@ return {
     end,
   },
 
+  -- Lightweight icon provider (alongside devicons; NvChad base46 highlights unaffected)
+  {
+    "echasnovski/mini.icons",
+    version = false,
+    lazy = false,
+    opts = {},
+  },
+
   -- Indentation guides
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -300,15 +308,5 @@ return {
     ft = { "dart", "pubspec.yaml" },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = true,
-  },
-
-  -- AI assistant
-  {
-    "nickjvandyke/opencode.nvim",
-    lazy = false,
-    version = "*",
-    config = function()
-      require "nvchad.configs.opencode"
-    end,
   },
 }
