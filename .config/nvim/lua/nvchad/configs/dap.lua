@@ -33,11 +33,15 @@ vim.fn.sign_define('DapBreakpointCondition', {
 })
 
 --Golang
+local dlv_path = vim.fn.stdpath "data" .. "/mason/bin/dlv"
+if vim.fn.executable(dlv_path) ~= 1 then
+  dlv_path = vim.fn.expand "~" .. "/go/bin/dlv"
+end
 dap.adapters.go = {
   type = "server",
   port = "${port}",
   executable = {
-    command = "dlv",
+    command = dlv_path,
     args = { "dap", "-l", "127.0.0.1:${port}" },
   },
 }

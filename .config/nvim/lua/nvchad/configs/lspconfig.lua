@@ -1,7 +1,7 @@
 local M = {}
 local map = vim.keymap.set
 
--- export on_attach & capabilities
+-- Keymaps applied on every LSP attach
 M.on_attach = function(_, bufnr)
   local function opts(desc)
     return { buffer = bufnr, desc = "LSP " .. desc }
@@ -21,97 +21,31 @@ M.on_attach = function(_, bufnr)
   map("n", "<leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
 end
 
--- disable semanticTokens
+-- Disable semanticTokens (noisy with NvChad themes)
 M.on_init = function(client, _)
   if client:supports_method "textDocument/semanticTokens" then
     client.server_capabilities.semanticTokensProvider = nil
   end
 end
 
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
-
-M.capabilities.textDocument.completion.completionItem = {
-  documentationFormat = { "markdown", "plaintext" },
-  snippetSupport = true,
-  preselectSupport = true,
-  insertReplaceSupport = true,
-  labelDetailsSupport = true,
-  deprecatedSupport = true,
-  commitCharactersSupport = true,
-  tagSupport = { valueSet = { 1 } },
-  resolveSupport = {
-    properties = {
-      "documentation",
-      "detail",
-      "additionalTextEdits",
-    },
-  },
-}
-
 M.defaults = function()
   dofile(vim.g.base46_cache .. "lsp")
   require("nvchad.lsp").diagnostic_config()
 
-  require('lspconfig').jsonls.setup {
-    settings = {
-      json = {
-        schemas = require('schemastore').json.schemas(),
-        validate = { enable = true },
-      },
-    },
-  }
-
-  require('lspconfig').yamlls.setup {
-    settings = {
-      yaml = {
-        schemaStore = {
-          -- You must disable built-in schemaStore support if you want to use
-          -- this plugin and its advanced options like `ignore`.
-          enable = false,
-          -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-          url = "",
-        },
-        schemas = require('schemastore').yaml.schemas(),
-      },
-    },
-  }
-
-  -- Disable native LSP signature help — blink.cmp handles this
+  -- Disable native signature help — blink.cmp handles this
   vim.lsp.handlers["textDocument/signatureHelp"] = function() end
 
+  -- Apply blink.cmp capabilities + on_init to all servers globally
+  local capabilities = require("blink.cmp").get_lsp_capabilities()
+  vim.lsp.config("*", { capabilities = capabilities, on_init = M.on_init })
+
+  -- Enable inlay hints and keymaps on every LSP attach
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
       M.on_attach(_, args.buf)
       vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end,
   })
-
-  local lua_lsp_settings = {
-    Lua = {
-      workspace = {
-        library = {
-          vim.fn.expand "$VIMRUNTIME/lua",
-          vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
-          vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
-          "${3rd}/luv/library",
-        },
-      },
-    },
-  }
-
-  local capabilities = require('blink.cmp').get_lsp_capabilities()
-
-  if vim.lsp.config then
-    vim.lsp.config("*", { capabilities = capabilities, on_init = M.on_init })
-    vim.lsp.config("lua_ls", { settings = lua_lsp_settings })
-    vim.lsp.enable "lua_ls"
-  else
-    require("lspconfig").lua_ls.setup {
-      capabilities = capabilities,
-      on_init = M.on_init,
-      settings = lua_lsp_settings,
-    }
-  end
 end
 
 return M

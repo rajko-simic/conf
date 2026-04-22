@@ -36,6 +36,7 @@ M.opts = {
 
     -- Debuggers
     "codelldb",
+    "delve",
     "kotlin-debug-adapter",
     "bash-debug-adapter",
     "dart-debug-adapter",

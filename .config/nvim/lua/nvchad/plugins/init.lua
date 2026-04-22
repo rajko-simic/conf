@@ -119,10 +119,7 @@ return {
     opts = require("nvchad.configs.blink"),
   },
 
-  {
-    "b0o/schemastore.nvim",
-    ft = { "json", "yaml" },
-  },
+  { "b0o/schemastore.nvim" },
 
   -- Fuzzy finder
   {
