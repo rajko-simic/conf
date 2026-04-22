@@ -1,15 +1,15 @@
-local dap = require("dap")
-local dapview = require("dap-view")
+local dap = require "dap"
+local dapview = require "dap-view"
 
 dap.listeners.after.event_initialized["dapui_config"] = function() dapview.open() end
 dap.listeners.before.event_terminated["dapui_config"] = function() dapview.close() end
 dap.listeners.before.event_exited["dapui_config"] = function() dapview.close() end
 
-return {
+dapview.setup {
     winbar = {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views
-        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "disassembly"},
+        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "console", "disassembly"},
         -- Must be one of the sections declared above
         default_section = "scopes",
         -- Append hints with keymaps within the labels
@@ -24,9 +24,8 @@ return {
             watches = { label = "Watches", keymap = "W" },
             threads = { label = "Threads", keymap = "T" },
             repl = { label = "REPL", keymap = "R" },
-            sessions = { label = "Sessions", keymap = "K" },
             console = { label = "Console", keymap = "C" },
-            disassembly = { label = "Disassembly", keymap = "D" },
+            sessions = { label = "Sessions", keymap = "K" },
         },
         -- Add your own sections
         custom_sections = {},

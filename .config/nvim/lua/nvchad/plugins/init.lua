@@ -111,6 +111,11 @@ return {
     opts = require("nvchad.configs.blink"),
   },
 
+  {
+    "b0o/schemastore.nvim",
+    ft = { "json", "yaml" },
+  },
+
   -- Fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
@@ -170,9 +175,6 @@ return {
     "igorlfs/nvim-dap-view",
     lazy = false,
     version = "1.*",
-    ---@module 'dap-view'
-    ---@type dapview.Config
-    opts = {},
   },
 
   -- DAP disassembly view
@@ -181,7 +183,16 @@ return {
     lazy = false,
     dependencies = "igorlfs/nvim-dap-view",
     config = function()
-      require "nvchad.configs.dapview"
+      require "dap-view" -- load into package.loaded so dap-disasm can find it
+      require("dap-disasm").setup {
+        dapview_register = true,
+        dapview = {
+          keymap = "D",
+          label = "Disassembly",
+          short_label = "󰒓 [D]",
+        },
+      }
+      require "nvchad.configs.dapview" -- calls dap-view.setup() after disasm registered
     end,
   },
 
