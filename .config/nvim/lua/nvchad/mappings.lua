@@ -22,7 +22,7 @@ map({ "n", "x" }, "<leader>fm", function() require("conform").format { lsp_fallb
 map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
 
 -- tabufline
-map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
+map("n", "<leader>n", "<cmd>enew<CR>", { desc = "buffer new" })
 map("n", "<tab>", function() require("nvchad.tabufline").next() end, { desc = "buffer goto next" })
 map("n", "<S-tab>", function() require("nvchad.tabufline").prev() end, { desc = "buffer goto prev" })
 map("n", "<leader>x", function() require("nvchad.tabufline").close_buffer() end, { desc = "buffer close" })
@@ -83,9 +83,9 @@ map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug Step Over" })
 map("n", "<F11>", function() require("dap").step_into() end, { desc = "Debug Step Into" })
 map("n", "<F12>", function() require("dap").step_out() end, { desc = "Debug Step Out" })
-map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
-map("n", "<leader>dc", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
-map("n", "<leader>dr", function() dap.repl.toggle() end, { desc = "Debug Toggle REPL" })
+map("n", "<leader>bb", function() dap.toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
+map("n", "<leader>bc", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
+-- map("n", "<leader>dR", function() dap.repl.toggle() end, { desc = "Debug Toggle REPL" })
 map("n", "<leader>dl", function() dap.run_last() end, { desc = "Debug Run Last Session" })
 
 -- DAP View
@@ -100,7 +100,7 @@ map("n", "<leader>dv", function() require("dap-view").jump_to_view "watches" end
 map("n", "<leader>df", function() require("dap-view").jump_to_view "threads" end, { desc = "DapView Jump Threads" })
 map("n", "<leader>dq", function() require("dap-view").jump_to_view "breakpoints" end, { desc = "DapView Jump Breakpoints" })
 map("n", "<leader>dk", function() require("dap-view").jump_to_view "console" end, { desc = "DapView Jump Console" })
-map("n", "<leader>dR", function() require("dap-view").jump_to_view "repl" end, { desc = "DapView Jump REPL" })
+map("n", "<leader>dr", function() require("dap-view").jump_to_view "repl" end, { desc = "DapView Jump REPL" })
 map("n", "<leader>dD", function() require("dap-view").jump_to_view "disassembly" end, { desc = "DapView Jump Disassembly" })
 map("n", "<leader>dm", function() require("dap-view").navigate { count = 1, wrap = true } end, { desc = "DapView Next View" })
 map("n", "<leader>dn", function() require("dap-view").navigate { count = -1, wrap = true } end, { desc = "DapView Prev View" })
