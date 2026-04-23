@@ -20,6 +20,8 @@ return {
   "nvzone/menu",
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
 
+
+
   -- Provides Nerd Font icons (glyphs) for use by Neovim plugins
   {
     "nvim-tree/nvim-web-devicons",
@@ -235,6 +237,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
+      "lewis6991/async.nvim",
     },
     opts = {},
   },
