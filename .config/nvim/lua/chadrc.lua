@@ -62,7 +62,7 @@ M.ui = {
   },
 
   statusline = {
-    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
+    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "dap_frame", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
     modules = {
       dap_session = function()
         local ok, dap = pcall(require, "dap")
