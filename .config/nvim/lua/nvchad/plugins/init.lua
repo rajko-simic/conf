@@ -180,24 +180,8 @@ return {
     "igorlfs/nvim-dap-view",
     lazy = false,
     version = "1.*",
-  },
-
-  -- DAP disassembly view
-  {
-    "https://codeberg.org/Jorenar/nvim-dap-disasm.git",
-    lazy = false,
-    dependencies = "igorlfs/nvim-dap-view",
     config = function()
-      require "dap-view" -- load into package.loaded so dap-disasm can find it
-      require("dap-disasm").setup {
-        dapview_register = true,
-        dapview = {
-          keymap = "D",
-          label = "Disassembly",
-          short_label = "󰒓 [D]",
-        },
-      }
-      require "nvchad.configs.dapview" -- calls dap-view.setup() after disasm registered
+      require "nvchad.configs.dapview"
     end,
   },
 

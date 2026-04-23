@@ -101,7 +101,6 @@ map("n", "<leader>df", function() require("dap-view").jump_to_view "threads" end
 map("n", "<leader>dq", function() require("dap-view").jump_to_view "breakpoints" end, { desc = "DapView Jump Breakpoints" })
 map("n", "<leader>dk", function() require("dap-view").jump_to_view "console" end, { desc = "DapView Jump Console" })
 map("n", "<leader>dr", function() require("dap-view").jump_to_view "repl" end, { desc = "DapView Jump REPL" })
-map("n", "<leader>dD", function() require("dap-view").jump_to_view "disassembly" end, { desc = "DapView Jump Disassembly" })
 map("n", "<leader>dm", function() require("dap-view").navigate { count = 1, wrap = true } end, { desc = "DapView Next View" })
 map("n", "<leader>dn", function() require("dap-view").navigate { count = -1, wrap = true } end, { desc = "DapView Prev View" })
 map("n", "<leader>di", function() require("dap-view").virtual_text_toggle() end, { desc = "DapView Toggle Virtual Text" })

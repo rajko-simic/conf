@@ -9,7 +9,7 @@ dapview.setup {
     winbar = {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views
-        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "console", "disassembly"},
+        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "console" },
         -- Must be one of the sections declared above
         default_section = "scopes",
         -- Append hints with keymaps within the labels
@@ -46,7 +46,7 @@ dapview.setup {
         },
     },
     windows = {
-        size = 0.25,
+        size = 0.45,
         position = "below",
         terminal = {
             size = 0.5,

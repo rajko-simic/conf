@@ -56,10 +56,49 @@ M.nvdash = {
 }
 
 M.ui = {
-       tabufline = {
-         lazyload = false,
-         order = {"buffers", "tabs", "btns"}
-  }
+  tabufline = {
+    lazyload = false,
+    order = { "buffers", "tabs", "btns" },
+  },
+
+  statusline = {
+    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
+    modules = {
+      dap_session = function()
+        local ok, dap = pcall(require, "dap")
+        if not ok then return "" end
+        local session = dap.session()
+        if not session then return "" end
+        local adapter = session.config and session.config.type or "dap"
+        local status = dap.status()
+        status = (status ~= "" and status) or "Running"
+        return "%#St_lspError#  " .. adapter .. ": " .. status .. " "
+      end,
+
+      dap_frame = function()
+        local ok, dap = pcall(require, "dap")
+        if not ok then return "" end
+        local session = dap.session()
+        if not session or not session.current_frame then return "" end
+        local frame = session.current_frame
+        local file = (frame.source and frame.source.name) or "?"
+        local lnum = frame.line or "?"
+        local name = frame.name or "?"
+        return "%#St_LspInfo#  " .. file .. ":" .. lnum .. " in " .. name .. " "
+      end,
+
+      lsp = function()
+        if rawget(vim, "lsp") then
+          for _, client in ipairs(vim.lsp.get_clients()) do
+            if client.attached_buffers[require("nvchad.stl.utils").stbufnr()] then
+              return (vim.o.columns > 100 and "%#St_Lsp#   " .. client.name .. " ") or "%#St_Lsp#   LSP "
+            end
+          end
+        end
+        return ""
+      end,
+    },
+  },
 }
 
 M.term = {
