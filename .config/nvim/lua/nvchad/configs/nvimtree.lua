@@ -17,6 +17,15 @@ return {
   actions = {
     open_file = {
       resize_window = false,
+      window_picker = {
+        enable = true,
+        picker = "default",
+        chars = "ASDFQWERJKLHUIO",
+        exclude = {
+          filetype = { "dap-view", "dap-view-term", "dap-repl" },
+          buftype = { "terminal", "nofile" },
+        },
+      },
     },
   },
   diagnostics = {
