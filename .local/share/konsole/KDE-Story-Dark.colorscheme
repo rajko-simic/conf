@@ -1,0 +1,69 @@
+[General]
+Description=KDE Story Dark (from Plasma)
+Opacity=1
+
+[Background]
+Color=20,22,34
+
+[Foreground]
+Color=212,231,234
+
+[Color0]  # Black
+Color=20,22,34
+
+[Color1]  # Red
+Color=253,84,126
+
+[Color2]  # Green
+Color=0,110,40
+
+[Color3]  # Yellow
+Color=255,170,127
+
+[Color4]  # Blue
+Color=46,139,139
+
+[Color5]  # Magenta
+Color=255,128,224
+
+[Color6]  # Cyan
+Color=0,184,184
+
+[Color7]  # White
+Color=190,207,210
+
+[Color8]  # Bright Black
+Color=30,32,50
+
+[Color9]  # Bright Red
+Color=255,85,127
+
+[Color10] # Bright Green
+Color=128,255,128
+
+[Color11] # Bright Yellow
+Color=255,211,188
+
+[Color12] # Bright Blue
+Color=0,150,150
+
+[Color13] # Bright Magenta
+Color=255,128,224
+
+[Color14] # Bright Cyan
+Color=0,184,184
+
+[Color15] # Bright White
+Color=212,231,234
+
+[Cursor]
+Color=255,128,224
+
+[CursorText]
+Color=20,22,34
+
+[Selection]
+Color=0,150,150
+
+[SelectionText]
+Color=15,16,25
