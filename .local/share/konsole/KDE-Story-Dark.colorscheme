@@ -1,69 +1,121 @@
-[General]
-Description=KDE Story Dark (from Plasma)
-Opacity=1
+# Konsole Color Scheme: KDE Story Dark
+# Generated from KDEStoryDark KDE Plasma color scheme
+# Place in ~/.local/share/konsole/ and select in Konsole settings
 
 [Background]
 Color=20,22,34
 
+[BackgroundFaint]
+Color=18,19,31
+
+[BackgroundIntense]
+Color=30,32,50
+
+# --- Black ---
+# Normal: Window/View BackgroundNormal
+[Color0]
+Color=20,22,34
+
+# Faint: deepest background (Window BackgroundAlternate)
+[Color0Faint]
+Color=18,19,31
+
+# Intense: slightly lifted surface (View BackgroundAlternate)
+[Color0Intense]
+Color=30,32,50
+
+# --- Red ---
+# Normal: ForegroundNegative (all contexts consistent)
+[Color1]
+Color=253,84,126
+
+[Color1Faint]
+Color=160,50,80
+
+[Color1Intense]
+Color=255,110,150
+
+# --- Green ---
+# Derived from ForegroundPositive tones; intense from Selection ForegroundPositive
+[Color2]
+Color=0,160,90
+
+[Color2Faint]
+Color=0,90,50
+
+[Color2Intense]
+Color=128,255,128
+
+# --- Yellow (Orange-warm) ---
+# Complementary ForegroundNeutral gives a warm amber that reads as yellow in terminal
+[Color3]
+Color=220,145,90
+
+[Color3Faint]
+Color=140,90,55
+
+[Color3Intense]
+Color=255,170,127
+
+# --- Blue (Teal-Blue) ---
+# Normal: Button/Window DecorationFocus
+# Intense: View DecorationFocus / Complementary DecorationFocus (brighter teal)
+[Color4]
+Color=46,139,139
+
+[Color4Faint]
+Color=30,90,90
+
+[Color4Intense]
+Color=0,184,184
+
+# --- Magenta ---
+# ForegroundActive across all contexts
+[Color5]
+Color=220,100,195
+
+[Color5Faint]
+Color=140,65,125
+
+[Color5Intense]
+Color=255,128,224
+
+# --- Cyan ---
+# View ForegroundLink / Complementary DecorationHover
+[Color6]
+Color=0,184,184
+
+[Color6Faint]
+Color=0,120,120
+
+[Color6Intense]
+Color=0,210,215
+
+# --- White ---
+# Normal: Button/Window ForegroundNormal
+# Intense: View ForegroundNormal (brightest readable text)
+[Color7]
+Color=190,207,210
+
+[Color7Faint]
+Color=139,151,153
+
+[Color7Intense]
+Color=212,231,234
+
 [Foreground]
 Color=212,231,234
 
-[Color0]  # Black
-Color=20,22,34
+[ForegroundFaint]
+Color=168,184,186
 
-[Color1]  # Red
-Color=253,84,126
+[ForegroundIntense]
+Color=230,245,248
 
-[Color2]  # Green
-Color=0,110,40
-
-[Color3]  # Yellow
-Color=255,170,127
-
-[Color4]  # Blue
-Color=46,139,139
-
-[Color5]  # Magenta
-Color=255,128,224
-
-[Color6]  # Cyan
-Color=0,184,184
-
-[Color7]  # White
-Color=190,207,210
-
-[Color8]  # Bright Black
-Color=30,32,50
-
-[Color9]  # Bright Red
-Color=255,85,127
-
-[Color10] # Bright Green
-Color=128,255,128
-
-[Color11] # Bright Yellow
-Color=255,211,188
-
-[Color12] # Bright Blue
-Color=0,150,150
-
-[Color13] # Bright Magenta
-Color=255,128,224
-
-[Color14] # Bright Cyan
-Color=0,184,184
-
-[Color15] # Bright White
-Color=212,231,234
-
-[Cursor]
-Color=255,128,224
-
-[CursorText]
-Color=20,22,34
-
-[Selection]
-Color=0,150,150
-
-[SelectionText]
-Color=15,16,25
+[General]
+Blur=false
+ColorRandomization=false
+Description=KDE Story Dark
+Opacity=1
+Wallpaper=
+WallpaperOpacity=1
