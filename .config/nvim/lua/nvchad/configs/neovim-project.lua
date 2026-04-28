@@ -1,6 +1,7 @@
 return  {
   projects = { -- define project roots
     "~/.config/*",
+    "~/Documents/Notes/**",
     "~/Documents/Projects/*",
     "~/Documents/Projects/*/*",
     "~/Documents/Work/*",

@@ -243,11 +243,26 @@ return {
   },
 
   -- Markdown / HTML / LaTeX previewer
+  -- {
+  --   "OXY2DEV/markview.nvim",
+  --   ft = { "markdown", "rmd", "quarto", "mdx", "html", "latex" },
+  --   lazy = false,
+  --   priority = 49,
+  -- },
+
   {
-    "OXY2DEV/markview.nvim",
-    ft = { "markdown", "rmd", "quarto", "mdx", "html", "latex" },
-    lazy = false,
-    priority = 49,
+      'MeanderingProgrammer/render-markdown.nvim',
+      ft = "markdown",
+      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+      ---@module 'render-markdown'
+      ---@type render.md.UserConfig
+      opts = {},
+  },
+
+  {
+    "yousefhadder/markdown-plus.nvim",
+    ft = "markdown",
+    opts = {},
   },
 
   -- Motion hints
