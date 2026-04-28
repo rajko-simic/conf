@@ -91,7 +91,7 @@ M.ui = {
         if rawget(vim, "lsp") then
           for _, client in ipairs(vim.lsp.get_clients()) do
             if client.attached_buffers[require("nvchad.stl.utils").stbufnr()] then
-              return (vim.o.columns > 100 and "%#St_Lsp#   " .. client.name .. " ") or "%#St_Lsp#   LSP "
+              return (vim.o.columns > 100 and "%#St_Lsp# " .. client.name .. " ") or "%#St_Lsp# LSP"
             end
           end
         end
