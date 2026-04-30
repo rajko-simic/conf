@@ -308,4 +308,14 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     config = true,
   },
+
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    opts = require("nvchad.configs.noice"), -- adjust path to match your setup
+  }
 }

@@ -39,6 +39,7 @@ M.ensure_installed = {
   "properties",
   "python",
   "query",
+  "regex",
   "rust",
   "sql",
   "ssh_config",
