@@ -2,7 +2,6 @@ require("nvchad.configs.lspconfig").defaults()
 
 local servers = {
   "bashls",
-    -- "dartls",
   "dockerls",
   "gopls",
   "graphql",
@@ -16,10 +15,14 @@ local servers = {
   "rust_analyzer",
   "sqlls",
   "terraformls",
+  "toplo",
   "vimls",
   "yamlls",
   "ts_ls",
   "eslint",
+  "html",
+  "cssls",
+  "emmet_ls",
 }
 
 vim.lsp.enable(servers)

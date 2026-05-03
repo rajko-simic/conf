@@ -20,6 +20,7 @@ M.opts = {
     -- Formatters & Linters
     "buf",
     "ktlint",
+    "eslint-lsp",
     "gofumpt",
     "golangci-lint",
     "gdtoolkit",
@@ -55,6 +56,11 @@ M.opts = {
     "css-lsp",
     "cypher-language-server",
     "docker-compose-language-service",
+    "html-lsp",
+    "typescript-language-server",
+    "emmet-ls",
+    "tailwindcss-language-server",
+    "taplo",
   }
 }
 

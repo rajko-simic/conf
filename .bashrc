@@ -84,3 +84,5 @@ function y() {
 
 # opencode
 export PATH=/home/rajko/.opencode/bin:$PATH
+
+eval "$(starship init bash)"

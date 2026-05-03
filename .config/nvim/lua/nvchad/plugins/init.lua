@@ -18,6 +18,8 @@ return {
 
   "nvzone/volt",
   "nvzone/menu",
+  "rafamadriz/friendly-snippets",
+  "pmizio/typescript-tools.nvim",
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
 
 
