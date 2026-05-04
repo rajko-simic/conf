@@ -18,9 +18,6 @@ $php\
 $dotnet\
 $dart\
 $lua\
-$claude_model\
-$claude_context\
-$claude_cost\
 $docker_context\
 [](fg:#212736 bg:#1d2230)\
 $battery\
@@ -109,20 +106,6 @@ symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol $context ](fg:#769ff0 bg:#212736)]($style)'
 only_with_files = true
-
-[claude_model]
-symbol = "󰧑 "
-style = "bg:#212736"
-format = '[[ $symbol$model ](fg:#769ff0 bg:#212736)]($style)'
-
-[claude_context]
-style = "bg:#212736"
-format = '[[ $gauge $percentage ](fg:#769ff0 bg:#212736)]($style)'
-
-[claude_cost]
-symbol = "󰁪 "
-style = "bg:#212736"
-format = '[[ $symbol$cost ](fg:#769ff0 bg:#212736)]($style)'
 
 [lua]
 symbol = ""
