@@ -213,7 +213,12 @@ return {
       "nvim-lua/plenary.nvim",
       "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter",
+      "Nsidorenco/neotest-vstest",
     },
+    event = "VeryLazy",
+    config = function()
+      require "nvchad.configs.neotest"
+    end,
   },
 
   -- Notification UI
@@ -281,6 +286,18 @@ return {
     config = function()
       require 'nvchad.configs.symbolusage'
     end,
+  },
+
+  -- C# / .NET LSP (Roslyn)
+  {
+    "seblyng/roslyn.nvim",
+    ft = { "cs", "razor", "cshtml", "csproj", "sln", "slnx" },
+    ---@module 'roslyn.config'
+    ---@type RoslynNvimConfig
+    opts = {
+      broad_search = true,
+      filewatching = "auto",
+    },
   },
 
   -- Dotnet / C#

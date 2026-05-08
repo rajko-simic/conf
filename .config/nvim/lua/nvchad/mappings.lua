@@ -122,6 +122,18 @@ map("n", "<leader>gd", "<cmd>Gitsigns toggle_deleted<cr>", {desc = "Git Toggle D
 map("n", "<leader>ga", "<cmd>Gitsigns attach<cr>", {desc = "Gitlens Attach"})
 map("n", "<leader>gc", "<cmd>Gitsigns show_commit<cr>", {desc = "Git Show Commit"})
 
+-- Neotest (language-agnostic)
+map("n", "<leader>Tt", function() require("neotest").run.run() end,                                        { desc = "Neotest run nearest" })
+map("n", "<leader>Tf", function() require("neotest").run.run(vim.fn.expand("%")) end,                      { desc = "Neotest run file" })
+map("n", "<leader>Ta", function() require("neotest").run.run(vim.uv.cwd()) end,                            { desc = "Neotest run all" })
+map("n", "<leader>Td", function() require("neotest").run.run({ strategy = "dap" }) end,                    { desc = "Neotest debug nearest" })
+map("n", "<leader>Tl", function() require("neotest").run.run_last() end,                                   { desc = "Neotest run last" })
+map("n", "<leader>TL", function() require("neotest").run.run_last({ strategy = "dap" }) end,               { desc = "Neotest debug last" })
+map("n", "<leader>Ts", function() require("neotest").summary.toggle() end,                                 { desc = "Neotest summary toggle" })
+map("n", "<leader>To", function() require("neotest").output.open({ enter = true, auto_close = true }) end, { desc = "Neotest output" })
+map("n", "<leader>TO", function() require("neotest").output_panel.toggle() end,                            { desc = "Neotest output panel" })
+map("n", "<leader>Tx", function() require("neotest").run.stop() end,                                       { desc = "Neotest stop" })
+
 --Precognition
 map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
 
