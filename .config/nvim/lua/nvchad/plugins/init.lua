@@ -304,6 +304,7 @@ return {
   {
     "GustavEikaas/easy-dotnet.nvim",
     ft = { "cs", "csproj", "sln", "slnx", "props", "csx", "targets" },
+    cmd = { "Dotnet" },
     dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
     config = function()
       require "nvchad.configs.easydotnet"
@@ -317,8 +318,12 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "stevearc/dressing.nvim",
+      "nvim-telescope/telescope.nvim",
     },
-    config = true,
+    config = function()
+      require("flutter-tools").setup({})
+      pcall(require("telescope").load_extension, "flutter")
+    end,
   },
 
   {
