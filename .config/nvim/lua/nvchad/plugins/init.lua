@@ -52,7 +52,6 @@ return {
   -- File tree
   {
     "nvim-tree/nvim-tree.lua",
-    lazy = false,
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     opts = function()
       return require "nvchad.configs.nvimtree"
@@ -165,7 +164,7 @@ return {
   -- Sticky context header
   {
     "nvim-treesitter/nvim-treesitter-context",
-    lazy = false,
+    event = "User FilePost",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {},
   },
@@ -182,7 +181,7 @@ return {
   -- DAP UI
   {
     "igorlfs/nvim-dap-view",
-    lazy = false,
+    event = "VeryLazy",
     version = "1.*",
     config = function()
       require "nvchad.configs.dapview"
@@ -240,7 +239,6 @@ return {
   {
     "ThePrimeagen/refactoring.nvim",
     event = "VeryLazy",
-    lazy = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
