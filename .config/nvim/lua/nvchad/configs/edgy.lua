@@ -3,7 +3,7 @@ return {
   wo = {
     winbar = false,
   },
-  left = {
+  right = {
     {
       title = "Files",
       ft = "NvimTree",
@@ -34,7 +34,7 @@ return {
       size = { height = 0.25 },
     },
   },
-  right = {
+  left = {
     {
       title = "Neotest",
       ft = "neotest-summary",
