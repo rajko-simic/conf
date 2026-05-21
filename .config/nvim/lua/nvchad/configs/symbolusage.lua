@@ -1,65 +1,57 @@
 local SymbolKind = vim.lsp.protocol.SymbolKind
 
--- Bubble-style highlight groups
-local function h(name) return vim.api.nvim_get_hl(0, { name = name }) end
+local function h(name)
+  return vim.api.nvim_get_hl(0, { name = name })
+end
 
-vim.api.nvim_set_hl(0, 'SymbolUsageRounding', { fg = h('CursorLine').bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageContent', { bg = h('CursorLine').bg, fg = h('Comment').fg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageRef',  { fg = h('Function').fg, bg = h('CursorLine').bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageDef',  { fg = h('Type').fg,     bg = h('CursorLine').bg, italic = true })
-vim.api.nvim_set_hl(0, 'SymbolUsageImpl', { fg = h('@keyword').fg, bg = h('CursorLine').bg, italic = true })
+vim.api.nvim_set_hl(0, "SymbolUsageContent", { fg = h("Comment").fg, italic = true })
+vim.api.nvim_set_hl(0, "SymbolUsageRef", { fg = h("Function").fg, italic = true })
+vim.api.nvim_set_hl(0, "SymbolUsageDef", { fg = h("Type").fg, italic = true })
+vim.api.nvim_set_hl(0, "SymbolUsageImpl", { fg = h("@keyword").fg, italic = true })
 
 ---@param symbol Symbol
 local function text_format(symbol)
   local res = {}
 
-  local round_start = { '', 'SymbolUsageRounding' }
-  local round_end   = { '', 'SymbolUsageRounding' }
-
-  -- Indicator for stacked symbols on the same line
-  local stacked = symbol.stacked_count > 0
-    and ('+%s'):format(symbol.stacked_count)
-    or ''
+  local stacked = symbol.stacked_count > 0 and ("+%s"):format(symbol.stacked_count) or ""
 
   if symbol.references then
-    local usage = symbol.references <= 1 and 'usage' or 'usages'
-    local num   = symbol.references == 0 and 'no' or symbol.references
-    table.insert(res, round_start)
-    table.insert(res, { '󰌹 ', 'SymbolUsageRef' })
-    table.insert(res, { ('%s %s'):format(num, usage), 'SymbolUsageContent' })
-    table.insert(res, round_end)
+    local usage = symbol.references <= 1 and "usage" or "usages"
+    local num = symbol.references == 0 and "no" or symbol.references
+    table.insert(res, { "󰌹 ", "SymbolUsageRef" })
+    table.insert(res, { ("%s %s"):format(num, usage), "SymbolUsageContent" })
   end
 
   if symbol.definition then
-    if #res > 0 then table.insert(res, { ' ', 'NonText' }) end
-    table.insert(res, round_start)
-    table.insert(res, { '󰳽 ', 'SymbolUsageDef' })
-    table.insert(res, { symbol.definition .. ' defs', 'SymbolUsageContent' })
-    table.insert(res, round_end)
+    if #res > 0 then
+      table.insert(res, { " ", "NonText" })
+    end
+    table.insert(res, { "󰳽 ", "SymbolUsageDef" })
+    table.insert(res, { symbol.definition .. " defs", "SymbolUsageContent" })
   end
 
   if symbol.implementation then
-    if #res > 0 then table.insert(res, { ' ', 'NonText' }) end
-    table.insert(res, round_start)
-    table.insert(res, { '󰡱 ', 'SymbolUsageImpl' })
-    table.insert(res, { symbol.implementation .. ' impls', 'SymbolUsageContent' })
-    table.insert(res, round_end)
+    if #res > 0 then
+      table.insert(res, { " ", "NonText" })
+    end
+    table.insert(res, { "󰡱 ", "SymbolUsageImpl" })
+    table.insert(res, { symbol.implementation .. " impls", "SymbolUsageContent" })
   end
 
-  if stacked ~= '' then
-    if #res > 0 then table.insert(res, { ' ', 'NonText' }) end
-    table.insert(res, round_start)
-    table.insert(res, { ' ', 'SymbolUsageImpl' })
-    table.insert(res, { stacked, 'SymbolUsageContent' })
-    table.insert(res, round_end)
+  if stacked ~= "" then
+    if #res > 0 then
+      table.insert(res, { " ", "NonText" })
+    end
+    table.insert(res, { " ", "SymbolUsageImpl" })
+    table.insert(res, { stacked, "SymbolUsageContent" })
   end
 
   return res
 end
 
-require('symbol-usage').setup({
+require("symbol-usage").setup {
   ---@type table<string, any> `nvim_set_hl`-like options for highlight virtual text
-  hl = { link = 'Comment' },
+  hl = { link = "Comment" },
 
   ---@type lsp.SymbolKind[] Symbol kinds to count
   kinds = {
@@ -77,7 +69,7 @@ require('symbol-usage').setup({
   kinds_filter = {},
 
   ---@type 'above'|'end_of_line'|'textwidth'|'signcolumn'
-  vt_position = 'above',
+  vt_position = "above",
 
   ---@type integer|nil Virtual text priority
   vt_priority = nil,
@@ -85,13 +77,13 @@ require('symbol-usage').setup({
   ---Text to display while the LSP request is pending.
   ---Use false to show nothing until the request finishes (avoids line jumping).
   ---@type string|table|false
-  request_pending_text = 'loading...',
+  request_pending_text = "loading...",
 
   ---Custom format function (bubble style — edit to taste)
   text_format = text_format,
 
-  references    = { enabled = true,  include_declaration = false },
-  definition    = { enabled = true },
+  references = { enabled = true, include_declaration = false },
+  definition = { enabled = true },
   implementation = { enabled = true },
 
   ---Disable for specific LSPs, filetypes, or custom conditions
@@ -102,7 +94,7 @@ require('symbol-usage').setup({
   -- filetypes = {},
 
   ---@type 'start'|'end' Where on selectionRange to send the LSP request from
-  symbol_request_pos = 'end',
+  symbol_request_pos = "end",
 
   ---Optional filter for references/definitions/implementations
   ---@type (fun(ctx: lsp.HandlerContext):fun(symbol: lsp.Location): boolean)?
@@ -110,4 +102,4 @@ require('symbol-usage').setup({
 
   ---@type { enabled: boolean }
   log = { enabled = false },
-})
+}
