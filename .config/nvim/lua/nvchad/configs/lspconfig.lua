@@ -32,6 +32,10 @@ M.defaults = function()
   dofile(vim.g.base46_cache .. "lsp")
   require("nvchad.lsp").diagnostic_config()
 
+  vim.diagnostic.config {
+    virtual_text = { current_line = true },
+  }
+
   -- Disable native signature help — blink.cmp handles this
   vim.lsp.handlers["textDocument/signatureHelp"] = function() end
 
