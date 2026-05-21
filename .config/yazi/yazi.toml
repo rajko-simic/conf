@@ -1,9 +1,11 @@
 [[plugin.prepend_fetchers]]
 id   = "git"
-name = "*"
+group = "file"
+url = "*"
 run  = "git"
 
 [[plugin.prepend_fetchers]]
 id   = "git"
-name = "*/"
+group = "file"
+url = "*/"
 run  = "git"
