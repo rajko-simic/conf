@@ -286,18 +286,6 @@ return {
     end,
   },
 
-  -- C# / .NET LSP (Roslyn)
-  {
-    "seblyng/roslyn.nvim",
-    ft = { "cs", "razor", "cshtml", "csproj", "sln", "slnx" },
-    ---@module 'roslyn.config'
-    ---@type RoslynNvimConfig
-    opts = {
-      broad_search = true,
-      filewatching = "auto",
-    },
-  },
-
   -- Dotnet / C#
   {
     "GustavEikaas/easy-dotnet.nvim",

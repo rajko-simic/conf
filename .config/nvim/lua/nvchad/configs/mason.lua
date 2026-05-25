@@ -12,8 +12,7 @@ M.opts = {
     },
   },
   registries = {
-      "github:mason-org/mason-registry",
-      "github:Crashdummyy/mason-registry",
+    "github:mason-org/mason-registry",
   },
   max_concurrent_installers = 10,
   ensure_installed = {

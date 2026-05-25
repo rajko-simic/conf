@@ -24,7 +24,7 @@ local function open_flutter()
 end
 
 function M.open()
-  if has_client("roslyn") then
+  if has_client("easy_dotnet") then
     vim.cmd("Dotnet")
     return
   end
