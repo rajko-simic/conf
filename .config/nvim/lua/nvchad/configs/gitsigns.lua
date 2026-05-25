@@ -6,5 +6,4 @@ return {
     changedelete = { text = "󱕖" },
   },
   numhl = true,
-  current_line_blame = true
 }
