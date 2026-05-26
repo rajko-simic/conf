@@ -53,14 +53,20 @@ M.opts = {
     "azure-pipelines-language-server",
     "bash-language-server",
     "bicep-lsp",
+    "cmake-language-server",
     "css-lsp",
     "cypher-language-server",
     "docker-compose-language-service",
+    "gh-actions-language-server",
+    "harper-ls",
     "html-lsp",
+    "lemminx",
+    "nil",
     "typescript-language-server",
     "emmet-ls",
     "tailwindcss-language-server",
     "taplo",
+    "typos-lsp",
   }
 }
 
