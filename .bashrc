@@ -65,6 +65,7 @@ export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$(go env GOPATH)/bin
+export PATH="$PATH:$HOME/.dotnet/tools"
 
 alias azurite='azurite -l /home/rajko/.azurite/ '
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
