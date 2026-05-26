@@ -52,6 +52,7 @@ M.opts = {
     "golangci-lint-langserver",
     "azure-pipelines-language-server",
     "bash-language-server",
+    "bicep-lsp",
     "css-lsp",
     "cypher-language-server",
     "docker-compose-language-service",

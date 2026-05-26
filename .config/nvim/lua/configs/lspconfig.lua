@@ -2,6 +2,7 @@ require("nvchad.configs.lspconfig").defaults()
 
 local servers = {
   "bashls",
+  "bicep",
   "dockerls",
   "gopls",
   "graphql",
@@ -11,6 +12,7 @@ local servers = {
   "lua_ls",
   "marksman",
   "nginx_language_server",
+  "powershell_es",
   "pyright",
   "rust_analyzer",
   "sqlls",
