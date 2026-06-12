@@ -143,5 +143,6 @@ map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition tog
 --Basic Settings
 map("n", "<leader>sn", "<cmd>set nu!<CR>", { desc = "general toggle line number" })
 map("n", "<leader>sr", "<cmd>set rnu!<CR>", { desc = "general toggle relative number" })
+map("n", "<leader>sw", "<cmd>set wrap!<CR>", { desc = "general toggle word wrap" })
 map("n", "<leader>sc", "<cmd>NvCheatsheet<CR>", { desc = "general toggle nvcheatsheet" })
 map("n", "<leader>st", function() require("nvchad.themes").open() end, { desc = "telescope nvchad themes" })
