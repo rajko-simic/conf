@@ -5,8 +5,8 @@ hash = "92fbb5483657fa7976cdf4e0104e18e0"
 
 [[plugin.deps]]
 use = "MasouShizuka/projects"
-rev = "198c2ba"
-hash = "5eeb4f0919ce6be5d941a9290c131d7d"
+rev = "112a270"
+hash = "5a4e61f8cae42be53844acaa6c447d96"
 
 [[plugin.deps]]
 use = "Lil-Dank/lazygit"
@@ -20,7 +20,7 @@ hash = "869884767c2ef592bfb7f5764f8fcae3"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "c2c16c8"
+rev = "598cdb6"
 hash = "88e56a64b7ce7c4314427452343fef17"
 
 [[plugin.deps]]
@@ -30,27 +30,27 @@ hash = "eed89e75671723c8f9390a2862af0e4e"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "c2c16c8"
+rev = "598cdb6"
 hash = "e3260d0b1feded8c8e3ae3afa1169e30"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "c2c16c8"
+rev = "598cdb6"
 hash = "8b1af6b5a69797ee951f2a80ce570818"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:lsar"
-rev = "c2c16c8"
+rev = "598cdb6"
 hash = "c1c66e28145e28e581e74e2d6da4fdf1"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mime-ext"
-rev = "c2c16c8"
+rev = "598cdb6"
 hash = "2678c84a0b3a0b22504e918ccaf99011"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-filter"
-rev = "c2c16c8"
+rev = "598cdb6"
 hash = "c887903a63a2ff520081b6d90a4b3392"
 
 [flavor]

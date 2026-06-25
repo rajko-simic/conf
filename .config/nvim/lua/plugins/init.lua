@@ -17,17 +17,17 @@ return {
   -- { import = "nvchad.blink.lazyspec" },
 
   -- Window layout manager
-  {
-    "folke/edgy.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.opt.laststatus = 3
-      vim.opt.splitkeep = "screen"
-    end,
-    opts = function()
-      return require "nvchad.configs.edgy"
-    end,
-  },
+  -- {
+  --   "folke/edgy.nvim",
+  --   event = "VeryLazy",
+  --   init = function()
+  --     vim.opt.laststatus = 3
+  --     vim.opt.splitkeep = "screen"
+  --   end,
+  --   opts = function()
+  --     return require "nvchad.configs.edgy"
+  --   end,
+  -- },
 
   -- LSP UI (peek definition, line diagnostics, code action picker)
   {
