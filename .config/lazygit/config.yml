@@ -3,8 +3,9 @@ gui:
   showFileIcons: true
   nerdFontsVersion: "3"
   splitDiff: false
-  sidePanelWidth: 0.2
+  sidePanelWidth: 0.3
 git:
   paging:
+    diffContextSize: 1000
     colorArg: always
     pager: delta --side-by-side --paging=never --line-numbers
