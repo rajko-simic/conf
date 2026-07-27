@@ -105,8 +105,9 @@ map("n", "<leader>dm", function() require("dap-view").navigate { count = 1, wrap
 map("n", "<leader>dn", function() require("dap-view").navigate { count = -1, wrap = true } end, { desc = "DapView Prev View" })
 map("n", "<leader>di", function() require("dap-view").virtual_text_toggle() end, { desc = "DapView Toggle Virtual Text" })
 
--- Dotnet / Flutter command picker (context-aware)
-map("n", "<leader>cd", function() require("nvchad.configs.cmdpicker").open() end, { desc = "Dotnet/Flutter command picker" })
+-- Project command picker (detects toolchain from project root, not buffer)
+map("n", "\\", function() require("nvchad.configs.cmdpicker").open() end, { desc = "Project command picker" })
+map("n", "<leader>cd", function() require("nvchad.configs.cmdpicker").open() end, { desc = "Project command picker" })
 
 --Trouble
 map("n", "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Trouble Diagnostics" })
