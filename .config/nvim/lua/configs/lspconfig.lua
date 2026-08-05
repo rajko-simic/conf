@@ -1,4 +1,4 @@
-require("nvchad.configs.lspconfig").defaults()
+require("configs.lsp").defaults()
 
 local servers = {
   "bashls",
@@ -11,7 +11,6 @@ local servers = {
   "gh_actions_ls",
   "gopls",
   "graphql",
-  "groovyls",
   "harper_ls",
   "html",
   "jsonls",
