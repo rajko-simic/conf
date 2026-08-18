@@ -12,14 +12,15 @@ local function search_root()
   return vim.uv.cwd()
 end
 
--- A provider is active when its project marker is somewhere above us, or when
--- its language server is already running anywhere in this session.
+-- A provider is active when its project marker is somewhere above us, when its
+-- language server is already running anywhere in this session, or when its
+-- optional deep scan finds a project below us.
 local function detect()
   local root, matched = search_root(), {}
 
   for _, p in ipairs(providers) do
     local marker = vim.fs.find(p.match, { path = root, upward = true, type = "file", limit = 1 })[1]
-    if marker or (p.lsp and #vim.lsp.get_clients { name = p.lsp } > 0) then
+    if marker or (p.lsp and #vim.lsp.get_clients { name = p.lsp } > 0) or (p.deep and p.deep()) then
       table.insert(matched, p)
     end
   end

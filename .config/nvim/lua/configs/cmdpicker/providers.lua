@@ -7,6 +7,7 @@
 --   ensure   optional extra step to make the plugin's commands exist
 --   lsp      LSP client name that also implies this toolchain is active
 --   match    predicate over a filename, searched upward from the buffer/cwd
+--   deep     optional fallback: scan downward when nothing matched upward
 --   commands opens the toolchain's own command picker
 
 local function ends_with(name, suffix)
@@ -36,7 +37,11 @@ return {
     end,
     lsp = "dartls",
     match = function(name) return name == "pubspec.yaml" end,
+    -- repo root opened with the flutter project in a subfolder: nothing matches
+    -- upward, so look below (bounded scan; discover never loads flutter-tools)
+    deep = function() return #require("configs.flutter.discover").projects(vim.uv.cwd()) > 0 end,
     commands = function()
+      require("configs.flutter").refresh()
       pcall(require("telescope").load_extension, "flutter")
       vim.cmd "Telescope flutter commands"
     end,

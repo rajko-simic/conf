@@ -25,8 +25,7 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     config = function()
-      require("flutter-tools").setup {}
-      pcall(require("telescope").load_extension, "flutter")
+      require "configs.flutter"
     end,
   },
 
