@@ -38,3 +38,8 @@ desc = "Mount, unmount, and eject functionality"
 on   = "F"
 run  = "plugin smart-filter"
 desc = "Smart filter"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "t" ]
+run  = "shell --orphan --confirm konsole --workdir ."
+desc = "Open Konsole here" 

@@ -58,3 +58,4 @@ source ~/.bash-preexec.sh
 
 eval "$(starship init bash)"
 eval "$(atuin init bash --disable-up-arrow)"
+export PATH=$PATH:$HOME/.local/bin
