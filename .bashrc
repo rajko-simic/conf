@@ -40,6 +40,25 @@ alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias ldn='dotnet Lazydotnet'
 alias ldf='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias cointop='flatpak run --branch=stable --arch=x86_64 --command=cointop com.github.miguelmota.Cointop'
+alias ls='eza -lh --group-directories-first --icons=auto --octal-permissions'
+alias lsa='ls -a'
+alias lt='eza --tree --level=2 --long --icons=auto --group-directories-first --git --octal-permissions'
+alias lta='lt -a'
+alias ..='cd ..'
+
+# cd noargs go home, else to dir
+if command -v zoxide &> /dev/null; then
+  alias cd="zd"
+  zd() {
+    if [ $# -eq 0 ]; then
+      builtin cd ~ && return
+    elif [ -d "$1" ]; then
+      builtin cd "$1"
+    else
+      z "$@" && printf "\U000F17A9 " && pwd || echo "Error: Directory not found"
+    fi
+  }
+fi
 
 #yazi stay in folder after quit (q)
 function y() {
@@ -58,4 +77,4 @@ source ~/.bash-preexec.sh
 
 eval "$(starship init bash)"
 eval "$(atuin init bash --disable-up-arrow)"
-export PATH=$PATH:$HOME/.local/bin
+eval "$(zoxide init bash)"

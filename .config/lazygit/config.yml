@@ -5,7 +5,7 @@ gui:
   splitDiff: false
   sidePanelWidth: 0.3
 git:
+  diffContextSize: 1000
   paging:
-    diffContextSize: 1000
     colorArg: always
     pager: delta --side-by-side --paging=never --line-numbers
