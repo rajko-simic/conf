@@ -60,7 +60,7 @@ if command -v zoxide &> /dev/null; then
   }
 fi
 
-#yazi stay in folder after quit (q)
+# yazi: cd the shell to yazi's last dir on quit (also keeps the OSC 7 report accurate)
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
@@ -74,6 +74,27 @@ if [[ ! -f ~/.bash-preexec.sh ]]; then
     curl -o ~/.bash-preexec.sh https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh
 fi
 source ~/.bash-preexec.sh
+
+# Report cwd to the terminal (OSC 7) so new Konsole tabs/windows inherit it,
+# and so Konsole's reported url doesn't stay stuck on Yazi's last directory.
+__osc7_cwd() {
+	local ret=$?
+	if [[ -x /usr/libexec/vte-urlencode-cwd ]]; then
+		printf '\e]7;file://%s\e\\' "$(/usr/libexec/vte-urlencode-cwd)"
+	else
+		local LC_ALL=C url="" i ch
+		for ((i = 0; i < ${#PWD}; i++)); do
+			ch=${PWD:i:1}
+			case $ch in
+				[-_.~/A-Za-z0-9]) url+=$ch ;;
+				*) printf -v ch '%%%02X' "'$ch"; url+=$ch ;;
+			esac
+		done
+		printf '\e]7;file://%s\e\\' "$url"
+	fi
+	return $ret
+}
+precmd_functions+=(__osc7_cwd)
 
 eval "$(starship init bash)"
 eval "$(atuin init bash --disable-up-arrow)"
