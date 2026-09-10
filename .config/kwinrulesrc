@@ -1,0 +1,10 @@
+[General]
+rules=
+
+[bd4e6173-9253-4fac-a7c6-6d971c1ac501]
+above=true
+aboverule=3
+
+[e67d4f8d-17d1-4dd2-9cb5-6529ce964910]
+noborder=true
+noborderrule=3
