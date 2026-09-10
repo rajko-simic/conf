@@ -25,3 +25,23 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
     end
   end,
 })
+
+-- Report the cwd to the terminal (OSC 7) so a new Konsole tab/window opened from
+-- this one starts in the current project, not where nvim was launched. Empty host
+-- on purpose: Konsole only accepts file:// urls whose host is empty or matches the
+-- machine hostname.
+local function osc7_encode(path)
+  return (path:gsub("[^A-Za-z0-9%-%._~/]", function(c)
+    return string.format("%%%02X", string.byte(c))
+  end))
+end
+
+autocmd("DirChanged", {
+  group = vim.api.nvim_create_augroup("Osc7Cwd", { clear = true }),
+  callback = function()
+    local cwd = vim.uv.cwd()
+    if cwd then
+      vim.api.nvim_ui_send("\27]7;file://" .. osc7_encode(cwd) .. "\27\\")
+    end
+  end,
+})
