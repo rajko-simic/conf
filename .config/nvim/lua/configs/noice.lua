@@ -29,7 +29,12 @@ return {
         winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
       },
     },
+    mini = {
+      timeout = 3000,
+      format = { "{level_text}" },
+    },
   },
+  notify = { enabled = true, view = "mini" },
   messages = { enabled = true },
   lsp = {
     override = {

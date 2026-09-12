@@ -12,6 +12,11 @@ M.base46 = {
 		Comment = { italic = true },
 		["@comment"] = { italic = true },
 	},
+	hl_add = {
+		NoiceNotifyInfo = { fg = "green" },
+		NoiceNotifyWarn = { fg = "yellow" },
+		NoiceNotifyError = { fg = "red" },
+	},
 }
 
 M.cheatsheet = {
