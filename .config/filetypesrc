@@ -5,6 +5,7 @@ embed-application/x-matroska=false
 embed-application/x-yaml=false
 embed-application/yaml=false
 embed-inode/directory=false
+embed-text/calendar=false
 embed-text/markdown=false
 embed-text/plain=false
 embed-text/x-cmake=false

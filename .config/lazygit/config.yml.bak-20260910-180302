@@ -6,6 +6,6 @@ gui:
   sidePanelWidth: 0.3
 git:
   diffContextSize: 1000
-  diffRenderers:
-    - colorArg: always
-      command: delta --side-by-side --paging=never --line-numbers
+  paging:
+    colorArg: always
+    pager: delta --side-by-side --paging=never --line-numbers

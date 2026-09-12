@@ -1,5 +1,14 @@
 # gvfs.yazi
 
+> [!IMPORTANT]
+> This repository is deprecated  
+> This project is no longer actively maintained,  
+> and there will be no more updates to this repository.  
+> If you've made a fork or a newer, actively maintained version of this project,  
+> feel free to share it in the Issues page.  
+> This way, newcomers can easily find an up-to-date alternative.
+> Forks, improvements, and alternative implementations are always welcome!
+
 <!-- toc -->
 
 - [Preview](#preview)
@@ -46,7 +55,7 @@ https://github.com/user-attachments/assets/fb74a710-5f05-4bf4-b95f-10f40583c5a0
 
 ## Requirements
 
-1. [yazi >= 25.5.31](https://github.com/sxyazi/yazi)
+1. [yazi >= 26.5.6 and <= v26.9.1](https://github.com/sxyazi/yazi)
 
 2. This plugin only supports Linux, and requires having [GLib](https://github.com/GNOME/glib), [gvfs](https://gitlab.gnome.org/GNOME/gvfs) (need D-Bus Session)
 
@@ -185,12 +194,15 @@ prepend_keymap = [
     #   -> remount this DEVIEC_1 if needed
     { on = [ "M", "R" ], run = "plugin gvfs -- remount-current-cwd-device", desc = "Remount device under cwd" },
 
+    # Unmount device.
+    #   -> Unmounted device can safely be removed, if it's not hard drive (usb drive, hdd, ssd, etc). e.g. mtp, etc.
     { on = [ "M", "u" ], run = "plugin gvfs -- select-then-unmount", desc = "Select device then unmount" },
-    # Or this if you want to unmount and eject device.
+    # Eject hard device (including both mounted or not mounted devices, and only show hard drives).
     #   -> Ejected device can safely be removed.
     #   -> Ejecting a device will unmount all paritions/volumes under it.
+    #   -> Ejected device CAN'T be mounted again. Re-plug the device to show it again.
     #   -> Fallback to normal unmount if not supported by device.
-    { on = [ "M", "u" ], run = "plugin gvfs -- select-then-unmount --eject", desc = "Select device then eject" },
+    { on = [ "M", "U" ], run = "plugin gvfs -- select-then-unmount --eject", desc = "Select device then eject" },
 
     # Also support force unmount/eject.
     #   -> Ignore outstanding file operations when unmounting or ejecting
@@ -248,39 +260,66 @@ prepend_keymap = [
 
 It's highly recommended to add these lines to your `~/.config/yazi/yazi.toml`,  
 because GVFS is slow that can make yazi freeze when it preloads or previews a large number of files.  
-Especially when you use `Google-drive` or `One-drive`.
+Especially when you use `Google-drive` or `One-drive`. Also please read this before adding these lines  
+to your `yazi.toml`:
+
+- https://yazi-rs.github.io/docs/configuration/overview#mixing
+- https://yazi-rs.github.io/docs/configuration/yazi#plugin
+
+> [!NOTE]
+> If you already have `preloaders` and `previewers` in your `yazi.toml`,
+> you can add all of `url...` directly to `preloaders` and `previewers`
+> instead of copy the whole `prepend_preloaders` and `prepend_previewers` to your `yazi.toml`.
+
+For example: https://github.com/boydaihungst/.config/blob/34fed94fb65230c550b9153d2fedf0cadc619be2/yazi/yazi.toml#L230-L338
 
 - Replace `1000` with your real user id (run `id -u` to get user id).
 - Replace `USER_NAME` with your real user name (run `whoami` to get username).
-
-> [!IMPORTANT]
->
-> For yazi (>=v25.12.29) replace `name` with `url`
 
 ```toml
 [plugin]
 prepend_preloaders = [
   # Do not preload files in mounted locations:
   # Environment variable won't work here.
+
   # Using absolute path instead.
-  { name = "/run/user/1000/gvfs/**/*", run = "noop" },
+  { url = "/run/user/1000/gvfs/**/*", run = "noop" },
+  # Or match any user id
+  { url = "/run/user/*/gvfs/**/*", run = "noop" },
 
   # For mounted hard disk/drive
-  { name = "/run/media/USER_NAME/**/*", run = "noop" },
+  { url = "/run/media/USER_NAME/**/*", run = "noop" },
+  # Or match any username
+  { url = "/run/media/*/**/*", run = "noop" },
+
+  # You can also use glob pattern to match paths
+  { url = "/run/user/*/gvfs/google-drive:host=gmail.com,user=*/**/*", run = "noop", prio = "high" },
+  { url = "/run/user/*/gvfs/google-drive:host=gmail.com,user=*/**/*/", run = "noop", prio = "high" },
+
 ]
 prepend_previewers = [
-  # Allow to preview folder.
-  { name = "*/", run = "folder" },
+  # Allow to preview folder by default.
+  # https://github.com/sxyazi/yazi/blob/main/yazi-config/preset/yazi-default.toml#L153
+  { url = "*/", run = "folder" }, # use this if you use yazi version <= 26.8.15
+  { url = "folder/*", run = "folder" }, # use this if you use yazi version > 26.8.15
 
   # Do not previewing files in mounted locations.
   # Uncomment the line below to allow previewing text files.
   # { mime = "{text/*,application/x-subrip}", run = "code" },
 
   # Using absolute path.
-  { name = "/run/user/1000/gvfs/**/*", run = "noop" },
+  { url = "/run/user/1000/gvfs/**/*", run = "noop" },
+  # Or match any user id
+  { url = "/run/user/*/gvfs/**/*", run = "noop" },
 
   # For mounted hard disk/drive.
-  { name = "/run/media/USER_NAME/**/*", run = "noop" },
+  { url = "/run/media/USER_NAME/**/*", run = "noop" },
+  # Or match any username
+  { url = "/run/media/*/**/*", run = "noop" },
+
+  # You can also use glob pattern to match paths
+  { url = "/run/user/*/gvfs/google-drive:host=gmail.com,user=*/**/*", run = "noop", prio = "high" },
+  { url = "/run/user/*/gvfs/google-drive:host=gmail.com,user=*/**/*/", run = "noop", prio = "high" },
 ]
 ```
 

@@ -1,0 +1,23 @@
+[user]
+	name = rajko
+	email = rajko@mingle.com
+[core]
+	autocrlf = input
+[credential]
+	helper = cache
+[delta]
+  side-by-side = true
+  line-numbers = true
+	syntax-theme = base16
+	minus-style = red
+	minus-emph-style = reverse red
+	plus-style = green
+	plus-emph-style = reverse green
+	line-numbers-minus-style = red
+	line-numbers-plus-style = green
+	line-numbers-zero-style = bright-black
+	hunk-header-style = file line-number syntax
+	hunk-header-decoration-style = bright-black box
+	file-style = blue bold
+	file-decoration-style = bright-black ul
+	blame-palette = black bright-black

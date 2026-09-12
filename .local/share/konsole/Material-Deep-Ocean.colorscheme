@@ -1,0 +1,118 @@
+# Konsole Color Scheme: Material Deep Ocean
+# Derived from the base46 "material-deep-ocean" palette used by Neovim (NvChad),
+# ~/.local/share/nvim/lazy/base46/lua/base46/themes/material-deep-ocean.lua
+#
+# Two deliberate deviations from base46's own g:terminal_color_*:
+#   1. base46 makes bright colors 9-14 identical to their normal counterparts.
+#      A terminal needs them distinct (BoldIntense, TUIs addressing bright slots),
+#      so the Intense variants are lifted toward white.
+#   2. base46 sets color7=#EEFFFF / color15=#B5B8C1 (bright dimmer than normal).
+#      Inverted here: Color7=#B5B8C1 (base07), Color7Intense=#EEFFFF (base05).
+#   3. Color0 is lifted from the background to #23293E so ANSI-black stays visible.
+
+[Background]
+Color=15,17,26
+
+[BackgroundFaint]
+Color=10,11,20
+
+[BackgroundIntense]
+Color=25,29,44
+
+# --- Black --- base01 lifted off the background so black text stays readable
+[Color0]
+Color=35,41,62
+
+[Color0Faint]
+Color=25,29,44
+
+[Color0Intense]
+Color=55,65,98
+
+# --- Red --- #F07178
+[Color1]
+Color=240,113,120
+
+[Color1Faint]
+Color=122,58,62
+
+[Color1Intense]
+Color=246,170,174
+
+# --- Green --- #C3E88D
+[Color2]
+Color=195,232,141
+
+[Color2Faint]
+Color=98,112,69
+
+[Color2Intense]
+Color=221,255,167
+
+# --- Yellow --- #FFCB6B
+[Color3]
+Color=255,203,107
+
+[Color3Faint]
+Color=128,101,56
+
+[Color3Intense]
+Color=255,229,133
+
+# --- Blue --- #82AAFF
+[Color4]
+Color=130,170,255
+
+[Color4Faint]
+Color=65,85,128
+
+[Color4Intense]
+Color=156,196,255
+
+# --- Magenta --- #C792EA
+[Color5]
+Color=199,146,234
+
+[Color5Faint]
+Color=100,73,117
+
+[Color5Intense]
+Color=225,172,255
+
+# --- Cyan --- #89DDFF
+[Color6]
+Color=137,221,255
+
+[Color6Faint]
+Color=68,111,128
+
+[Color6Intense]
+Color=163,247,255
+
+# --- White --- normal #B5B8C1 (base07), intense #EEFFFF (base05)
+# This slot is body text for every ANSI-following app (bat, delta, starship).
+[Color7]
+Color=181,184,193
+
+[Color7Faint]
+Color=90,107,161
+
+[Color7Intense]
+Color=238,255,255
+
+[Foreground]
+Color=238,255,255
+
+[ForegroundFaint]
+Color=90,107,161
+
+[ForegroundIntense]
+Color=255,255,255
+
+[General]
+Blur=false
+ColorRandomization=false
+Description=Material Deep Ocean
+Opacity=1
+Wallpaper=
+WallpaperOpacity=1

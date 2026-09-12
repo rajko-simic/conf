@@ -96,6 +96,23 @@ __osc7_cwd() {
 }
 precmd_functions+=(__osc7_cwd)
 
+# ---- Terminal-following colors ----
+# Everything below references the terminal's 16 ANSI slots, never hex, so the
+# whole CLI stack retints when the Konsole colorscheme changes.
+
+# ls / eza: GNU default database (16-color). eza's own defaults are ANSI too,
+# so no EZA_COLORS override -- adding one would re-pin colors to hex.
+[ -f ~/.dircolors ] && eval "$(dircolors -b ~/.dircolors)"
+
+# fzf: --color=16 selects the ANSI base scheme; numbers are slot indices,
+# -1 inherits from the terminal (keeps transparency working).
+export FZF_DEFAULT_OPTS="--color=16 \
+--color=fg:-1,bg:-1,gutter:-1,query:-1 \
+--color=fg+:15,bg+:8,hl:4,hl+:6 \
+--color=info:5,prompt:1,pointer:1,marker:2,spinner:3 \
+--color=header:8,border:8,disabled:8,scrollbar:8"
+# ---- end terminal-following colors ----
+
 eval "$(starship init bash)"
 eval "$(atuin init bash --disable-up-arrow)"
 eval "$(zoxide init bash)"
