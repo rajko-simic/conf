@@ -1,0 +1,128 @@
+# Konsole Color Scheme: Material Lighter
+# Light counterpart of Material-Deep-Ocean.colorscheme, derived from the base46
+# "material-lighter" palette used by Neovim (NvChad),
+# ~/.local/share/nvim/lazy/base46/lua/base46/themes/material-lighter.lua
+#
+# Slots map to the same base46 keys as Material-Deep-Ocean so apps look alike in both.
+# Deliberate deviations from base46, all for readability on a light background:
+#   1. Accents darkened (hue kept) to >= 4.5:1 contrast against #FAFAFA:
+#      Red      #E53935 (4.05:1) -> #DF211D (4.60:1)
+#      Green    #91B859 (2.19:1) -> #5E7B35 (4.61:1)
+#      Yellow   #F59717 (2.16:1) -> #A46207 (4.65:1)
+#      Blue     #6182B8 (3.73:1) -> #4E72AD (4.64:1)
+#      Cyan     #39ADB5 (2.57:1) -> #297D83 (4.62:1)
+#   2. Intense variants go darker and more saturated (the dark scheme lifts them
+#      toward white) so BoldIntense text keeps its contrast.
+#   3. Faint variants are a 50% mix toward the background.
+#   4. light_grey (#B3B3B3) is unreadable here; ForegroundFaint, Color7Faint and
+#      Color0Intense use base06 #7E8EAA instead.
+#   5. Color7=#546E7A (base07), Color7Intense=#435862 (base05), mirroring the dark scheme.
+#   6. Color0 is one_bg3 #D9D9D9, lifted off the background by the same contrast
+#      as the dark scheme's Color0, so ANSI-black stays visible.
+
+[Background]
+Color=250,250,250
+
+[BackgroundFaint]
+Color=242,242,242
+
+[BackgroundIntense]
+Color=235,235,235
+
+# --- Black --- one_bg3 lifted off the background so black text stays visible
+[Color0]
+Color=217,217,217
+
+[Color0Faint]
+Color=235,235,235
+
+[Color0Intense]
+Color=126,142,170
+
+# --- Red --- #E53935 -> #DF211D
+[Color1]
+Color=223,33,29
+
+[Color1Faint]
+Color=236,142,140
+
+[Color1Intense]
+Color=189,15,12
+
+# --- Green --- #91B859 -> #5E7B35
+[Color2]
+Color=94,123,53
+
+[Color2Faint]
+Color=172,186,152
+
+[Color2Intense]
+Color=67,91,34
+
+# --- Yellow --- #F59717 -> #A46207
+[Color3]
+Color=164,98,7
+
+[Color3Faint]
+Color=207,174,128
+
+[Color3Intense]
+Color=120,70,0
+
+# --- Blue --- #6182B8 -> #4E72AD
+[Color4]
+Color=78,114,173
+
+[Color4Faint]
+Color=164,182,212
+
+[Color4Intense]
+Color=56,89,144
+
+# --- Magenta --- #7C4DFF
+[Color5]
+Color=124,77,255
+
+[Color5Faint]
+Color=187,164,252
+
+[Color5Intense]
+Color=86,26,255
+
+# --- Cyan --- #39ADB5 -> #297D83
+[Color6]
+Color=41,125,131
+
+[Color6Faint]
+Color=146,188,190
+
+[Color6Intense]
+Color=24,92,97
+
+# --- White --- normal #546E7A (base07), intense #435862 (base05)
+# This slot is body text for every ANSI-following app (bat, delta, starship).
+[Color7]
+Color=84,110,122
+
+[Color7Faint]
+Color=126,142,170
+
+[Color7Intense]
+Color=67,88,98
+
+[Foreground]
+Color=67,88,98
+
+[ForegroundFaint]
+Color=126,142,170
+
+[ForegroundIntense]
+Color=38,50,56
+
+[General]
+Blur=false
+ColorRandomization=false
+Description=Material Lighter
+Opacity=1
+Wallpaper=
+WallpaperOpacity=1

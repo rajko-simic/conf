@@ -9,6 +9,11 @@ ConfigVersion=1
 [KonsoleWindow]
 ShowWindowTitleOnTitleBar=true
 
+[LightDarkTheme]
+DarkThemeProfile=Material-Deep-Ocean
+LightThemeProfile=Material-Lighter
+SyncProfileWithSystemTheme=true
+
 [MainWindow]
 MenuBar=Disabled
 ToolBarsMovable=Enabled
