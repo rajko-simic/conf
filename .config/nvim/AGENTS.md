@@ -36,15 +36,15 @@ are relative to the cwd, hence the `:/`-prefixed form above.
 | `lua/chadrc.lua` | NvChad UI config (theme, dashboard, tabufline, terminal) — mirrors `nvconfig.lua` from `nvchad/ui` |
 | `lua/options.lua` | All `vim.opt`/`vim.o` settings |
 | `lua/mappings.lua` | All global keymaps (see **Keymaps** below) |
-| `lua/filetypes.lua` | **All** `vim.filetype.add` rules (DevOps toolchains). Required from `init.lua` *before* `lazy.setup` |
+| `lua/filetypes.lua` | **All** `vim.filetype.add` rules (DevOps toolchains, MSBuild fragments). Required from `init.lua` *before* `lazy.setup` |
 | `lua/autocmds.lua` | Autocommands, incl. the `User FilePost` event most plugins lazy-load on |
 | `lua/plugins/*.lua` | **Plugin specs, split by domain** — see below |
 | `lua/configs/*.lua` | Per-plugin config (dap, treesitter, mason, telescope, blink, …) |
 | `lua/configs/lsp.lua` | Shared LSP behaviour: `on_attach` keymaps, capabilities, diagnostics, `defaults()` |
 | `lua/configs/lspconfig.lua` | Calls `configs.lsp.defaults()`, then the server list for `vim.lsp.enable()` |
 | `lua/configs/lazy.lua` | lazy.nvim options (all plugins lazy by default) |
-| `lsp/*.lua` | Legacy per-server overrides — **loses to nvim-lspconfig**, see **LSP** below |
-| `after/lsp/*.lua` | Per-server `vim.lsp.config` overrides that actually win |
+| `after/lsp/*.lua` | **All** per-server overrides, one file per server. There is deliberately no `lsp/` dir — see **LSP** |
+| `lua/lsp_overrides/health.lua` | `:checkhealth lsp_overrides` — flags an override that has drifted into a no-op |
 | `snippets/` | blink.cmp's default snippet search path (`package.json` + per-language JSON) |
 | `themes/vs2022.lua` | Custom base46 theme (base_30 + base_16 palette) |
 
@@ -108,7 +108,15 @@ Run formatter: `stylua <file>` (installed via Mason). Note `lua/mappings.lua` an
 
 Servers are listed in `lua/configs/lspconfig.lua` and enabled via `vim.lsp.enable(servers)`. To add a server: append its name to the `servers` table, then ensure it is installed via Mason (`lua/configs/mason.lua`).
 
-**Per-server settings go in `after/lsp/<server>.lua`, not `lsp/<server>.lua`.** `vim.lsp.config` merges *every* `lsp/<name>.lua` found on the runtimepath with `tbl_deep_extend("force", ...)`, last one winning — and lazy.nvim puts plugin directories *after* `~/.config/nvim`, so nvim-lspconfig's bundled defaults overwrite anything set in `lsp/`. Measured: `~/.config/nvim` is rtp index 1, `nvim-lspconfig` is index 7, and the resolved `yamlls.filetypes` is lspconfig's four-element list rather than the three-element one in `lsp/yamlls.lua`. The files still in `lsp/` survive only on keys lspconfig happens not to set.
+**Overrides go in `after/lsp/<server>.lua`. There is no `lsp/` directory, and adding one is a mistake.** `vim.lsp.config` merges *every* `lsp/<name>.lua` on the runtimepath with `tbl_deep_extend("force", ...)`, last one winning, and lazy.nvim puts plugin directories *after* `~/.config/nvim`. Measured rtp indices: `~/.config/nvim` = **1**, `nvim-lspconfig` = **7**, `~/.config/nvim/after` = **18**. A file in `lsp/` is therefore overwritten by lspconfig on every key they both set; a file in `after/lsp/` always wins. This was not theoretical: `emmet_ls`'s narrowed filetype list was being ignored, so it attached to ~17 filetypes instead of the 5 configured, and `bicep` fell back to `.git` as its only root marker.
+
+**nvim-lspconfig is still required.** nvim 0.11+ owns the *mechanism* (`vim.lsp.config`, `vim.lsp.enable`, the `lsp/` runtime dir) but ships **zero** server definitions; `$VIMRUNTIME/lsp/` is empty while lspconfig ships 417. Of the 35 enabled servers, **19 have no local file at all** and exist only because lspconfig defines them.
+
+**An override contains only what differs from upstream.** Never copy an upstream default in just to have it written down: it becomes a frozen snapshot that blocks future fixes, and since `after/` wins, a stale copy is actively harmful. Auditing the old `lsp/` directory found 7 of 16 files were exactly this — pure copies, or worse than upstream (a static `cmd` displacing lspconfig's function that prefers a project-local `node_modules/.bin` binary). Each file carries an `-- Inherited:` comment naming what it leaves to upstream.
+
+Run **`:checkhealth lsp_overrides`** after touching these; it reports any key that now equals upstream and should be deleted.
+
+A filetype that nothing ever produces is a dead entry. `csproj`, `props`, `targets` and `slnx` are *not* filetypes: nvim maps `.csproj`/`.slnx` to `xml`, and `.props`/`.targets` had no filetype at all until `lua/filetypes.lua` mapped them to `xml` too. Listing such names in a server's `filetypes` does nothing — fix detection in `lua/filetypes.lua` instead.
 
 To check what a server actually resolved to: `:lua =vim.lsp.config.<name>`.
 
@@ -120,7 +128,9 @@ DevOps servers and their overrides:
 |---|---|---|
 | `ansiblels` | `after/lsp/ansiblels.lua` | resolves `python3`/`ansible`/`ansible-lint` from PATH, falling back to the mason ansible-lint venv. Needs `ansible-core` + `ansible-lint` from dnf — mason has no `ansible`/`ansible-doc` package |
 | `helm_ls` | `after/lsp/helm_ls.lua` | `helm-ls.yamlls.enabled = false`; it otherwise spawns a second yaml-language-server on values files |
-| `yamlls` | `lsp/yamlls.lua` + `after/lsp/yamlls.lua` | schemastore set, plus Kubernetes/manifest schema globs merged on top |
+| `yamlls` | `after/lsp/yamlls.lua` | schemastore set with Kubernetes/manifest globs merged in; inherits upstream's `cmd` and `filetypes` (the latter adds `yaml.helm-values`) |
+| `bicep` | `after/lsp/bicep.lua` | **load-bearing**: lspconfig deliberately ships no `cmd` for bicep, so without this the server cannot start |
+| `typos_lsp` | `after/lsp/typos_lsp.lua` | upstream sets no `filetypes`, and a nil list means the server attaches to *every* buffer |
 | `docker_language_server` | — | replaced `dockerls`; covers dockerfile, compose *and* bake HCL in one process |
 | `jinja_lsp` | — | validates *minijinja*, so `*.j2` Ansible templates show some false positives. Drop the name from `servers` to disable |
 | `rpmspec`, `systemd_lsp`, `tflint` | — | upstream defaults are fine |

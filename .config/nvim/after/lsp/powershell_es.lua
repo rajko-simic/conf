@@ -1,3 +1,7 @@
+-- Point at the mason-installed PowerShellEditorServices bundle. Upstream instead
+-- discovers the module by shelling out to `pwsh`, which is not installed here, so its
+-- cmd would fail to resolve.
+-- Inherited: filetypes, root_markers, init_options.
 ---@type vim.lsp.Config
 return {
   cmd = function(dispatchers)
@@ -12,6 +16,4 @@ return {
     )
     return vim.lsp.rpc.start({ "pwsh", "-NoLogo", "-NoProfile", "-Command", command }, dispatchers)
   end,
-  filetypes = { "ps1" },
-  root_markers = { "PSScriptAnalyzerSettings.psd1", ".git" },
 }

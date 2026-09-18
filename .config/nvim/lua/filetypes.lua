@@ -134,6 +134,11 @@ vim.filetype.add {
 
     -- dnf/yum repository files
     repo = "dosini",
+
+    -- MSBuild fragments. nvim already detects .csproj and .slnx as xml, but not these,
+    -- so they get no filetype and therefore no lemminx / typos_lsp at all.
+    props = "xml",
+    targets = "xml",
   },
 
   pattern = pattern,

@@ -1,15 +1,16 @@
--- Extra schema mappings layered on top of lsp/yamlls.lua's schemastore set.
---
--- `settings.yaml.schemas` is a map, so tbl_deep_extend merges these into the
--- schemastore table rather than replacing it. schemastore does not map the Kubernetes
--- schema onto arbitrary manifest paths, so that part is done by hand.
+-- schemastore instead of the server's built-in schema store, plus the Kubernetes
+-- schema, which schemastore does not map onto arbitrary manifest paths.
+-- Inherited: cmd (prefers a project-local binary), filetypes (upstream's list adds
+-- yaml.helm-values, which helm charts need), root_markers.
 local k8s = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json"
 
 ---@type vim.lsp.Config
 return {
   settings = {
     yaml = {
-      schemas = {
+      -- using schemastore.nvim instead
+      schemaStore = { enable = false, url = "" },
+      schemas = vim.tbl_extend("force", require("schemastore").yaml.schemas(), {
         [k8s] = {
           "*.k8s.yaml",
           "k8s/**/*.yaml",
@@ -18,7 +19,7 @@ return {
           "manifests/**/*.yml",
           "kube/**/*.yaml",
         },
-      },
+      }),
     },
   },
 }

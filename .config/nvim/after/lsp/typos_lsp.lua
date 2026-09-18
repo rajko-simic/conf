@@ -1,6 +1,8 @@
+-- Upstream sets no `filetypes`, and a nil filetypes list means the server attaches to
+-- *every* buffer. This restricts it to languages where the checks are worth having.
+-- Inherited: cmd, root_markers, settings.
 ---@type vim.lsp.Config
 return {
-  cmd = { "typos-lsp" },
   filetypes = {
     "bash",
     "bicep",
@@ -35,6 +37,4 @@ return {
     "typescriptreact",
     "yaml",
   },
-  root_markers = { "typos.toml", "_typos.toml", ".typos.toml", "pyproject.toml", "Cargo.toml" },
-  settings = {},
 }
