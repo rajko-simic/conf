@@ -14,6 +14,20 @@ What is still consumed from NvChad upstream, as ordinary lazy.nvim plugins:
 
 **Important:** `require "nvchad.…"` in this config always refers to the `nvchad/ui` plugin. Do not rename or "localise" those requires — they are not config-local modules.
 
+## Version control
+
+This directory is **not** its own git repo — it is tracked in the bare dotfiles repo at
+`~/.dotfiles` with `$HOME` as the work tree. Use the shell alias:
+
+```
+dotfiles status --porcelain -- ':/.config/nvim'
+dotfiles add -- ':/.config/nvim' && dotfiles commit
+```
+
+Plain `git` inside this directory resolves upward to a zero-commit repo at `/home/rajko` and
+reports the whole home directory as untracked, which makes the config look unversioned. Pathspecs
+are relative to the cwd, hence the `:/`-prefixed form above.
+
 ## Directory layout
 
 | Path | Purpose |
@@ -22,13 +36,16 @@ What is still consumed from NvChad upstream, as ordinary lazy.nvim plugins:
 | `lua/chadrc.lua` | NvChad UI config (theme, dashboard, tabufline, terminal) — mirrors `nvconfig.lua` from `nvchad/ui` |
 | `lua/options.lua` | All `vim.opt`/`vim.o` settings |
 | `lua/mappings.lua` | All global keymaps (see **Keymaps** below) |
+| `lua/filetypes.lua` | **All** `vim.filetype.add` rules (DevOps toolchains). Required from `init.lua` *before* `lazy.setup` |
 | `lua/autocmds.lua` | Autocommands, incl. the `User FilePost` event most plugins lazy-load on |
 | `lua/plugins/*.lua` | **Plugin specs, split by domain** — see below |
 | `lua/configs/*.lua` | Per-plugin config (dap, treesitter, mason, telescope, blink, …) |
 | `lua/configs/lsp.lua` | Shared LSP behaviour: `on_attach` keymaps, capabilities, diagnostics, `defaults()` |
 | `lua/configs/lspconfig.lua` | Calls `configs.lsp.defaults()`, then the server list for `vim.lsp.enable()` |
 | `lua/configs/lazy.lua` | lazy.nvim options (all plugins lazy by default) |
-| `lsp/*.lua` | Per-server `vim.lsp.config` overrides (native `lsp/` runtime dir) |
+| `lsp/*.lua` | Legacy per-server overrides — **loses to nvim-lspconfig**, see **LSP** below |
+| `after/lsp/*.lua` | Per-server `vim.lsp.config` overrides that actually win |
+| `snippets/` | blink.cmp's default snippet search path (`package.json` + per-language JSON) |
 | `themes/vs2022.lua` | Custom base46 theme (base_30 + base_16 palette) |
 
 ## Plugin specs
@@ -46,6 +63,7 @@ What is still consumed from NvChad upstream, as ordinary lazy.nvim plugins:
 | `test.lua` | neotest (+ neotest-vstest) |
 | `lang.lua` | easy-dotnet, flutter-tools, pubspec-assist (TypeScript is served by `ts_ls`, see LSP) |
 | `markdown.lua` | render-markdown, markdown-plus |
+| `devops.lua` | nvim-lint (the linting layer) |
 
 ### Adding plugins
 
@@ -65,7 +83,7 @@ Leader is `<Space>`, `timeoutlen = 400`. One prefix per domain; keep new maps in
 | `<leader>l` | LSP actions via lspsaga (`la` code action, `lp` peek, `lr`/`lR` rename, `le` line diagnostics, `li`/`lo` calls) | `configs/lsp.lua` `on_attach`, **buffer-local** |
 | `<leader>r` | refactoring.nvim (`rr` select, `re` extract fn, `rf` extract to file, `rv` extract var, `ri`/`rI` inline var/fn) | `mappings.lua` |
 | `<leader>d` | DAP + dap-view (`db`/`dB` breakpoints, `dl` run last, `do`/`dx`/`dt` view, `dw` watch, `dj`…`dr` jump to view) | `mappings.lua` |
-| `<leader>t` / `<leader>T` | Trouble (`tx`/`tX` diagnostics, `ts` symbols, `tL`/`tQ` loclist/qflist) / neotest | `mappings.lua` |
+| `<leader>t` / `<leader>T` | Trouble (`tx`/`tX` diagnostics, `ts` symbols, `tL`/`tQ` loclist/qflist, `tl` lint buffer now) / neotest | `mappings.lua` |
 | `<leader>g` | git (`gw`/`gf` lazygit, `gb`/`gl` blame, `gd` deleted, `gc` commit) | `mappings.lua` |
 | `<leader>p` | projects (`pl`, `ph`, `pd*`) | `mappings.lua` |
 | `<leader>s` | settings/toggles (`sn`, `sr`, `sw`, `sp` precognition, `sc` cheatsheet, `st` theme) | `mappings.lua` |
@@ -88,7 +106,24 @@ Run formatter: `stylua <file>` (installed via Mason). Note `lua/mappings.lua` an
 
 ## LSP
 
-Servers are listed in `lua/configs/lspconfig.lua` and enabled via `vim.lsp.enable(servers)`. To add a server: append its name to the `servers` table, then ensure it is installed via Mason (`lua/configs/mason.lua`). Per-server settings go in `lsp/<server>.lua`.
+Servers are listed in `lua/configs/lspconfig.lua` and enabled via `vim.lsp.enable(servers)`. To add a server: append its name to the `servers` table, then ensure it is installed via Mason (`lua/configs/mason.lua`).
+
+**Per-server settings go in `after/lsp/<server>.lua`, not `lsp/<server>.lua`.** `vim.lsp.config` merges *every* `lsp/<name>.lua` found on the runtimepath with `tbl_deep_extend("force", ...)`, last one winning — and lazy.nvim puts plugin directories *after* `~/.config/nvim`, so nvim-lspconfig's bundled defaults overwrite anything set in `lsp/`. Measured: `~/.config/nvim` is rtp index 1, `nvim-lspconfig` is index 7, and the resolved `yamlls.filetypes` is lspconfig's four-element list rather than the three-element one in `lsp/yamlls.lua`. The files still in `lsp/` survive only on keys lspconfig happens not to set.
+
+To check what a server actually resolved to: `:lua =vim.lsp.config.<name>`.
+
+Compound filetypes do **not** fall back: `vim.lsp.enable` filters with an exact `vim.tbl_contains` on `filetypes`, so a server listing `yaml` never attaches to a `yaml.ansible` buffer. That is why `ansiblels` and `yamlls` coexist without conflict, and why anything that should see `yaml.helm-values` has to name it verbatim.
+
+DevOps servers and their overrides:
+
+| Server | Override | Note |
+|---|---|---|
+| `ansiblels` | `after/lsp/ansiblels.lua` | resolves `python3`/`ansible`/`ansible-lint` from PATH, falling back to the mason ansible-lint venv. Needs `ansible-core` + `ansible-lint` from dnf — mason has no `ansible`/`ansible-doc` package |
+| `helm_ls` | `after/lsp/helm_ls.lua` | `helm-ls.yamlls.enabled = false`; it otherwise spawns a second yaml-language-server on values files |
+| `yamlls` | `lsp/yamlls.lua` + `after/lsp/yamlls.lua` | schemastore set, plus Kubernetes/manifest schema globs merged on top |
+| `docker_language_server` | — | replaced `dockerls`; covers dockerfile, compose *and* bake HCL in one process |
+| `jinja_lsp` | — | validates *minijinja*, so `*.j2` Ansible templates show some false positives. Drop the name from `servers` to disable |
+| `rpmspec`, `systemd_lsp`, `tflint` | — | upstream defaults are fine |
 
 Shared behaviour (on-attach keymaps, blink capabilities, diagnostic config, semantic-token suppression) lives in `lua/configs/lsp.lua`. Inlay hints are enabled globally in `init.lua`.
 
@@ -115,12 +150,43 @@ C# uses `easy-dotnet.nvim` with Roslyn LSP + roslynator — configured in `lua/c
 Adapters configured in `lua/configs/dap.lua`:
 - **Go**: `dlv` (delve)
 - **Rust**: `codelldb`
+- **Python**: `debugpy` (prefers a project `.venv`/`venv`, else `python3` from PATH)
+- **Bash/sh**: `bash-debug-adapter` (bashdb)
+- **Ansible**: `ansibug`, registered for `yaml.ansible` **only when `ansibug` is on PATH**
+  (`pip install --user ansibug`; it is not in mason and needs to import the dnf ansible-core)
+
+There is no DAP for Groovy/Jenkinsfile or Terraform — none exists upstream.
 
 Debug keymaps: `<F5>` continue, `<F10>` step over, `<F11>` step into, `<F12>` step out, `<leader>db` toggle breakpoint, `<leader>dB` conditional breakpoint, `<leader>dl` run last. DAP View is under `<leader>d*` too (`configs/dapview.lua` opens/closes it via `dap.listeners` keyed `dap_view`).
+
+## Linting
+
+`nvim-lint` (`lua/plugins/devops.lua` + `lua/configs/lint.lua`) covers the tools that have no
+language server behind them. It runs on **`BufWritePost` only** — `npm-groovy-lint` starts a JVM
+and `rpmlint`/`tfsec` are slow enough that `InsertLeave` stutters. `<leader>tl` lints on demand.
+
+Three omissions that are deliberate, not oversights:
+
+- **`shellcheck`** — bash-language-server runs it itself from PATH. Wiring it here double-reports.
+- **`ansible_lint`** — ansible-language-server runs it, and ansible-lint runs yamllint in turn.
+  That is also why `linters_by_ft["yaml.ansible"] = {}` suppresses the `yaml` yamllint entry.
+- **`tflint`** — enabled as a language server instead, which is its better mode.
+
+nvim-lint and conform resolve compound filetypes differently, and it matters:
+
+| | suppressing `yaml.ansible` |
+|---|---|
+| nvim-lint | exact-key lookup first, and an empty table is truthy in Lua — `["yaml.ansible"] = {}` **works** |
+| conform | walks `yaml.ansible` -> `ansible` -> `yaml` and **skips empty tables** — needs the function form |
 
 ## Treesitter
 
 `nvim-treesitter` tracks the `main` branch. Its `setup()` only takes `install_dir`; `highlight`/`indent`/`ensure_installed` opts from the old API are ignored. `lua/configs/treesitter.lua` therefore installs parsers from `M.ensure_installed` itself and starts highlighting + `indentexpr` per buffer from a `FileType` autocmd. Add languages to `M.ensure_installed`; never re-add `highlight = { enable = true }`.
+
+No `vim.treesitter.language.register` calls are needed. nvim strips sub-filetypes itself
+(`get_lang("yaml.ansible") == "yaml"`), and nvim-treesitter's own `plugin/filetypes.lua` already
+maps `sh`->`bash`, `terraform-vars`->`terraform` and `dosini`->`ini`. `.spec` files have no parser
+and fall back to nvim's built-in `syntax/spec.vim`, which is fine.
 
 ## Theme
 
@@ -133,4 +199,16 @@ After any theme or highlight change, regenerate the base46 cache:
 
 ## Mason
 
-Mason auto-installs LSP servers, formatters, and debuggers on startup via `lua/configs/mason.lua`. It uses both the official registry and `Crashdummyy/mason-lspconfig-extensions` (for Roslyn). Do not manually install Mason-managed tools outside of that config file.
+`lua/configs/mason.lua` holds `ensure_installed` and a hand-rolled install loop (there is no
+mason-lspconfig and no mason-tool-installer). Only the official registry is used — Roslyn comes
+from easy-dotnet.nvim, not from `Crashdummyy/mason-lspconfig-extensions`.
+
+mason.nvim is **`cmd`-lazy** and nothing else requires it, so the loop does *not* run on startup.
+It runs when you open `:Mason` or invoke **`:MasonEnsure`**. Package lookups are `pcall`-wrapped, so
+one unknown name warns instead of aborting every install after it.
+
+`PATH = "skip"`; `lua/options.lua` prepends the mason bin dir manually. That is load-bearing —
+bash-language-server finds `shellcheck` through it.
+
+Do not manually install Mason-managed tools outside of that config file. Known gap: `nil` (Nix LSP)
+is a cargo source build and is not installed.

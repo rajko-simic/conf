@@ -1,18 +1,21 @@
 require("configs.lsp").defaults()
 
 local servers = {
+  "ansiblels",
   "bashls",
   "bicep",
   "cmake",
   "cssls",
-  "dockerls",
+  "docker_language_server",
   "emmet_ls",
   "eslint",
   "gh_actions_ls",
   "gopls",
   "graphql",
   "harper_ls",
+  "helm_ls",
   "html",
+  "jinja_lsp",
   "jsonls",
   "kotlin_language_server",
   "lemminx",
@@ -22,10 +25,13 @@ local servers = {
   "nil_ls",
   "powershell_es",
   "pyright",
+  "rpmspec",
   "rust_analyzer",
   "sqlls",
+  "systemd_lsp",
+  "taplo",
   "terraformls",
-  "toplo",
+  "tflint",
   "ts_ls",
   "typos_lsp",
   "vimls",
@@ -33,4 +39,4 @@ local servers = {
 }
 
 vim.lsp.enable(servers)
--- read :h vim.lsp.config for changing options of lsp servers 
+-- read :h vim.lsp.config for changing options of lsp servers

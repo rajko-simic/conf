@@ -100,6 +100,7 @@ map("n", "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { des
 map("n", "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Trouble Symbols" })
 map("n", "<leader>tL", "<cmd>Trouble loclist toggle<cr>", { desc = "Trouble Location List" })
 map("n", "<leader>tQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quickfix List" })
+map("n", "<leader>tl", function() require("configs.lint").lint_buf() end, { desc = "Lint buffer now" })
 
 --Git
 map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Git LazyGit"})

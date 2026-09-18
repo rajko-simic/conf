@@ -1,0 +1,22 @@
+{
+  "service unit": {
+    "prefix": "service",
+    "body": ["[Unit]", "Description=${1:What it does}", "After=${2:network-online.target}", "Wants=${2:network-online.target}", "", "[Service]", "Type=${3|simple,exec,oneshot,notify,forking|}", "ExecStart=${4:/usr/bin/true}", "Restart=${5|on-failure,always,no|}", "User=${6:root}", "", "[Install]", "WantedBy=${7:multi-user.target}"],
+    "description": "systemd service unit"
+  },
+  "timer unit": {
+    "prefix": "timer",
+    "body": ["[Unit]", "Description=${1:Run something on a schedule}", "", "[Timer]", "OnCalendar=${2:daily}", "Persistent=${3|true,false|}", "RandomizedDelaySec=${4:5m}", "", "[Install]", "WantedBy=timers.target"],
+    "description": "systemd timer unit"
+  },
+  "quadlet container": {
+    "prefix": "quadlet",
+    "body": ["[Unit]", "Description=${1:Container}", "After=network-online.target", "", "[Container]", "Image=${2:docker.io/library/nginx:latest}", "ContainerName=${3:app}", "PublishPort=${4:8080:80}", "Volume=${5:/srv/app:/data:Z}", "AutoUpdate=registry", "", "[Service]", "Restart=on-failure", "", "[Install]", "WantedBy=multi-user.target default.target"],
+    "description": "podman quadlet .container"
+  },
+  "hardening": {
+    "prefix": "harden",
+    "body": ["NoNewPrivileges=true", "PrivateTmp=true", "ProtectSystem=strict", "ProtectHome=true", "ReadWritePaths=${1:/var/lib/app}", "ProtectKernelTunables=true", "ProtectControlGroups=true", "RestrictSUIDSGID=true", "CapabilityBoundingSet=${2:}"],
+    "description": "service hardening directives"
+  }
+}

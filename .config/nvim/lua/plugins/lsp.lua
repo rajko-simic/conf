@@ -4,7 +4,7 @@ return {
   -- LSP package manager
   {
     "mason-org/mason.nvim",
-    cmd = { "Mason", "MasonInstall", "MasonUpdate" },
+    cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonEnsure" },
     opts = function()
       return require("configs.mason").opts
     end,

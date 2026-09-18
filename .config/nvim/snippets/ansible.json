@@ -1,0 +1,89 @@
+{
+  "play": {
+    "prefix": "play",
+    "body": [
+      "- name: ${1:Describe the play}",
+      "  hosts: ${2:all}",
+      "  become: ${3|true,false|}",
+      "  gather_facts: ${4|true,false|}",
+      "  tasks:",
+      "    - $0"
+    ],
+    "description": "Playbook play"
+  },
+  "task": {
+    "prefix": "task",
+    "body": ["- name: ${1:Describe the task}", "  ansible.builtin.${2:command}:", "    $0"],
+    "description": "Task"
+  },
+  "block": {
+    "prefix": "block",
+    "body": [
+      "- name: ${1:Describe the block}",
+      "  block:",
+      "    - $0",
+      "  rescue:",
+      "    - ansible.builtin.debug:",
+      "        msg: \"{{ ansible_failed_result }}\"",
+      "  always:",
+      "    - ansible.builtin.debug:",
+      "        msg: done"
+    ],
+    "description": "block / rescue / always"
+  },
+  "handler": {
+    "prefix": "handler",
+    "body": ["- name: ${1:Restart service}", "  listen: ${2:restart service}", "  ansible.builtin.systemd_service:", "    name: ${3:nginx}", "    state: restarted"],
+    "description": "Handler"
+  },
+  "package": {
+    "prefix": "dnf",
+    "body": ["- name: Install ${1:packages}", "  ansible.builtin.dnf:", "    name: ${2:[]}", "    state: ${3|present,latest,absent|}"],
+    "description": "dnf package"
+  },
+  "service": {
+    "prefix": "service",
+    "body": ["- name: ${1:Enable} ${2:nginx}", "  ansible.builtin.systemd_service:", "    name: ${2:nginx}", "    state: ${3|started,stopped,restarted,reloaded|}", "    enabled: ${4|true,false|}", "    daemon_reload: ${5|true,false|}"],
+    "description": "systemd service"
+  },
+  "template": {
+    "prefix": "template",
+    "body": ["- name: Deploy ${1:config}", "  ansible.builtin.template:", "    src: ${2:$1.j2}", "    dest: ${3:/etc/$1}", "    owner: ${4:root}", "    group: ${5:root}", "    mode: \"${6:0644}\"", "    validate: ${7:/bin/true %s}", "  notify: ${8:restart service}"],
+    "description": "template + notify"
+  },
+  "copy": {
+    "prefix": "copy",
+    "body": ["- name: Copy ${1:file}", "  ansible.builtin.copy:", "    src: ${2:files/$1}", "    dest: ${3:/etc/$1}", "    owner: ${4:root}", "    group: ${5:root}", "    mode: \"${6:0644}\""],
+    "description": "copy"
+  },
+  "lineinfile": {
+    "prefix": "lineinfile",
+    "body": ["- name: Ensure ${1:line} in ${2:/etc/file}", "  ansible.builtin.lineinfile:", "    path: ${2:/etc/file}", "    regexp: \"${3:^KEY=}\"", "    line: \"${4:KEY=value}\"", "    state: present"],
+    "description": "lineinfile"
+  },
+  "loop": {
+    "prefix": "loop",
+    "body": ["loop: \"{{ ${1:items} }}\"", "loop_control:", "  label: \"{{ ${2:item.name} }}\""],
+    "description": "loop with label"
+  },
+  "when": {
+    "prefix": "when",
+    "body": ["when: ${1:ansible_facts['os_family'] == 'RedHat'}"],
+    "description": "when"
+  },
+  "register": {
+    "prefix": "register",
+    "body": ["register: ${1:result}", "changed_when: ${2:false}", "failed_when: ${3:result.rc not in [0]}"],
+    "description": "register + idempotency guards"
+  },
+  "assert": {
+    "prefix": "assert",
+    "body": ["- name: Assert ${1:precondition}", "  ansible.builtin.assert:", "    that:", "      - ${2:condition}", "    fail_msg: \"${3:message}\""],
+    "description": "assert"
+  },
+  "include_tasks": {
+    "prefix": "include",
+    "body": ["- name: Include ${1:tasks}", "  ansible.builtin.include_tasks: ${2:$1.yml}"],
+    "description": "include_tasks"
+  }
+}

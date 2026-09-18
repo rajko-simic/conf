@@ -1,0 +1,70 @@
+{
+  "declarative pipeline": {
+    "prefix": "pipeline",
+    "body": [
+      "pipeline {",
+      "    agent ${1|any,none|}",
+      "",
+      "    options {",
+      "        timestamps()",
+      "        buildDiscarder(logRotator(numToKeepStr: '${2:20}'))",
+      "    }",
+      "",
+      "    stages {",
+      "        stage('${3:Build}') {",
+      "            steps {",
+      "                sh '${4:make}'",
+      "            }",
+      "        }",
+      "    }",
+      "",
+      "    post {",
+      "        always {",
+      "            cleanWs()",
+      "        }",
+      "    }",
+      "}"
+    ],
+    "description": "Declarative pipeline skeleton"
+  },
+  "stage": {
+    "prefix": "stage",
+    "body": ["stage('${1:Name}') {", "    steps {", "        $0", "    }", "}"],
+    "description": "stage"
+  },
+  "parallel stages": {
+    "prefix": "parallel",
+    "body": ["stage('${1:Parallel}') {", "    parallel {", "        stage('${2:A}') {", "            steps { sh '${3:true}' }", "        }", "        stage('${4:B}') {", "            steps { sh '${5:true}' }", "        }", "    }", "}"],
+    "description": "parallel stages"
+  },
+  "environment": {
+    "prefix": "environment",
+    "body": ["environment {", "    ${1:KEY} = '${2:value}'", "}"],
+    "description": "environment block"
+  },
+  "parameters": {
+    "prefix": "parameters",
+    "body": ["parameters {", "    string(name: '${1:NAME}', defaultValue: '${2:value}', description: '${3:desc}')", "    booleanParam(name: '${4:FLAG}', defaultValue: false, description: '${5:desc}')", "}"],
+    "description": "parameters block"
+  },
+  "withCredentials": {
+    "prefix": "creds",
+    "body": ["withCredentials([usernamePassword(credentialsId: '${1:id}', usernameVariable: 'USER', passwordVariable: 'PASS')]) {", "    $0", "}"],
+    "description": "withCredentials"
+  },
+  "docker agent": {
+    "prefix": "agentdocker",
+    "body": ["agent {", "    docker {", "        image '${1:fedora:44}'", "        args '${2:-u root}'", "    }", "}"],
+    "description": "docker agent"
+  },
+  "ansible step": {
+    "prefix": "ansible",
+    "body": ["ansiblePlaybook(", "    playbook: '${1:site.yml}',", "    inventory: '${2:inventory/hosts}',", "    credentialsId: '${3:ssh-key}',", "    colorized: true", ")"],
+    "description": "ansiblePlaybook step"
+  },
+  "post": {
+    "prefix": "post",
+    "body": ["post {", "    success { ${1:echo 'ok'} }", "    failure { ${2:echo 'failed'} }", "    always  { ${3:cleanWs()} }", "}"],
+    "description": "post block"
+  }
+}

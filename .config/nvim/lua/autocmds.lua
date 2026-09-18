@@ -45,3 +45,27 @@ autocmd("DirChanged", {
     end
   end,
 })
+
+-- ansible-vault: never leave plaintext behind.
+--
+-- Opening an encrypted file normally writes swap, undo and backup copies next to it,
+-- so a decrypted secret can end up on disk (or in a commit) without anyone touching
+-- :w. Mark the buffer so the lint and format layers skip it too.
+autocmd("BufReadPre", {
+  group = vim.api.nvim_create_augroup("AnsibleVault", { clear = true }),
+  pattern = { "*.yml", "*.yaml", "*vault*", "*/group_vars/*", "*/host_vars/*" },
+  callback = function(args)
+    local ok, first = pcall(vim.fn.readfile, vim.api.nvim_buf_get_name(args.buf), "", 1)
+    if not ok or not first[1] or not first[1]:match "^%$ANSIBLE_VAULT;" then
+      return
+    end
+
+    -- 'swapfile' and 'undofile' are the buffer-local ones that leave files behind;
+    -- 'backup' is global and off by default, and 'writebackup' only lives for the
+    -- duration of a write.
+    vim.b[args.buf].ansible_vault = true
+    vim.bo[args.buf].swapfile = false
+    vim.bo[args.buf].undofile = false
+    vim.notify("encrypted vault file: swap and undo disabled (\\ -> ansible -> vault view/edit)", vim.log.levels.WARN)
+  end,
+})

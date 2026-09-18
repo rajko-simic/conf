@@ -48,14 +48,34 @@ M.ensure_installed = {
   "typescript",
   "tsx",
   "yaml",
+
+  -- DevOps. `jinja` requires jinja_inline and injects comment; `helm` builds on gotmpl.
+  -- No vim.treesitter.language.register calls are needed: nvim strips sub-filetypes
+  -- itself (yaml.ansible -> yaml) and nvim-treesitter already maps sh->bash,
+  -- terraform-vars->terraform and dosini->ini.
+  "awk",
+  "cmake",
+  "comment",
+  "csv",
+  "diff",
+  "git_config",
+  "git_rebase",
+  "gotmpl",
+  "hcl",
+  "helm",
+  "ini",
+  "java",
+  "jinja",
+  "jinja_inline",
+  "just",
+  "requirements",
+  "toml",
+  "xml",
 }
 
 -- Runs on :Lazy build nvim-treesitter and first install
 M.build = function()
-  require("nvim-treesitter.install").install(
-    M.ensure_installed,
-    { force = false, summary = true }
-  )
+  require("nvim-treesitter.install").install(M.ensure_installed, { force = false, summary = true })
 end
 
 -- Runs on every startup — installs any parsers missing from ensure_installed
@@ -64,7 +84,9 @@ M.init = function()
     once = true,
     callback = function()
       local ok, ts_config = pcall(require, "nvim-treesitter.config")
-      if not ok then return end
+      if not ok then
+        return
+      end
       local installed = ts_config.get_installed()
       local missing = vim.tbl_filter(function(p)
         return not vim.tbl_contains(installed, p)

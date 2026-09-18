@@ -10,6 +10,11 @@ vim.schedule(function()
   vim.lsp.inlay_hint.enable(true)
 end)
 
+-- Filetype detection (DevOps toolchains). Registered before lazy.setup because
+-- neovim-project loads eagerly and can restore a session -- i.e. read buffers --
+-- while lazy is still setting up.
+require "filetypes"
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 

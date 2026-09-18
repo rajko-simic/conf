@@ -15,8 +15,13 @@ end
 -- A provider is active when its project marker is somewhere above us, when its
 -- language server is already running anywhere in this session, or when its
 -- optional deep scan finds a project below us.
+--
+-- A platform repo routinely has a Dockerfile, *.tf and a Chart.yaml at the same level,
+-- which would make every keypress a two-step chooser. So when any active provider
+-- claims the current buffer's filetype, those win outright.
 local function detect()
   local root, matched = search_root(), {}
+  local ft = vim.bo.filetype
 
   for _, p in ipairs(providers) do
     local marker = vim.fs.find(p.match, { path = root, upward = true, type = "file", limit = 1 })[1]
@@ -25,14 +30,20 @@ local function detect()
     end
   end
 
-  return matched
+  local by_ft = vim.tbl_filter(function(p)
+    return p.ft and vim.tbl_contains(p.ft, ft)
+  end, matched)
+
+  return #by_ft > 0 and by_ft or matched
 end
 
 -- Providers are lazy-loaded by filetype, so their commands do not exist yet
 -- when we are triggered from an unrelated buffer.
 local function ensure_loaded(p)
   if p.plugin then
-    pcall(function() require("lazy").load { plugins = { p.plugin } } end)
+    pcall(function()
+      require("lazy").load { plugins = { p.plugin } }
+    end)
   end
   if p.ensure then
     pcall(p.ensure)
@@ -58,7 +69,9 @@ function M.open()
   else
     vim.ui.select(matched, {
       prompt = "Toolchain",
-      format_item = function(p) return p.name end,
+      format_item = function(p)
+        return p.name
+      end,
     }, function(choice)
       if choice then
         open_provider(choice)

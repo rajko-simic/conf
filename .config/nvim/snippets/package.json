@@ -1,0 +1,12 @@
+{
+  "name": "devops-snippets",
+  "version": "1.0.0",
+  "description": "Ansible / Jenkins / systemd snippets for this config",
+  "contributes": {
+    "snippets": [
+      { "language": "ansible", "path": "./ansible.json" },
+      { "language": "groovy", "path": "./jenkins.json" },
+      { "language": "systemd", "path": "./systemd.json" }
+    ]
+  }
+}

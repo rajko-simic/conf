@@ -2,7 +2,10 @@ dofile(vim.g.base46_cache .. "nvimtree")
 
 return {
   filters = { dotfiles = false },
-  disable_netrw = true,
+  -- netrw stays enabled so remote editing (:e scp://host//etc/foo.conf) works;
+  -- nvim-tree hijacks the netrw *directory* browser instead of replacing netrw.
+  disable_netrw = false,
+  hijack_netrw = true,
   hijack_cursor = true,
   sync_root_with_cwd = true,
   update_focused_file = {
@@ -35,7 +38,7 @@ return {
     severity = {
       min = vim.diagnostic.severity.WARN,
       max = vim.diagnostic.severity.ERROR,
-    }
+    },
     -- icons = {
     --   hint = "",
     --   info = "",
