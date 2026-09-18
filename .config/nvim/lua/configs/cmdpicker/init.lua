@@ -24,7 +24,17 @@ local function detect()
   local ft = vim.bo.filetype
 
   for _, p in ipairs(providers) do
-    local marker = vim.fs.find(p.match, { path = root, upward = true, type = "file", limit = 1 })[1]
+    -- Bounded at $HOME (exclusive). Without this the walk continues to /, so a single
+    -- stray file in the home directory -- ~/rustdesk_selinux.spec, say -- makes its
+    -- provider match every project on the machine. Cost: loose files sitting directly
+    -- in $HOME get no toolchain detection, which is the right trade.
+    local marker = vim.fs.find(p.match, {
+      path = root,
+      upward = true,
+      stop = vim.env.HOME,
+      type = "file",
+      limit = 1,
+    })[1]
     if marker or (p.lsp and #vim.lsp.get_clients { name = p.lsp } > 0) or (p.deep and p.deep()) then
       table.insert(matched, p)
     end

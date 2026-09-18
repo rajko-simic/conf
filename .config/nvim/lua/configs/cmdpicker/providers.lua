@@ -79,7 +79,9 @@ return {
     name = "dotnet",
     plugin = "easy-dotnet.nvim",
     lsp = "easy_dotnet",
-    ft = { "cs", "fsharp", "vb" },
+    -- .sln is filetype `solution` and .csproj/.props/.targets are `xml`; without those
+    -- here, opening the picker from a project file falls back to the ambiguous list.
+    ft = { "cs", "fsharp", "vb", "solution", "xml" },
     match = function(name)
       return ends_with(name, ".sln") or ends_with(name, ".slnx") or ends_with(name, ".csproj")
     end,
