@@ -1,0 +1,23 @@
+#!/bin/sh
+# delta wrapper for lazygit: side-by-side only when the diff pane is wide enough.
+#
+# lazygit runs this as git's pager (GIT_PAGER) inside a pty sized to the main
+# panel, so delta already sizes itself correctly via ioctl on stdout. We only
+# need that same number to pick the layout. Raise/lower MIN to taste: it is the
+# width of the diff pane, not the terminal (with gui.sidePanelWidth 0.3 the
+# pane is roughly 70% of the terminal).
+MIN=${DELTA_SIDE_BY_SIDE_MIN_WIDTH:-120}
+
+# Ask the pty directly; fall back to what lazygit/git export, then to 80.
+exec 3>&1
+cols=$(stty size <&3 2>/dev/null | cut -d' ' -f2)
+exec 3>&-
+case $cols in
+  '' | *[!0-9]*) cols=${LAZYGIT_COLUMNS:-${COLUMNS:-80}} ;;
+esac
+
+if [ "$cols" -ge "$MIN" ]; then
+  exec delta --paging=never --side-by-side
+else
+  exec delta --paging=never
+fi

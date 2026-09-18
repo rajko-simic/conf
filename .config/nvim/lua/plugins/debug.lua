@@ -29,9 +29,6 @@ return {
     end,
   },
 
-  -- Async IO library
-  {
-    "nvim-neotest/nvim-nio",
-    requires = { "mfussenegger/nvim-dap" },
-  },
+  -- Async IO library (also a neotest dependency)
+  "nvim-neotest/nvim-nio",
 }

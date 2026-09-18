@@ -37,6 +37,10 @@ return {
   notify = { enabled = true, view = "mini" },
   messages = { enabled = true },
   lsp = {
+    -- lspsaga owns hover, blink.cmp owns signature help, NvChad statusline lsp_msg owns progress
+    hover = { enabled = false },
+    signature = { enabled = false },
+    progress = { enabled = false },
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
       ["vim.lsp.util.stylize_markdown"] = true,

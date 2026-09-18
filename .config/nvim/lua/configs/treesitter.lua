@@ -50,15 +50,6 @@ M.ensure_installed = {
   "yaml",
 }
 
-M.opts = {
-  ensure_installed = M.ensure_installed,
-  highlight = {
-    enable = true,
-    use_languagetree = true,
-  },
-  indent = { enable = true },
-}
-
 -- Runs on :Lazy build nvim-treesitter and first install
 M.build = function()
   require("nvim-treesitter.install").install(
@@ -85,8 +76,23 @@ M.init = function()
   })
 end
 
+-- nvim-treesitter `main` only manages parser installs; highlighting and
+-- indentation are started per buffer here (nvim itself only auto-starts
+-- treesitter for a handful of built-in ftplugins).
 M.config = function()
-  require("nvim-treesitter").setup(M.opts)
+  require("nvim-treesitter").setup()
+
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("user_treesitter_start", { clear = true }),
+    callback = function(args)
+      local lang = vim.treesitter.language.get_lang(args.match)
+      if not lang or not vim.treesitter.language.add(lang) then
+        return
+      end
+      pcall(vim.treesitter.start, args.buf, lang)
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
+  })
 end
 
 return M

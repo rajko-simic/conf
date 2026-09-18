@@ -12,9 +12,6 @@ return {
     end,
   },
 
-  -- TypeScript
-  "pmizio/typescript-tools.nvim",
-
   -- Flutter
   {
     "nvim-flutter/flutter-tools.nvim",

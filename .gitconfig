@@ -1,13 +1,14 @@
 [user]
 	name = rajko
-	email = rajko@mingle.com
+	email = rajko92@gmail.com
 [core]
 	autocrlf = input
 [credential]
 	helper = cache
 [delta]
-  side-by-side = true
   line-numbers = true
+  line-numbers-left-format = "{nm:>4}│"
+  line-numbers-right-format = "{np:>4}│"
 	syntax-theme = base16
 	minus-style = red
 	minus-emph-style = reverse red
@@ -16,8 +17,7 @@
 	line-numbers-minus-style = red
 	line-numbers-plus-style = green
 	line-numbers-zero-style = bright-black
-	hunk-header-style = file line-number syntax
-	hunk-header-decoration-style = bright-black box
+	hunk-header-style = omit
 	file-style = blue bold
-	file-decoration-style = bright-black ul
+	file-decoration-style = none
 	blame-palette = black bright-black

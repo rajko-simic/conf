@@ -8,15 +8,6 @@ require("trouble").setup({
     end,
   },
   modes = {
-    lsp_bottom = {
-      mode = "lsp",
-      focus = false,
-      -- title = false,
-      win = {
-        position = "bottom",
-        size = 0.5,
-      },
-    },
     symbols = {
       desc = "document symbols",
       mode = "lsp_document_symbols",

@@ -34,8 +34,6 @@ return {
     opts = require "configs.blink",
   },
 
-  "rafamadriz/friendly-snippets",
-
   -- LSP UI (peek definition, line diagnostics, code action picker)
   {
     "nvimdev/lspsaga.nvim",

@@ -4,8 +4,6 @@ return {
   keymap = {
     preset = 'super-tab',
     ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
-    ['<C-s>'] = { 'scroll_signature_down', 'fallback' },
-    ['<C-S-s>'] = { 'scroll_signature_up', 'fallback' },
   },
 
   signature = {

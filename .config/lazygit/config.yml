@@ -8,4 +8,4 @@ git:
   diffContextSize: 1000
   diffRenderers:
     - colorArg: always
-      command: delta --side-by-side --paging=never --line-numbers
+      command: $HOME/.config/delta/lazygit-delta

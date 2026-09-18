@@ -13,19 +13,14 @@ map("n", "<C-j>", "<C-w>j", { desc = "window switch down" })
 map("n", "<C-k>", "<C-w>k", { desc = "window switch up" })
 
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
-map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 map({ "n", "x" }, "<leader>fm", function() require("conform").format { lsp_fallback = true } end, { desc = "general format file" })
-
--- global lsp mappings
-map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
 
 -- tabufline
 map("n", "<leader>n", "<cmd>enew<CR>", { desc = "buffer new" })
 map("n", "<tab>", function() require("nvchad.tabufline").next() end, { desc = "buffer goto next" })
 map("n", "<S-tab>", function() require("nvchad.tabufline").prev() end, { desc = "buffer goto prev" })
 map("n", "<leader>x", function() require("nvchad.tabufline").close_buffer() end, { desc = "buffer close" })
--- map("n", "<leader>tf", ":enew<CR>", { desc = "New empty buffer" })
 
 -- Comment
 map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
@@ -39,7 +34,7 @@ map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window"
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
-map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+map("n", "<leader>fM", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
 map("n", "<leader>fc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
@@ -67,24 +62,15 @@ map({ "n", "t" }, "<A-i>", function() require("nvchad.term").toggle { pos = "flo
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
 map("n", "<leader>wk", function() vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ") end, { desc = "whichkey query lookup" })
 
--- LSP references
-map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "LSP references" })
-map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "LSP Go to definition" })
-map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP Go to implementation" })
-map("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "LSP Go to type definition" })
--- map("n", "K",  "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP Hover info" })
-
--- LSP hover (blink.cmp handles signature help in insert mode)
-map('n', 'K', vim.lsp.buf.hover, { desc = "LSP Hover", noremap = true, silent = true })
+-- LSP: all LSP/lspsaga maps are buffer-local, set in configs/lsp.lua on_attach
 
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start/Continue" })
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug Step Over" })
 map("n", "<F11>", function() require("dap").step_into() end, { desc = "Debug Step Into" })
 map("n", "<F12>", function() require("dap").step_out() end, { desc = "Debug Step Out" })
-map("n", "<leader>bb", function() require("dap").toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
-map("n", "<leader>bc", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
--- map("n", "<leader>dR", function() require("dap").repl.toggle() end, { desc = "Debug Toggle REPL" })
+map("n", "<leader>db", function() require("dap").toggle_breakpoint() end, { desc = "Debug Toggle Breakpoint" })
+map("n", "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, { desc = "Debug Set Conditional Breakpoint" })
 map("n", "<leader>dl", function() require("dap").run_last() end, { desc = "Debug Run Last Session" })
 
 -- DAP View
@@ -112,7 +98,6 @@ map("n", "<leader>cd", function() require("configs.cmdpicker").open() end, { des
 map("n", "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Trouble Diagnostics" })
 map("n", "<leader>tX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Trouble Buffer Diagnostics" })
 map("n", "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Trouble Symbols" })
-map("n", "<leader>tl", "<cmd>Trouble lsp_bottom toggle<cr>", { desc = "Trouble LSP Definitions / references / ..." })
 map("n", "<leader>tL", "<cmd>Trouble loclist toggle<cr>", { desc = "Trouble Location List" })
 map("n", "<leader>tQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quickfix List" })
 
@@ -122,7 +107,6 @@ map("n", "<leader>gf", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Git Current
 map("n", "<leader>gb", "<cmd>Gitsigns blame<cr>", {desc = "Git Toggle Blame"})
 map("n", "<leader>gl", "<cmd>Gitsigns blame_line<cr>", {desc = "Git Blame Line"})
 map("n", "<leader>gd", "<cmd>Gitsigns toggle_deleted<cr>", {desc = "Git Toggle Deleted"})
-map("n", "<leader>ga", "<cmd>Gitsigns attach<cr>", {desc = "Gitlens Attach"})
 map("n", "<leader>gc", "<cmd>Gitsigns show_commit<cr>", {desc = "Git Show Commit"})
 
 -- Neotest (language-agnostic)
@@ -137,10 +121,8 @@ map("n", "<leader>To", function() require("neotest").output.open({ enter = true,
 map("n", "<leader>TO", function() require("neotest").output_panel.toggle() end,                            { desc = "Neotest output panel" })
 map("n", "<leader>Tx", function() require("neotest").run.stop() end,                                       { desc = "Neotest stop" })
 
---Precognition
-map("n", "<leader>pr", "<cmd>Precognition toggle<cr>", {desc = "Precognition toggle"})
-
 --Basic Settings
+map("n", "<leader>sp", "<cmd>Precognition toggle<cr>", { desc = "general toggle precognition" })
 map("n", "<leader>sn", "<cmd>set nu!<CR>", { desc = "general toggle line number" })
 map("n", "<leader>sr", "<cmd>set rnu!<CR>", { desc = "general toggle relative number" })
 map("n", "<leader>sw", "<cmd>set wrap!<CR>", { desc = "general toggle word wrap" })
@@ -154,12 +136,13 @@ map("n", "<leader>st", function() require("nvchad.themes").open() end, { desc = 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
---Saga
-map("n", "<leader>la", "<cmd>Lspsaga code_action<cr>", { desc = "LSP saga code action" })
-map("n", "<leader>lp", "<cmd>Lspsaga peek_definition<cr>", { desc = "LSP saga peek definition" })
-map("n", "<leader>le", "<cmd>Lspsaga show_line_diagnostics<cr>", { desc = "LSP saga line diagnostics" })
-map("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<cr>", { desc = "LSP saga next diagnostic" })
-map("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<cr>", { desc = "LSP saga prev diagnostic" })
+-- Refactoring (refactoring.nvim; lazy-loads on first require)
+map({ "n", "x" }, "<leader>rr", function() require("refactoring").select_refactor() end, { desc = "Refactor select" })
+map({ "n", "x" }, "<leader>re", function() require("refactoring").extract_func() end, { desc = "Refactor extract function" })
+map("x", "<leader>rf", function() require("refactoring").extract_func_to_file() end, { desc = "Refactor extract function to file" })
+map({ "n", "x" }, "<leader>rv", function() require("refactoring").extract_var() end, { desc = "Refactor extract variable" })
+map({ "n", "x" }, "<leader>ri", function() require("refactoring").inline_var() end, { desc = "Refactor inline variable" })
+map("n", "<leader>rI", function() require("refactoring").inline_func() end, { desc = "Refactor inline function" })
 
 local function write_unnamed(buf)
   vim.ui.input({ prompt = "Save as: ", completion = "file" }, function(input)

@@ -7,18 +7,25 @@ M.on_attach = function(_, bufnr)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end
 
-  map("n", "ga", vim.lsp.buf.code_action, opts "Do action")
+  -- Navigation (lspsaga; saga has no declaration command, so gD stays native)
+  map("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts "Go to definition")
   map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
-  map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
-  map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
-  map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
+  map("n", "gy", "<cmd>Lspsaga goto_type_definition<CR>", opts "Go to type definition")
+  map("n", "gh", "<cmd>Lspsaga finder<CR>", opts "Finder (definition / references / implementation)")
+  map("n", "K", "<cmd>Lspsaga hover_doc<CR>", opts "Hover")
 
-  map("n", "<leader>wl", function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, opts "List workspace folders")
+  -- Actions
+  map({ "n", "v" }, "<leader>la", "<cmd>Lspsaga code_action<CR>", opts "Code action")
+  map("n", "<leader>lp", "<cmd>Lspsaga peek_definition<CR>", opts "Peek definition")
+  map("n", "<leader>lr", "<cmd>Lspsaga rename<CR>", opts "Rename")
+  map("n", "<leader>lR", "<cmd>Lspsaga rename ++project<CR>", opts "Rename (project)")
+  map("n", "<leader>li", "<cmd>Lspsaga incoming_calls<CR>", opts "Incoming calls")
+  map("n", "<leader>lo", "<cmd>Lspsaga outgoing_calls<CR>", opts "Outgoing calls")
 
-  map("n", "<leader>D", vim.lsp.buf.type_definition, opts "Go to type definition")
-  map("n", "<leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
+  -- Diagnostics
+  map("n", "<leader>le", "<cmd>Lspsaga show_line_diagnostics<CR>", opts "Line diagnostics")
+  map("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", opts "Next diagnostic")
+  map("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts "Prev diagnostic")
 end
 
 -- Disable semanticTokens (noisy with NvChad themes)
@@ -36,18 +43,14 @@ M.defaults = function()
     virtual_text = { current_line = true },
   }
 
-  -- Disable native signature help — blink.cmp handles this
-  vim.lsp.handlers["textDocument/signatureHelp"] = function() end
-
   -- Apply blink.cmp capabilities + on_init to all servers globally
   local capabilities = require("blink.cmp").get_lsp_capabilities()
   vim.lsp.config("*", { capabilities = capabilities, on_init = M.on_init })
 
-  -- Enable inlay hints and keymaps on every LSP attach
+  -- Keymaps on every LSP attach (inlay hints are enabled globally in init.lua)
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
       M.on_attach(_, args.buf)
-      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end,
   })
 end

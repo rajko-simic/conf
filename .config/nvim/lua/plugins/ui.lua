@@ -59,17 +59,4 @@ return {
     cmd = { "Precognition" },
     opts = {},
   },
-
-  -- Window layout manager (config kept in configs/edgy.lua)
-  -- {
-  --   "folke/edgy.nvim",
-  --   event = "VeryLazy",
-  --   init = function()
-  --     vim.opt.laststatus = 3
-  --     vim.opt.splitkeep = "screen"
-  --   end,
-  --   opts = function()
-  --     return require "configs.edgy"
-  --   end,
-  -- },
 }

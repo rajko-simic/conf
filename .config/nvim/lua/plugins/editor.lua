@@ -41,10 +41,9 @@ return {
     opts = require "configs.conform",
   },
 
-  -- Refactoring tools
+  -- Refactoring tools (loads on first require from a <leader>r* keymap)
   {
     "ThePrimeagen/refactoring.nvim",
-    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",

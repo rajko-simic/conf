@@ -1,4 +1,4 @@
--- NvChad runtime (ui/base46/volt/menu) and icon providers.
+-- NvChad runtime (ui/base46/volt/minty) and icon provider.
 -- NOTE: the `nvchad.*` lua namespace comes from the `nvchad/ui` plugin below.
 
 return {
@@ -20,7 +20,6 @@ return {
   },
 
   "nvzone/volt",
-  "nvzone/menu",
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
 
   -- Provides Nerd Font icons (glyphs) for use by Neovim plugins
@@ -30,13 +29,5 @@ return {
       dofile(vim.g.base46_cache .. "devicons")
       return { override = require "nvchad.icons.devicons" }
     end,
-  },
-
-  -- Lightweight icon provider (alongside devicons; NvChad base46 highlights unaffected)
-  {
-    "echasnovski/mini.icons",
-    version = false,
-    lazy = false,
-    opts = {},
   },
 }

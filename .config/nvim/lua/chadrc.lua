@@ -105,6 +105,9 @@ M.ui = {
   },
 }
 
+-- blink.cmp owns signature help; disable NvChad's TextChangedI signature autocmd
+M.lsp = { signature = false }
+
 M.term = {
   float = {
     relative = "editor",
