@@ -18,7 +18,8 @@ return {
     ft = { "dart", "pubspec.yaml" },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "stevearc/dressing.nvim",
+      -- dressing.nvim dropped: snacks provides vim.ui.input/select globally now, and
+      -- flutter-tools never required it (only a comment referenced it).
       "nvim-telescope/telescope.nvim",
     },
     config = function()

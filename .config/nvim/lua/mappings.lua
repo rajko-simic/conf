@@ -103,8 +103,9 @@ map("n", "<leader>tQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble Quick
 map("n", "<leader>tl", function() require("configs.lint").lint_buf() end, { desc = "Lint buffer now" })
 
 --Git
-map("n", "<leader>gw", "<cmd>LazyGit<cr>", {desc = "Git LazyGit"})
-map("n", "<leader>gf", "<cmd>LazyGitFilterCurrentFile<cr>", {desc = "Git Current File"})
+map("n", "<leader>gw", function() Snacks.lazygit() end, {desc = "Git LazyGit"})
+map("n", "<leader>gf", function() Snacks.lazygit.log_file() end, {desc = "Git Current File"})
+map({"n", "v"}, "<leader>go", function() Snacks.gitbrowse() end, {desc = "Git Open In Browser"})
 map("n", "<leader>gb", "<cmd>Gitsigns blame<cr>", {desc = "Git Toggle Blame"})
 map("n", "<leader>gl", "<cmd>Gitsigns blame_line<cr>", {desc = "Git Blame Line"})
 map("n", "<leader>gd", "<cmd>Gitsigns toggle_deleted<cr>", {desc = "Git Toggle Deleted"})
@@ -121,6 +122,14 @@ map("n", "<leader>Ts", function() require("neotest").summary.toggle() end,      
 map("n", "<leader>To", function() require("neotest").output.open({ enter = true, auto_close = true }) end, { desc = "Neotest output" })
 map("n", "<leader>TO", function() require("neotest").output_panel.toggle() end,                            { desc = "Neotest output panel" })
 map("n", "<leader>Tx", function() require("neotest").run.stop() end,                                       { desc = "Neotest stop" })
+
+-- Scratch buffer (scoped to project + branch + filetype)
+map("n", "<leader>.", function() Snacks.scratch() end, { desc = "Scratch buffer toggle" })
+map("n", "<leader>S", function() Snacks.scratch.select() end, { desc = "Scratch buffer select" })
+
+-- LSP reference navigation (snacks.words highlights them on LspAttach)
+map("n", "]]", function() Snacks.words.jump(vim.v.count1) end, { desc = "Next reference" })
+map("n", "[[", function() Snacks.words.jump(-vim.v.count1) end, { desc = "Prev reference" })
 
 --Basic Settings
 map("n", "<leader>sp", "<cmd>Precognition toggle<cr>", { desc = "general toggle precognition" })

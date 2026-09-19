@@ -10,11 +10,6 @@ return {
     end,
   },
 
-  -- Git UI
-  {
-    "kdheepak/lazygit.nvim",
-    lazy = true,
-    cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile" },
-    dependencies = { "nvim-lua/plenary.nvim" },
-  },
+  -- Git UI is snacks.lazygit (lua/plugins/ui.lua); it layers its theme onto the
+  -- existing ~/.config/lazygit/config.yml rather than replacing it.
 }

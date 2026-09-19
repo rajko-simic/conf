@@ -37,6 +37,33 @@ return {
         timeout = 3000,
         icons = { error = "", warn = "", info = "", debug = "", trace = "" },
       },
+
+      -- `ui_select` is the point of enabling the picker: it replaces vim.ui.select,
+      -- which is otherwise nvim's bare numbered prompt (dressing only ever loaded for
+      -- dart files). That covers the `\` toolchain menus, ansible-doc, <leader>dB and
+      -- every other prompt. Telescope keeps its own keymaps -- nothing here rebinds them.
+      picker = { ui_select = true },
+      input = {},
+
+      -- Passive. bigfile turns off treesitter/LSP/syntax past ~1.5MB or ~1000 char
+      -- average line length, which matters for terraform state, generated yaml and logs.
+      bigfile = {},
+      quickfile = {},
+
+      -- Indent guides + scope highlighting, replacing indent-blankline.
+      indent = {
+        indent = { char = "│" },
+        scope = { char = "│" },
+      },
+
+      -- LSP reference highlighting; ]] / [[ are mapped in mappings.lua.
+      words = {},
+
+      -- Registers its own ii/ai textobjects and [i/]i jumps (all verified unmapped).
+      scope = {},
+
+      gitbrowse = {},
+      scratch = {},
     },
   },
 
@@ -49,17 +76,6 @@ return {
   },
 
   -- Indentation guides
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "User FilePost",
-    opts = function()
-      return require("configs.indentblankline").opts
-    end,
-    config = function(_, opts)
-      require("configs.indentblankline").config(_, opts)
-    end,
-  },
-
   -- File tree
   {
     "nvim-tree/nvim-tree.lua",

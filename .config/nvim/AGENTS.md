@@ -151,6 +151,37 @@ TypeScript is served by `ts_ls` (`lsp/ts_ls.lua`). Do not add `typescript-tools.
 
 C# uses `easy-dotnet.nvim` with Roslyn LSP + roslynator — configured in `lua/configs/easydotnet.lua`. Do not add `omnisharp` or `csharp_ls` to the servers list.
 
+## snacks.nvim
+
+One plugin, modules enabled individually. `Snacks.setup` turns on **exactly** the keys it is handed
+(`snacks/init.lua`: `for k in pairs(opts) do opts[k].enabled = opts[k].enabled == nil or opts[k].enabled end`),
+so an absent key is off. Config lives inline in the spec in `lua/plugins/ui.lua`.
+
+On: `notifier` (the `vim.notify` backend — see **Notifications**), `picker` (**only** for
+`ui_select`), `input`, `bigfile`, `quickfile`, `indent`, `words`, `scope`, `gitbrowse`, `scratch`.
+
+Deliberately off, with the reason, so this is not re-litigated:
+
+| module | why off |
+|---|---|
+| `picker` as a telescope replacement | telescope is a hard `dependencies` entry of easy-dotnet, flutter-tools and neovim-project, so it stays installed either way — swapping the UI buys no reduction. It is enabled for `ui_select` alone and rebinds nothing |
+| `explorer` | nvim-tree carries 80 lines of configuration (right side, width 40, window picker with dap-view exclusions, diagnostic severity range) and is a persistent sidebar; explorer is a picker in disguise |
+| `image` | Konsole has no kitty graphics protocol. `:checkhealth snacks` reports image errors regardless of the module being disabled — they are noise |
+| `dashboard` | nvdash is base46-themed and already has the project buttons |
+| `terminal` | `nvchad.term` is wired into `<A-i>/<A-h>/<A-v>` and `Telescope terms` |
+| `toggle`, `bufdelete`, `zen`, `statuscolumn` | no gain over what is already mapped |
+
+Retired by these modules: `lazygit.nvim` (→ `snacks.lazygit`), `indent-blankline.nvim`
+(→ `snacks.indent`), `dressing.nvim` (→ `snacks.input` + `picker.ui_select`; it was only a soft dep
+of flutter-tools and therefore only ever loaded for Dart buffers).
+
+`snacks.lazygit` does **not** overwrite `~/.config/lazygit/config.yml` — it runs `lazygit -cd`, puts
+the existing config first in `LG_CONFIG_FILE` and appends only a generated theme file, so the delta
+`diffRenderers` wrapper survives.
+
+`picker` and `input` attach on `UIEnter`, which never fires under `nvim --headless`; verifying
+`vim.ui.select`/`vim.ui.input` requires a real session.
+
 ## Completion
 
 **blink.cmp** is the active completion engine (`lua/configs/blink.lua`). Do not reference `nvim-cmp` or LuaSnip APIs in new code — neither is installed.
