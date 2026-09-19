@@ -29,12 +29,11 @@ return {
         winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
       },
     },
-    mini = {
-      timeout = 3000,
-      format = { "{level_text}" },
-    },
   },
-  notify = { enabled = true, view = "mini" },
+  -- `notify` resolves to the snacks notifier (noice tries snacks, then nvim-notify,
+  -- then falls back to its own `mini`). Unlike `mini`, it can replace a notification in
+  -- place, which is what stops timer-driven spinners stacking one line per tick.
+  notify = { enabled = true, view = "notify" },
   messages = { enabled = true },
   lsp = {
     -- lspsaga owns hover, blink.cmp owns signature help, NvChad statusline lsp_msg owns progress
@@ -55,7 +54,7 @@ return {
   routes = {
     {
       filter = { event = "msg_show", kind = { "emsg", "wmsg" } },
-      view = "mini",
+      view = "notify",
     },
   },
 }

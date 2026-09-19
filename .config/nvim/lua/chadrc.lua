@@ -12,11 +12,6 @@ M.base46 = {
 		Comment = { italic = true },
 		["@comment"] = { italic = true },
 	},
-	hl_add = {
-		NoiceNotifyInfo = { fg = "green" },
-		NoiceNotifyWarn = { fg = "yellow" },
-		NoiceNotifyError = { fg = "red" },
-	},
 }
 
 M.cheatsheet = {
@@ -66,8 +61,20 @@ M.ui = {
   },
 
   statusline = {
-    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "dap_frame", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
+    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "progress", "dap_frame", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
     modules = {
+      -- Progress from tools that bypass vim.lsp. Sources are listed in
+      -- configs/progress.lua; language servers report through lsp_msg instead.
+      progress = function()
+        for _, source in ipairs(require "configs.progress") do
+          local ok, text = pcall(source)
+          if ok and type(text) == "string" and text ~= "" then
+            return "%#St_LspMsg# " .. text .. " "
+          end
+        end
+        return ""
+      end,
+
       dap_session = function()
         local ok, dap = pcall(require, "dap")
         if not ok then return "" end
