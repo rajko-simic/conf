@@ -69,3 +69,10 @@ autocmd("BufReadPre", {
     vim.notify("encrypted vault file: swap and undo disabled (\\ -> ansible -> vault view/edit)", vim.log.levels.WARN)
   end,
 })
+
+-- The dashboard's New Project button is only reachable in the first seconds of a
+-- session, so the wizard gets a command too. The require stays inside the callback:
+-- registering the command costs nothing, loading the module at startup would.
+vim.api.nvim_create_user_command("NewProject", function()
+  require("configs.newproject").open()
+end, { desc = "Scaffold a new project in the current directory" })

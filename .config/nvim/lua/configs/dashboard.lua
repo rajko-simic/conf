@@ -9,6 +9,12 @@
 --
 -- No `header` section: that is what draws the big NEOVIM banner, omitted on purpose.
 --
+-- Button glyphs are Nerd Font private-use codepoints and do not survive being retyped
+-- by hand -- they were lost once already. If these need editing, go by codepoint:
+-- Font Awesome F002 search, F011 power, F07B folder, F07C folder-open, F0AE tasks,
+-- F0E8 sitemap, F0FE plus-square, F11C keyboard, F15C file-text, F1DA history,
+-- F252 hourglass; Codicons EA68 git-branch; Material F022D text-search.
+--
 -- Theming needs no work. snacks links SnacksDashboard{Header,Title,Icon,Key,Desc,File,
 -- Dir,Footer} to Special / Title / Number / NonText / Normal with `default = true`, and
 -- base46 themes all of those -- so the dashboard follows the active base46 theme.
@@ -355,26 +361,36 @@ local function cwd()
 end
 
 -- The telescope picker behind each list, parked directly under it.
+---@param icon string
 ---@param key string
 ---@param desc string
 ---@param action string
-local function picker(key, desc, action)
-  return { pane = 2, indent = 2, padding = 1, icon = " ", key = key, desc = desc, action = action }
+local function picker(icon, key, desc, action)
+  return { pane = 2, indent = 2, padding = 1, icon = icon, key = key, desc = desc, action = action }
 end
 
 M.opts = {
   preset = {
     keys = {
-      { icon = " ", key = "l", desc = "Last Project", action = ":NeovimProjectLoadRecent" },
-      { icon = " ", key = "a", desc = "Projects (Alphabet)", action = ":NeovimProjectDiscover alphabetical_name" },
-      { icon = " ", key = "h", desc = "Projects (History)", action = ":NeovimProjectDiscover history" },
-      { icon = " ", key = "d", desc = "Projects (Path)", action = ":NeovimProjectDiscover alphabetical_path" },
-      { icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
+      -- required inside the action so the wizard is not loaded at startup
+      {
+        icon = " ",
+        key = "n",
+        desc = "New Project",
+        action = function()
+          require("configs.newproject").open()
+        end,
+      },
+      { icon = " ", key = "l", desc = "Last Project", action = ":NeovimProjectLoadRecent" },
+      { icon = " ", key = "a", desc = "Projects (Alphabet)", action = ":NeovimProjectDiscover alphabetical_name" },
+      { icon = " ", key = "h", desc = "Projects (History)", action = ":NeovimProjectDiscover history" },
+      { icon = " ", key = "d", desc = "Projects (Path)", action = ":NeovimProjectDiscover alphabetical_path" },
+      { icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
       { icon = "󰈭 ", key = "w", desc = "Find Word", action = ":Telescope live_grep" },
-      { icon = " ", key = "c", desc = "Mappings", action = ":NvCheatsheet" },
+      { icon = " ", key = "c", desc = "Mappings", action = ":NvCheatsheet" },
       -- snacks binds q to `:bd` in D:init, but item keys are applied later in
       -- D:update -> D:keys, so this wins.
-      { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+      { icon = " ", key = "q", desc = "Quit", action = ":qa" },
     },
   },
 
@@ -384,14 +400,14 @@ M.opts = {
   sections = {
     { pane = 1, padding = 1, cwd },
     { pane = 1, section = "keys", gap = 1, padding = 1 },
-    { pane = 1, icon = " ", title = "Git", indent = 2, padding = 1, git },
+    { pane = 1, icon = " ", title = "Git", indent = 2, padding = 1, git },
 
     -- each list's own padding is the blank row between it and its button
-    { pane = 2, icon = " ", title = "Projects", indent = 2, padding = 1, projects },
-    picker("p", "Recent Projects", ":NeovimProjectHistory"),
+    { pane = 2, icon = " ", title = "Projects", indent = 2, padding = 1, projects },
+    picker(" ", "p", "Recent Projects", ":NeovimProjectHistory"),
 
-    { pane = 2, icon = " ", title = "Recent Files", indent = 2, padding = 1, recent_files },
-    picker("o", "Recent Files", ":Telescope oldfiles"),
+    { pane = 2, icon = " ", title = "Recent Files", indent = 2, padding = 1, recent_files },
+    picker(" ", "o", "Recent Files", ":Telescope oldfiles"),
 
     -- last, so it also lands at the bottom when a narrow window folds both panes into one
     { pane = 1, section = "startup" },
