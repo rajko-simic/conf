@@ -60,7 +60,7 @@ are relative to the cwd, hence the `:/`-prefixed form above.
 | `editor.lua` | telescope, treesitter (+context), conform, refactoring, neovim-project |
 | `git.lua` | gitsigns, lazygit |
 | `debug.lua` | nvim-dap, nvim-dap-view, nvim-dap-virtual-text, nvim-nio |
-| `test.lua` | neotest (+ neotest-vstest) |
+| `test.lua` | neotest, using easy-dotnet's built-in adapter (`require "easy-dotnet.neotest"`). `ft`-gated, **not** `VeryLazy`: easy-dotnet is a dependency, so a startup trigger would pull the .NET toolchain into every project |
 | `lang.lua` | easy-dotnet, flutter-tools, pubspec-assist (TypeScript is served by `ts_ls`, see LSP) |
 | `markdown.lua` | render-markdown, markdown-plus |
 | `devops.lua` | nvim-lint (the linting layer) |

@@ -1,4 +1,9 @@
 require("easy-dotnet").setup {
+  test_runner = {
+    -- neotest owns buffer signs and test keymaps; without this both draw them
+    -- (configs/neotest.lua registers easy-dotnet's own adapter).
+    neotest_integration = true,
+  },
   lsp = {
     enabled = true,
     roslynator_enabled = true,
