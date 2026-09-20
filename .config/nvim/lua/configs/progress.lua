@@ -13,7 +13,14 @@
 return {
   -- easy-dotnet speaks StreamJsonRpc over its own libuv pipe rather than vim.lsp, so its
   -- $/progress never reaches the LspProgress autocmd.
+  --
+  -- NOTE: read package.loaded, never `require`. lazy.nvim force-loads a plugin the
+  -- moment one of its modules is required, and the statusline renders constantly -- a
+  -- `require` here defeated easy-dotnet's `ft = { cs, csproj, sln, ... }` trigger and
+  -- started Roslyn at init in every project. The same rule applies to any source added
+  -- to this list.
   function()
-    return require("easy-dotnet").lualine.jobs()
+    local easy_dotnet = package.loaded["easy-dotnet"]
+    return easy_dotnet and easy_dotnet.lualine.jobs() or ""
   end,
 }
