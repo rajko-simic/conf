@@ -64,6 +64,9 @@ return {
 
       gitbrowse = {},
       scratch = {},
+
+      -- Replaces NvChad's nvdash (disabled in chadrc.lua).
+      dashboard = require("configs.dashboard").opts,
     },
   },
 

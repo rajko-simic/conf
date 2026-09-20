@@ -6,7 +6,7 @@
 local M = {}
 
 M.base46 = {
-	theme = "material-deep-ocean",
+	theme = "default-light",
   theme_toggle = { "material-deep-ocean", "default-light" },
 	hl_override = {
 		Comment = { italic = true },
@@ -20,7 +20,9 @@ M.cheatsheet = {
   }
 
 M.nvdash = {
-    load_on_startup = true,
+  -- Replaced by snacks.dashboard (lua/configs/dashboard.lua). Everything below is
+  -- left as it was so flipping this back restores the old dashboard verbatim.
+    load_on_startup = false,
     header = {
       "                            ",
       "           eovim           ",
