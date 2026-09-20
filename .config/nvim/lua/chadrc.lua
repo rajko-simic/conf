@@ -58,6 +58,13 @@ M.ui = {
   tabufline = {
     lazyload = false,
     order = { "buffers", "tabs", "btns" },
+    modules = {
+      -- Upstream's `buffers` is O(n^2) in buffer count; a 290-buffer session cost
+      -- 1275 ms per tabline render, i.e. per redraw. See lua/configs/tabufline.lua.
+      buffers = function()
+        return require("configs.tabufline").buffers()
+      end,
+    },
   },
 
   statusline = {
