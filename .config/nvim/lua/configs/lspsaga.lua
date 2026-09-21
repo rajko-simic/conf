@@ -5,6 +5,12 @@ return {
   lightbulb = {
     enable = false,
   },
+  finder = {
+    keys = {
+      -- <CR> was unbound by default; 'o' kept for muscle memory
+      toggle_or_open = { "<CR>", "o" },
+    },
+  },
   symbol_in_winbar = {
     enable = false,
   },

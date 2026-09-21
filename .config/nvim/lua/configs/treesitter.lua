@@ -48,11 +48,6 @@ M.ensure_installed = {
   "typescript",
   "tsx",
   "yaml",
-
-  -- DevOps. `jinja` requires jinja_inline and injects comment; `helm` builds on gotmpl.
-  -- No vim.treesitter.language.register calls are needed: nvim strips sub-filetypes
-  -- itself (yaml.ansible -> yaml) and nvim-treesitter already maps sh->bash,
-  -- terraform-vars->terraform and dosini->ini.
   "awk",
   "cmake",
   "comment",

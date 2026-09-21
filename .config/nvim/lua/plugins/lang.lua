@@ -1,5 +1,3 @@
--- Language-specific tooling.
-
 return {
   -- Dotnet / C#
   {
@@ -18,8 +16,6 @@ return {
     ft = { "dart", "pubspec.yaml" },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      -- dressing.nvim dropped: snacks provides vim.ui.input/select globally now, and
-      -- flutter-tools never required it (only a comment referenced it).
       "nvim-telescope/telescope.nvim",
     },
     config = function()

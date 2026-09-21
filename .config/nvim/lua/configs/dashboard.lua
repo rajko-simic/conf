@@ -296,20 +296,24 @@ local function spread(left, right)
   return vim.list_extend(parts, right)
 end
 
--- The incoming/outgoing pair, shared by the current branch and the branch list.
-local function drift(behind, ahead)
+-- Icon/count pairs for the right-hand side of a row, from { icon, n, hl } triples. Zeros
+-- are left out, the way the statusline suppresses them.
+local function stats(list)
   local parts = {}
-  local function add(icon, n)
+  for _, stat in ipairs(list) do
+    local icon, n, hl = unpack(stat)
     if n > 0 then
       if #parts > 0 then
         parts[#parts + 1] = { "  " }
       end
-      parts[#parts + 1] = { ("%s %d"):format(icon, n), hl = HL.head }
+      parts[#parts + 1] = { ("%s %d"):format(icon, n), hl = hl }
     end
   end
-  add(ICON.incoming, behind)
-  add(ICON.outgoing, ahead)
   return parts
+end
+
+local function drift(behind, ahead)
+  return stats { { ICON.incoming, behind, HL.head }, { ICON.outgoing, ahead, HL.head } }
 end
 
 local function render(d)
@@ -318,33 +322,26 @@ local function render(d)
     items[#items + 1] = { text = text }
   end
 
-  -- 1. current branch, its drift from origin flush right, fetch spinner in between
-  local ahead_behind = drift(d.behind, d.ahead)
+  -- 1. current branch; working tree counts and drift from origin flush right, fetch
+  --    spinner in between
+  local right = stats {
+    { ICON.added, d.added, HL.added },
+    { ICON.changed, d.changed, HL.changed },
+    { ICON.removed, d.removed, HL.removed },
+    { ICON.incoming, d.behind, HL.head },
+    { ICON.outgoing, d.ahead, HL.head },
+  }
   local spin = git_state.fetching and ("  " .. SPINNER[git_state.frame]) or ""
-  -- 6 covers the branch icon, its two trailing spaces and the gap before the drift
+  -- 6 covers the branch icon, its two trailing spaces and the gap before the counts
   local head = {
-    { ICON.branch .. "  " .. truncate(d.branch, CONTENT_WIDTH - width_of(ahead_behind) - #spin - 6), hl = HL.head },
+    { ICON.branch .. "  " .. truncate(d.branch, CONTENT_WIDTH - width_of(right) - #spin - 6), hl = HL.head },
   }
   if spin ~= "" then
     head[#head + 1] = { spin, hl = "dir" }
   end
-  row(spread(head, ahead_behind))
+  row(spread(head, right))
 
-  -- 2. working tree; zeros omitted, the way the statusline suppresses them
-  local counts = {}
-  local function part(icon, n, hl)
-    if n > 0 then
-      counts[#counts + 1] = { ("%s %d   "):format(icon, n), hl = hl }
-    end
-  end
-  part(ICON.added, d.added, HL.added)
-  part(ICON.changed, d.changed, HL.changed)
-  part(ICON.removed, d.removed, HL.removed)
-  if #counts > 0 then
-    row(counts)
-  end
-
-  -- 3. three most recent commits
+  -- 2. three most recent commits
   if #d.commits > 0 then
     row { { "" } }
     for _, c in ipairs(d.commits) do
@@ -355,7 +352,7 @@ local function render(d)
     end
   end
 
-  -- 4. three most recently committed branches other than this one, drift flush right
+  -- 3. three most recently committed branches other than this one, drift flush right
   if #d.branches > 0 then
     row { { "" } }
     for _, b in ipairs(d.branches) do

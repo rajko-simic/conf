@@ -7,9 +7,10 @@ M.on_attach = function(_, bufnr)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end
 
-  -- Navigation (lspsaga; saga has no declaration command, so gD stays native)
+  -- Navigation (lspsaga; saga has no declaration/implementation command, so those stay native)
   map("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts "Go to definition")
   map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
+  map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
   map("n", "gy", "<cmd>Lspsaga goto_type_definition<CR>", opts "Go to type definition")
   map("n", "gh", "<cmd>Lspsaga finder<CR>", opts "Finder (definition / references / implementation)")
   map("n", "K", "<cmd>Lspsaga hover_doc<CR>", opts "Hover")

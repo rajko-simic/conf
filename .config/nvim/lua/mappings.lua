@@ -62,8 +62,6 @@ map({ "n", "t" }, "<A-i>", function() require("nvchad.term").toggle { pos = "flo
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
 map("n", "<leader>wk", function() vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ") end, { desc = "whichkey query lookup" })
 
--- LSP: all LSP/lspsaga maps are buffer-local, set in configs/lsp.lua on_attach
-
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function() require("dap").continue() end, { desc = "Debug Start/Continue" })
 map("n", "<F10>", function() require("dap").step_over() end, { desc = "Debug Step Over" })
@@ -92,7 +90,6 @@ map("n", "<leader>di", function() require("dap-view").virtual_text_toggle() end,
 
 -- Project command picker (detects toolchain from project root, not buffer)
 map("n", "\\", function() require("configs.cmdpicker").open() end, { desc = "Project command picker" })
-map("n", "<leader>cd", function() require("configs.cmdpicker").open() end, { desc = "Project command picker" })
 
 --Trouble
 map("n", "<leader>tx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Trouble Diagnostics" })
@@ -140,8 +137,6 @@ map("n", "<leader>sc", "<cmd>NvCheatsheet<CR>", { desc = "general toggle nvcheat
 map("n", "<leader>st", function() require("nvchad.themes").open() end, { desc = "telescope nvchad themes" })
 
 -------------------------------------- user mappings -----------------------------------
-
-
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
