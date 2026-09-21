@@ -111,10 +111,10 @@ local function projects()
   return items
 end
 
--- Shift+<n>. The keys really are the shifted characters -- there is no way to bind
--- <S-1> as such -- but `label` is checked before `key` when the right-hand column is
--- built, so the row can advertise the sane spelling instead of "!".
-local SHIFT_NUM = { "!", "@", "#", "$", "%" }
+-- Shift+1 .. Shift+0. The keys really are the shifted characters -- there is no way to
+-- bind <S-1> as such -- but `label` is checked before `key` when the right-hand column
+-- is built, so the row can advertise the sane spelling instead of "!".
+local SHIFT_NUM = { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")" }
 
 -- snacks' recent_files items carry `autokey = true`; strip it so they take the keys set
 -- here instead of being handed whatever is left in the autokey pool.
@@ -125,7 +125,7 @@ local function recent_files()
   for i, item in ipairs(items) do
     item.autokey = nil
     item.key = SHIFT_NUM[i]
-    item.label = { "^" .. i, hl = "key" }
+    item.label = { "^" .. i % 10, hl = "key" }
     item.render = stripe(i)
   end
   return items
@@ -194,13 +194,14 @@ local function read_local(root)
     end
   end
 
-  -- %(upstream:track,nobracket) is local knowledge, i.e. as of the last fetch
+  -- %(upstream:track,nobracket) is local knowledge, i.e. as of the last fetch. Asks for
+  -- one extra because the checked-out branch is skipped -- it has its own row up top.
   local fmt = "%(refname:short)\t%(upstream:short)\t%(upstream:track,nobracket)"
   for _, line in
-    ipairs(sh(root, { "git", "for-each-ref", "--sort=-committerdate", "--count=3", "--format=" .. fmt, "refs/heads/" }))
+    ipairs(sh(root, { "git", "for-each-ref", "--sort=-committerdate", "--count=4", "--format=" .. fmt, "refs/heads/" }))
   do
     local name, upstream, track = line:match "^([^\t]*)\t([^\t]*)\t(.*)$"
-    if name and name ~= "" then
+    if name and name ~= "" and name ~= d.branch and #d.branches < 3 then
       d.branches[#d.branches + 1] = {
         name = name,
         tracked = upstream ~= "",
@@ -271,18 +272,63 @@ local function truncate(s, n)
   return #s > n and (s:sub(1, n - 1) .. "\u{2026}") or s
 end
 
+local CONTENT_WIDTH = PANE_WIDTH - 2 -- the git section's indent
+
+---@param parts snacks.dashboard.Text[]
+---@return integer
+local function width_of(parts)
+  local n = 0
+  for _, t in ipairs(parts) do
+    n = n + vim.api.nvim_strwidth(t[1])
+  end
+  return n
+end
+
+-- Pads between `left` and `right` so `right` finishes flush with the pane's right edge.
+-- Callers size `left` themselves: a pane-1 row wider than PANE_WIDTH is re-centred by
+-- snacks, which would drag the whole block sideways for that one row.
+local function spread(left, right)
+  if #right == 0 then
+    return left
+  end
+  local parts = vim.list_extend({}, left)
+  parts[#parts + 1] = { (" "):rep(math.max(CONTENT_WIDTH - width_of(left) - width_of(right), 1)) }
+  return vim.list_extend(parts, right)
+end
+
+-- The incoming/outgoing pair, shared by the current branch and the branch list.
+local function drift(behind, ahead)
+  local parts = {}
+  local function add(icon, n)
+    if n > 0 then
+      if #parts > 0 then
+        parts[#parts + 1] = { "  " }
+      end
+      parts[#parts + 1] = { ("%s %d"):format(icon, n), hl = HL.head }
+    end
+  end
+  add(ICON.incoming, behind)
+  add(ICON.outgoing, ahead)
+  return parts
+end
+
 local function render(d)
   local items = {}
   local function row(text)
     items[#items + 1] = { text = text }
   end
 
-  -- 1. branch, with the fetch spinner while the remote is being checked
-  local head = { { ICON.branch .. "  " .. d.branch, hl = HL.head } }
-  if git_state.fetching then
-    head[#head + 1] = { "  " .. SPINNER[git_state.frame], hl = "dir" }
+  -- 1. current branch, its drift from origin flush right, fetch spinner in between
+  local ahead_behind = drift(d.behind, d.ahead)
+  local spin = git_state.fetching and ("  " .. SPINNER[git_state.frame]) or ""
+  -- 6 covers the branch icon, its two trailing spaces and the gap before the drift
+  local head = {
+    { ICON.branch .. "  " .. truncate(d.branch, CONTENT_WIDTH - width_of(ahead_behind) - #spin - 6), hl = HL.head },
+  }
+  if spin ~= "" then
+    head[#head + 1] = { spin, hl = "dir" }
   end
-  row(head)
+  row(spread(head, ahead_behind))
 
   -- 2. working tree; zeros omitted, the way the statusline suppresses them
   local counts = {}
@@ -291,8 +337,6 @@ local function render(d)
       counts[#counts + 1] = { ("%s %d   "):format(icon, n), hl = hl }
     end
   end
-  part(ICON.incoming, d.behind, HL.head)
-  part(ICON.outgoing, d.ahead, HL.head)
   part(ICON.added, d.added, HL.added)
   part(ICON.changed, d.changed, HL.changed)
   part(ICON.removed, d.removed, HL.removed)
@@ -301,27 +345,23 @@ local function render(d)
   end
 
   -- 3. three most recent commits
-  for _, c in ipairs(d.commits) do
-    row {
-      { c.hash .. "  ", hl = HL.head },
-      { truncate(c.subject, PANE_WIDTH - #c.hash - 8), hl = "desc" },
-    }
+  if #d.commits > 0 then
+    row { { "" } }
+    for _, c in ipairs(d.commits) do
+      row {
+        { c.hash .. "  ", hl = HL.head },
+        { truncate(c.subject, PANE_WIDTH - #c.hash - 8), hl = "desc" },
+      }
+    end
   end
 
-  -- 4. three most recently committed branches, with their drift from origin
-  for _, b in ipairs(d.branches) do
-    local parts = { { truncate(b.name, 30), hl = "dir" } }
-    if not b.tracked then
-      parts[#parts + 1] = { "  (local)", hl = "desc" }
-    else
-      if b.behind > 0 then
-        parts[#parts + 1] = { ("  %s %d"):format(ICON.incoming, b.behind), hl = HL.head }
-      end
-      if b.ahead > 0 then
-        parts[#parts + 1] = { ("  %s %d"):format(ICON.outgoing, b.ahead), hl = HL.head }
-      end
+  -- 4. three most recently committed branches other than this one, drift flush right
+  if #d.branches > 0 then
+    row { { "" } }
+    for _, b in ipairs(d.branches) do
+      local right = b.tracked and drift(b.behind, b.ahead) or { { "(local)", hl = "desc" } }
+      row(spread({ { truncate(b.name, CONTENT_WIDTH - width_of(right) - 2), hl = "dir" } }, right))
     end
-    row(parts)
   end
 
   return items
