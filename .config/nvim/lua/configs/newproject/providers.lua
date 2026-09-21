@@ -1,365 +1,248 @@
--- Toolchains the New Project wizard can scaffold.
+-- The contract a toolchain implements, and the registry that finds the implementations.
+-- Nothing in here, or anywhere else outside providers/, knows about a particular toolchain.
 --
---   name      label in the first picker
---   icon      glyph prefix, two cells
---   bin       executable that must be on PATH; a missing one is shown disabled, not hidden
---   normalize optional, turns a typed name into one the toolchain will accept
---   steps     extra questions, asked in order after the name/target step
---   build     ctx -> argv, always run with cwd = ctx.dir, which exists by then
---   after     optional Lua to run after a successful scaffold
---   timeout   optional ms override, for toolchains that go and fetch packages
+-- To add one, drop a file into providers/ that returns a NewProject.Provider. That is the
+-- whole job: it is discovered, checked against the contract below and listed in the menu.
+-- providers/rust.lua is the shortest complete example.
 --
--- Every provider builds a `.`-relative command and the runner runs it inside the target
--- directory, having created that directory first. That collapses "scaffold in place" and
--- "scaffold into a subfolder" into one case, and works around `go mod init`, the only one
--- of the four that cannot create its own directory.
---
--- A step's `ask` writes into ctx and answers with a boolean -- see the note on the runner
--- in init.lua for why it is not a value.
+-- A provider answers two questions. What to ask (`steps`, plain data: the wizard owns the
+-- windows, cancelling and storing the answers) and what to run (`command`, the one
+-- required function). Every answer lands in `ctx` under the step's `key`, and `command`
+-- reads it back from there.
 
-local ui = require "configs.newproject.ui"
+---@class NewProject.Ctx
+---@field cwd string                      nvim's directory when the wizard was opened
+---@field provider NewProject.Provider
+---@field name string                     project name, already through `normalize`
+---@field dir string                      absolute target directory; exists by `command` time
+---@field argv string[]                   what `command` returned, once confirmed
+---@field created boolean                 whether the wizard made `dir` itself
+---@field cancelled? boolean              set when a newer wizard supersedes this one; a
+---                                       slow custom step may check it before opening a window
+---@field [string] any                    the answers, keyed by step.key
+
+---@class NewProject.Provider
+---@field name string                     menu label
+---@field icon string                     "\u{xxxx} " escape, never a typed glyph: private-use
+---                                       codepoints do not survive being pasted into a file
+---@field bin string                      executable that must be on PATH; a missing one is
+---                                       listed as "(bin not found)" rather than hidden
+---@field command fun(ctx: NewProject.Ctx): string[]  argv, run with cwd = ctx.dir, so the
+---                                       output path is always `.`. Must not be interactive:
+---                                       stdin is not connected.
+---@field steps? NewProject.Step[]        questions, asked in order (default: none)
+---@field name_first? boolean             ask the project name before `steps` rather than
+---                                       after, for a step that defaults off it
+---@field normalize? fun(name: string): string  typed name -> one the toolchain accepts
+---@field after? fun(ctx: NewProject.Ctx) runs once the command has succeeded
+---@field timeout? integer                ms, for toolchains that go and fetch packages
+---@field order? integer                  menu position; ties sort by name
+
+-- A step is exactly one of three kinds, told apart by the fields it carries:
+--   select   key + prompt + choices   ctx[key] = the chosen choice's `value`. A choice with
+--                                     no `value` is a real answer ("leave the flag off"),
+--                                     so `command` must not splice ctx[key] in blindly.
+--   input    key + prompt             ctx[key] = the typed text; `default` pre-fills it and
+--                                     `validate` returns an error message to ask again
+--   custom   ask                      the escape hatch, for anything asynchronous or
+--                                     multi-window. It writes into ctx itself and answers
+--                                     done(true) to carry on, done(false) to abort.
+---@class NewProject.Step
+---@field key? string
+---@field prompt? string
+---@field when? fun(ctx: NewProject.Ctx): boolean  the step is skipped when this is false
+---@field choices? { label: string, value?: any }[]
+---@field default? string|fun(ctx: NewProject.Ctx): string
+---@field validate? fun(value: string, ctx: NewProject.Ctx): string?
+---@field ask? fun(ctx: NewProject.Ctx, done: fun(ok: boolean))
 
 local M = {}
 
-------------------------------------------------------------------------------- dotnet
+local GLOB = "lua/configs/newproject/providers/*.lua"
+local MODULE = "configs.newproject.providers."
 
--- The template table is parsed by slicing on its ruler, so the output has to be the
--- English one; a localized header would shift every column. NOLOGO keeps the first-run
--- welcome banner out of the parse.
-local DOTNET_ENV = { DOTNET_CLI_UI_LANGUAGE = "en", DOTNET_NOLOGO = "1" }
-
--- Hand-picked, in rough order of how often they are wanted. `sln` is here rather than in
--- the queried list because it is not of type `project` -- `dotnet new list --type
--- solution` matches nothing at all.
-local DOTNET_TEMPLATES = {
-  { label = "Web API", short = "webapi" },
-  -- Not installed on this machine; picking it offers to install the package first.
-  {
-    label = "Azure Functions (isolated worker)",
-    short = "func",
-    pkg = "Microsoft.Azure.Functions.Worker.ProjectTemplates",
-  },
-  { label = "Console App", short = "console" },
-  { label = "Class Library", short = "classlib" },
-  { label = "Blazor Web App", short = "blazor" },
-  { label = "Blazor WebAssembly", short = "blazorwasm" },
-  { label = "Web App (MVC)", short = "mvc" },
-  { label = "Web App (Razor Pages)", short = "webapp" },
-  { label = "Worker Service", short = "worker" },
-  { label = "gRPC Service", short = "grpc" },
-  { label = "xUnit Test Project", short = "xunit" },
-  { label = "Solution file (.slnx)", short = "sln" },
-  { label = "All templates…", all = true },
+-- Merged under every provider, so the wizard never has to nil-check an optional member.
+local DEFAULTS = {
+  steps = {},
+  name_first = false,
+  normalize = function(name)
+    return name
+  end,
+  after = function() end,
+  timeout = 120000,
+  order = 100,
 }
 
--- `dotnet new list` prints a fixed-width table whose `----  ----  ----` ruler is the
--- authoritative column map -- the header row's own padding is not, and splitting on runs
--- of spaces breaks on names like "ASP.NET Core Web App (Razor Pages)".
----@param stdout string
----@return table[]
-local function parse_templates(stdout)
-  local lines = vim.split(stdout or "", "\n", { plain = true })
+----------------------------------------------------------------------------- contract
 
-  local ruler, cols
-  for i, line in ipairs(lines) do
-    if line:match "^%-%-%-+[%-%s]*$" then
-      ruler, cols = i, {}
-      local pos = 1
-      while true do
-        local s, e = line:find("%-+", pos)
-        if not s then
-          break
-        end
-        cols[#cols + 1] = { s, e }
-        pos = e + 1
+-- Lua has no compiler to say "does not implement the interface", so this plays one: a
+-- misspelt optional member (`timout`) would otherwise be silently ignored, and a missing
+-- required one would only surface as a nil call halfway through the wizard.
+
+local REQUIRED = { "name", "icon", "bin", "command" }
+
+local PROVIDER = {
+  name = "string",
+  icon = "string",
+  bin = "string",
+  command = "function",
+  steps = "table",
+  name_first = "boolean",
+  normalize = "function",
+  after = "function",
+  timeout = "number",
+  order = "number",
+}
+
+local STEP = {
+  key = "string",
+  prompt = "string",
+  when = "function",
+  choices = "table",
+  default = { "string", "function" },
+  validate = "function",
+  ask = "function",
+}
+
+-- ctx fields the wizard owns; a step storing its answer under one would corrupt the run.
+local RESERVED = { cwd = 1, provider = 1, name = 1, dir = 1, argv = 1, created = 1, cancelled = 1 }
+
+-- First member of `tbl` that is unknown or of the wrong type. A leading underscore marks
+-- a private member (the providers' test exports) and is left alone.
+---@return string? problem
+local function check_members(tbl, schema, where)
+  for member, value in pairs(tbl) do
+    if type(member) ~= "string" then
+      return ("%s[%s]: unexpected list entry"):format(where, tostring(member))
+    end
+    if member:sub(1, 1) ~= "_" then
+      local expected = schema[member]
+      if not expected then
+        return ("%s%s: unknown member"):format(where, member)
       end
-      break
-    end
-  end
-  if not ruler or #cols < 2 then
-    return {}
-  end
-
-  local items = {}
-  for i = ruler + 1, #lines do
-    local line = lines[i]
-    local function cell(n)
-      return cols[n] and vim.trim(line:sub(cols[n][1], cols[n][2])) or ""
-    end
-
-    -- string.sub counts bytes, so a non-ASCII template name from some third-party pack
-    -- would desync every later column on that row. Whitespace inside what should be a
-    -- short name is the tell; drop the row rather than invent a template from it.
-    local short = cell(2):match "^[^,]*"
-    if short ~= "" and not short:find "%s" then
-      items[#items + 1] = { label = ("%s  (%s)"):format(cell(1), short), short = short }
-    end
-  end
-  return items
-end
-
----@param cb fun(ok: boolean)
-local function dotnet_all_templates(ctx, cb)
-  ui.notify "Reading installed templates…"
-  vim.system({ "dotnet", "new", "list", "--type", "project" }, { text = true, env = DOTNET_ENV }, function(res)
-    vim.schedule(function()
-      local items = res.code == 0 and parse_templates(res.stdout) or {}
-      if #items == 0 then
-        ui.notify("Could not read the template list\n" .. ui.output(res), vim.log.levels.ERROR)
-        return cb(false)
+      expected = type(expected) == "table" and expected or { expected }
+      if not vim.tbl_contains(expected, type(value)) then
+        return ("%s%s: expected %s, got %s"):format(where, member, table.concat(expected, " or "), type(value))
       end
-      ui.select("Template", items, function(choice)
-        if not choice then
-          return cb(false)
-        end
-        ctx.template, ctx.label = choice.short, choice.label
-        cb(true)
-      end)
-    end)
-  end)
+    end
+  end
 end
 
--- Curated entries may name a NuGet package that carries them. Probe first, and never
--- install without asking: `dotnet new install` writes to ~/.templateengine, which is a
--- machine-global side effect, and it needs the network.
----@param cb fun(ok: boolean)
-local function ensure_template(ctx, entry, cb)
-  ui.notify("Looking for the " .. entry.short .. " template…")
-  vim.system(
-    { "dotnet", "new", "list", entry.short, "--type", "project" },
-    { text = true, env = DOTNET_ENV },
-    function(res)
-      vim.schedule(function()
-        if res.code == 0 and #parse_templates(res.stdout) > 0 then
-          return cb(true)
-        end
-        ui.select(entry.label .. " is not installed", {
-          { label = "Install " .. entry.pkg, install = true },
-          { label = "Cancel" },
-        }, function(choice)
-          if not choice or not choice.install then
-            return cb(false)
-          end
-          ui.notify("Installing " .. entry.pkg .. "…")
-          vim.system(
-            { "dotnet", "new", "install", entry.pkg },
-            { text = true, env = DOTNET_ENV, timeout = 300000 },
-            function(installed)
-              vim.schedule(function()
-                if installed.code ~= 0 then
-                  ui.notify("Install failed\n" .. ui.output(installed), vim.log.levels.ERROR)
-                  return cb(false)
-                end
-                cb(true)
-              end)
-            end
-          )
-        end)
-      end)
-    end
-  )
-end
+---@return string? problem
+local function check_step(step, where)
+  if type(step) ~= "table" then
+    return where .. ": expected a table, got " .. type(step)
+  end
+  local problem = check_members(step, STEP, where .. ".")
+  if problem then
+    return problem
+  end
 
-local function dotnet_template(ctx, cb)
-  ui.select("Template", DOTNET_TEMPLATES, function(choice)
-    if not choice then
-      return cb(false)
+  if step.ask then
+    for _, member in ipairs { "key", "prompt", "choices", "default", "validate" } do
+      if step[member] ~= nil then
+        return ("%s.%s: a custom `ask` step is a step on its own and takes only `when`"):format(where, member)
+      end
     end
-    if choice.all then
-      return dotnet_all_templates(ctx, cb)
-    end
-    ctx.template, ctx.label = choice.short, choice.label
-    if choice.pkg then
-      return ensure_template(ctx, choice, cb)
-    end
-    cb(true)
-  end)
-end
-
---------------------------------------------------------------------------------- rust
-
-local function rust_kind(ctx, cb)
-  ui.select("Crate type", {
-    { label = "Binary (application)", flag = "--bin" },
-    { label = "Library", flag = "--lib" },
-  }, function(choice)
-    if not choice then
-      return cb(false)
-    end
-    ctx.kind, ctx.label = choice.flag, choice.label
-    cb(true)
-  end)
-end
-
------------------------------------------------------------------------------------ go
-
--- Prefix offered in the module-path prompt. Set it once to your own host and user and
--- every new Go project gets a usable default; empty just offers the project name, which
--- is a valid module path for something that is never published.
-local GO_MODULE_PREFIX = ""
-
-local function go_module(ctx, cb)
-  local default = GO_MODULE_PREFIX ~= "" and (GO_MODULE_PREFIX .. "/" .. ctx.name) or ctx.name
-  ui.input("Module path", default, function(value)
-    if not value then
-      return cb(false)
-    end
-    if value:find "%s" then
-      ui.notify("A module path cannot contain spaces", vim.log.levels.WARN)
-      return go_module(ctx, cb)
-    end
-    ctx.module = value
-    cb(true)
-  end)
-end
-
--- `go mod init` leaves nothing but a go.mod, and Go has no scaffolder of its own, so the
--- entry point is written here. Never overwrites: the in-place path can land in a
--- directory that already has one.
-local function go_main(ctx)
-  local main = ctx.dir .. "/main.go"
-  if vim.uv.fs_stat(main) then
     return
   end
-  local src = table.concat({
-    "package main",
-    "",
-    'import "fmt"',
-    "",
-    "func main() {",
-    ('\tfmt.Println("hello, %s")'):format(ctx.name),
-    "}",
-    "",
-  }, "\n")
-  local fd = assert(vim.uv.fs_open(main, "w", 420)) -- 0644
-  vim.uv.fs_write(fd, src)
-  vim.uv.fs_close(fd)
-end
 
------------------------------------------------------------------------------- flutter
+  if not (step.key and step.prompt) then
+    return where .. ": needs `key` + `prompt` (+ `choices` for a select), or `ask`"
+  end
+  if RESERVED[step.key] then
+    return ("%s.key: %q is reserved by the wizard"):format(where, step.key)
+  end
+  if not step.choices then
+    return
+  end
 
--- `flutter create` rejects anything that is not a valid Dart package identifier, and the
--- directory name is what it derives the package name from by default -- so a directory
--- called `my-app` is a hard error unless the name is sanitised and passed explicitly.
----@param s string
----@return string
-local function dart_name(s)
-  s = s:lower()
-  s = s:gsub("[^%l%d_]", "_")
-  s = s:gsub("_+", "_")
-  s = s:gsub("^[_%d]+", "")
-  s = s:gsub("_+$", "")
-  return s ~= "" and s or "app"
-end
-
--- --platforms is only accepted for the app and plugin templates.
-local FLUTTER_PLATFORMS = {
-  { label = "All platforms" }, -- no `value`: the flag is left off entirely
-  { label = "Mobile (android, ios)", value = "android,ios" },
-  { label = "Desktop (linux, windows, macos)", value = "linux,windows,macos" },
-  { label = "Web", value = "web" },
-  { label = "Linux", value = "linux" },
-  { label = "Android", value = "android" },
-}
-
-local function flutter_template(ctx, cb)
-  ui.select("Flutter template", {
-    { label = "Application", value = "app" },
-    { label = "Package", value = "package" },
-    { label = "Plugin", value = "plugin" },
-    { label = "Module", value = "module" },
-  }, function(choice)
-    if not choice then
-      return cb(false)
+  if step.default ~= nil or step.validate then
+    return where .. ": `default` and `validate` belong to an input step, and this one has `choices`"
+  end
+  if #step.choices == 0 then
+    return where .. ".choices: empty"
+  end
+  for i, choice in ipairs(step.choices) do
+    if type(choice) ~= "table" or type(choice.label) ~= "string" then
+      return ("%s.choices[%d].label: expected string"):format(where, i)
     end
-    ctx.template, ctx.label = choice.value, choice.label
-    cb(true)
-  end)
+  end
 end
 
-local function flutter_platforms(ctx, cb)
-  ui.select("Platforms", FLUTTER_PLATFORMS, function(choice)
-    if not choice then
-      return cb(false)
+-- nil when `provider` honours the contract, otherwise the first thing wrong with it.
+---@param provider any
+---@return string? problem
+function M.validate(provider)
+  if type(provider) ~= "table" then
+    return "must return a table, got " .. type(provider)
+  end
+  for _, member in ipairs(REQUIRED) do
+    if provider[member] == nil then
+      return member .. ": missing"
     end
-    ctx.platforms = choice.value
-    cb(true)
-  end)
+  end
+  local problem = check_members(provider, PROVIDER, "")
+  if problem then
+    return problem
+  end
+  for i, step in ipairs(provider.steps or {}) do
+    problem = check_step(step, ("steps[%d]"):format(i))
+    if problem then
+      return problem
+    end
+  end
 end
 
---------------------------------------------------------------------------------------
+----------------------------------------------------------------------------- registry
 
-M.list = {
-  {
-    name = "Dotnet",
-    icon = "󰌛 ",
-    bin = "dotnet",
-    steps = { { ask = dotnet_template } },
-    build = function(ctx)
-      -- -n explicitly rather than letting the directory name decide, so the project name
-      -- is the one that was confirmed
-      return { "dotnet", "new", ctx.template, "-n", ctx.name, "-o", "." }
-    end,
-  },
+-- Every valid provider on the runtimepath, in menu order. Read fresh each time rather
+-- than cached: it is a glob and a handful of small files, and it means a provider that
+-- was just added or edited is picked up by the next `n` instead of the next restart.
+---@return NewProject.Provider[]
+function M.load()
+  local list, seen, problems = {}, {}, {}
 
-  {
-    name = "Rust",
-    icon = " ",
-    bin = "cargo",
-    normalize = function(s)
-      return (s:lower():gsub("[^%w_%-]", "-"))
-    end,
-    steps = { { ask = rust_kind } },
-    -- `cargo init` rather than `cargo new`, because the directory already exists. It
-    -- skips its own `git init` when the parent is already a repository, which is right.
-    build = function(ctx)
-      return { "cargo", "init", ctx.kind, "--name", ctx.name }
-    end,
-  },
+  for _, path in ipairs(vim.api.nvim_get_runtime_file(GLOB, true)) do
+    local id = vim.fn.fnamemodify(path, ":t:r")
+    if id ~= "init" and not seen[id] then
+      seen[id] = true
 
-  {
-    name = "Flutter",
-    icon = " ",
-    bin = "flutter",
-    normalize = dart_name,
-    steps = {
-      { ask = flutter_template },
-      {
-        ask = flutter_platforms,
-        when = function(ctx)
-          return ctx.template == "app" or ctx.template == "plugin"
-        end,
-      },
-    },
-    build = function(ctx)
-      local argv = { "flutter", "create", "--project-name", ctx.name, "-t", ctx.template }
-      if ctx.platforms then
-        argv[#argv + 1] = "--platforms"
-        argv[#argv + 1] = ctx.platforms
+      local provider, problem
+      if not id:match "^[%w_-]+$" then
+        -- `asp.net.lua` would be required as the module providers/asp/net
+        problem = "file name may only hold letters, digits, _ and -"
+      else
+        package.loaded[MODULE .. id] = nil
+        local ok, result = pcall(require, MODULE .. id)
+        if ok then
+          provider, problem = result, M.validate(result)
+        else
+          problem = result
+        end
       end
-      argv[#argv + 1] = "."
-      return argv
-    end,
-    -- it runs `pub get`, which is a network round trip
-    timeout = 240000,
-  },
 
-  {
-    name = "Go",
-    icon = " ",
-    bin = "go",
-    -- the only provider that needs the name up front: the module path defaults off it
-    name_first = true,
-    steps = { { ask = go_module } },
-    build = function(ctx)
-      return { "go", "mod", "init", ctx.module }
-    end,
-    after = go_main,
-  },
-}
+      if problem then
+        problems[#problems + 1] = ("providers/%s.lua: %s"):format(id, problem)
+      else
+        list[#list + 1] = vim.tbl_extend("keep", provider, DEFAULTS)
+      end
+    end
+  end
 
--- exported for the headless tests
-M._parse_templates = parse_templates
-M._dart_name = dart_name
+  -- One notification for the lot, and not through ui.notify: that one replaces itself
+  -- in place, so a second broken file would erase the report about the first.
+  if #problems > 0 then
+    vim.notify(table.concat(problems, "\n"), vim.log.levels.WARN, { title = "New Project" })
+  end
+
+  table.sort(list, function(a, b)
+    if a.order ~= b.order then
+      return a.order < b.order
+    end
+    return a.name < b.name
+  end)
+  return list
+end
 
 return M

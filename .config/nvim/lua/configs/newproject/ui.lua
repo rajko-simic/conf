@@ -1,5 +1,5 @@
--- Prompts and notifications shared by the wizard runner and the toolchain providers.
--- Kept in their own file so providers.lua never has to require init.lua back.
+-- Prompts, notifications and process running, shared by the wizard and by the providers
+-- that need more than a declarative step. The only central module a provider may require.
 --
 -- vim.ui.select is snacks.picker (`picker = { ui_select = true }` in plugins/ui.lua) and
 -- vim.ui.input is snacks input, so every prompt here is a floating window already themed
@@ -56,6 +56,22 @@ function M.output(res)
     lines[#lines + 1] = "…"
   end
   return table.concat(lines, "\n")
+end
+
+-- vim.system, minus its two traps. The callback arrives on the libuv thread, where
+-- touching the editor is illegal, so it is wrapped once here instead of at every call
+-- site. And a command that cannot be spawned at all makes vim.system *throw* rather than
+-- call back, which strands whatever the caller started beforehand -- a spinner, the busy
+-- flag -- so that is turned into an ordinary failed result as well.
+---@param argv string[]
+---@param opts? vim.SystemOpts
+---@param cb fun(res: vim.SystemCompleted)
+function M.system(argv, opts, cb)
+  cb = vim.schedule_wrap(cb)
+  local ok, err = pcall(vim.system, argv, vim.tbl_extend("keep", opts or {}, { text = true }), cb)
+  if not ok then
+    cb { code = 127, signal = 0, stdout = "", stderr = tostring(err) }
+  end
 end
 
 return M
