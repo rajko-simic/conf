@@ -231,12 +231,37 @@ and fall back to nvim's built-in `syntax/spec.vim`, which is fine.
 
 ## Theme
 
-Active theme: `material-deep-ocean` (set in `lua/chadrc.lua`). Custom theme `vs2022` is defined in `themes/vs2022.lua` as a base46 palette.
+Themes are a `{ dark, light }` pair, `theme_toggle` in `lua/chadrc.lua`: `material-deep-ocean` /
+`default-light`. Custom theme `vs2022` is defined in `themes/vs2022.lua` as a base46 palette.
 
 After any theme or highlight change, regenerate the base46 cache:
 ```
 :lua require("base46").load_all_highlights()
 ```
+
+### System light/dark
+
+`lua/configs/systheme.lua` follows the desktop preference from the XDG portal
+(`org.freedesktop.appearance` / `color-scheme`). `chadrc.lua` derives `theme` from that at load
+time, so every path that re-reads chadrc (NvChad's reload-on-save, the picker's cancel) agrees
+with the desktop; `init.lua` recompiles the cache when the one on disk was built for the other
+half; and one `dbus-monitor` job per nvim instance re-applies the theme live on the portal's
+`SettingChanged` signal, the same way the `<leader>st` picker does (`nvconfig.base46.theme` +
+`load_all_highlights()`). Without a session bus (ssh, tty) the query is nil and the dark half is
+used.
+
+Why the portal and not the terminal, so this is not re-litigated: nvim >= 0.11 re-detects
+`'background'` on DEC mode 2031 theme notifications, but Konsole implements neither 2031 nor
+DECRQM (verified in `Vt102Emulation.cpp`), so that never fires here; a manual OSC 11 re-query
+would need polling to catch scheduled day/night flips. Konsole swaps its own profile on the same
+desktop signal (`SyncProfileWithSystemTheme` in `~/.config/konsolerc`), so the two stay in step.
+`'background'` is an *output* of base46 -- set from the theme's `type` when the cache is
+compiled -- not a driver; do not build on `OptionSet background`.
+
+Consequences: a manual `<leader>st` pick or the tabufline toggle lasts until the next desktop
+flip or config reload. The picker's `<CR>` persists by rewriting the quoted theme name in
+`chadrc.lua`, which now redefines the matching half of the pair; `toggle_theme()`'s
+`theme = "<name>"` rewrite no longer matches anything and is a no-op on disk.
 
 ## Mason
 

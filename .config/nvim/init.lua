@@ -35,6 +35,9 @@ require("lazy").setup({
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
+-- follow the desktop light/dark preference (lua/configs/systheme.lua); recompiles the
+-- cache only when the one on disk was built for the other half of theme_toggle
+require("configs.systheme").setup()
 
 require "options"
 require "autocmds"

@@ -5,9 +5,13 @@
 ---@type ChadrcConfig
 local M = {}
 
+-- { dark, light }: lua/configs/systheme.lua picks the half matching the desktop preference
+-- and swaps it live; `theme` below must stay derived from `pair`.
+local pair = { "material-deep-ocean", "default-light" }
+
 M.base46 = {
-	theme = "material-deep-ocean",
-  theme_toggle = { "material-deep-ocean", "default-light" },
+  theme = require("configs.systheme").query() == "light" and pair[2] or pair[1],
+  theme_toggle = pair,
 	hl_override = {
 		Comment = { italic = true },
 		["@comment"] = { italic = true },
