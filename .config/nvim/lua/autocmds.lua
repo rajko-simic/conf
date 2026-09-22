@@ -46,6 +46,16 @@ autocmd("DirChanged", {
   end,
 })
 
+-- Statusline `recording` module (chadrc.lua): starting or stopping a macro redraws
+-- nothing by itself. Scheduled because reg_recording() is still set while
+-- RecordingLeave runs.
+autocmd({ "RecordingEnter", "RecordingLeave" }, {
+  group = vim.api.nvim_create_augroup("RecordingStatusline", { clear = true }),
+  callback = function()
+    vim.schedule(vim.cmd.redrawstatus)
+  end,
+})
+
 -- ansible-vault: never leave plaintext behind.
 --
 -- Opening an encrypted file normally writes swap, undo and backup copies next to it,

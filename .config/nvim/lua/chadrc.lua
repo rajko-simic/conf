@@ -70,8 +70,16 @@ M.ui = {
   },
 
   statusline = {
-    order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "progress", "dap_frame", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
+    order = { "mode", "recording", "file", "git", "%=", "lsp_msg", "%=", "progress", "dap_frame", "dap_session", "diagnostics", "lsp", "cwd", "cursor" },
     modules = {
+      -- 'showmode' is off, so nothing else says a macro is recording -- and which-key
+      -- switches itself off for the whole recording. A stray `qq` otherwise just looks
+      -- like <leader> stopped working. Redrawn from autocmds.lua.
+      recording = function()
+        local reg = vim.fn.reg_recording()
+        return reg ~= "" and ("%#St_lspError#  REC @" .. reg .. " ") or ""
+      end,
+
       -- Progress from tools that bypass vim.lsp. Sources are listed in
       -- configs/progress.lua; language servers report through lsp_msg instead.
       progress = function()
