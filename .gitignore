@@ -2,3 +2,4 @@
 .dotfiles
 
 *.log
+.local/state/yazi/
