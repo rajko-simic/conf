@@ -57,7 +57,7 @@ are relative to the cwd, hence the `:/`-prefixed form above.
 | `core.lua` | plenary, base46, nvchad/ui, volt, minty, nvim-web-devicons (sole icon provider) |
 | `ui.lua` | noice, which-key, indent-blankline, nvim-tree, precognition |
 | `lsp.lua` | nvim-lspconfig, mason, blink.cmp, lspsaga, symbol-usage, trouble, schemastore |
-| `editor.lua` | telescope, treesitter (+context), conform, refactoring, neovim-project |
+| `editor.lua` | telescope, undotree, treesitter (+context), conform, refactoring, neovim-project |
 | `git.lua` | gitsigns, lazygit |
 | `debug.lua` | nvim-dap, nvim-dap-view, nvim-dap-virtual-text, nvim-nio |
 | `test.lua` | neotest, using easy-dotnet's built-in adapter (`require "easy-dotnet.neotest"`). `ft`-gated, **not** `VeryLazy`: easy-dotnet is a dependency, so a startup trigger would pull the .NET toolchain into every project |
@@ -79,7 +79,7 @@ Leader is `<Space>`, `timeoutlen = 400`. One prefix per domain; keep new maps in
 
 | Prefix | Domain | Defined in |
 |---|---|---|
-| `<leader>f` | find (telescope: `ff` files, `fa` all files, `fw` grep, `fb` buffers, `fo` oldfiles, `fz` in-buffer, `fh` help, `fM` marks, `fc`/`fs` git commits/status, `ft` terms) + `fm` format (conform) | `mappings.lua` |
+| `<leader>f` | find (telescope: `ff` files, `fa` all files, `fw` grep, `fb` buffers, `fo` oldfiles, `fz` in-buffer, `fh` help, `fM` marks, `fc`/`fs` git commits/status, `ft` terms, `fj` jumplist scoped to cwd via `configs/jumplist.lua`) + `fm` format (conform) | `mappings.lua` |
 | `<leader>l` | LSP actions via lspsaga (`la` code action, `lp` peek, `lr`/`lR` rename, `le` line diagnostics, `li`/`lo` calls) | `configs/lsp.lua` `on_attach`, **buffer-local** |
 | `<leader>r` | refactoring.nvim (`rr` select, `re` extract fn, `rf` extract to file, `rv` extract var, `ri`/`rI` inline var/fn) | `mappings.lua` |
 | `<leader>d` | DAP + dap-view (`db`/`dB` breakpoints, `dl` run last, `do`/`dx`/`dt` view, `dw` watch, `dj`…`dr` jump to view) | `mappings.lua` |
@@ -89,7 +89,7 @@ Leader is `<Space>`, `timeoutlen = 400`. One prefix per domain; keep new maps in
 | `<leader>s` | settings/toggles (`sn`, `sr`, `sw`, `sp` precognition, `sc` cheatsheet, `st` theme) | `mappings.lua` |
 | `<leader>w` | which-key (`wk`, `wK`) | `mappings.lua` |
 | `<leader>c` / `\` | project command picker (`configs/cmdpicker`) | `mappings.lua` |
-| `<leader>e`, `<leader>n`, `<leader>x`, `<leader>h`, `<leader>v`, `<leader>/` | NvChad singles: tree focus, new buffer, close buffer, h/v terminal, comment | `mappings.lua` |
+| `<leader>e`, `<leader>u`, `<leader>n`, `<leader>x`, `<leader>h`, `<leader>v`, `<leader>/` | singles: tree focus, undotree toggle, new buffer, close buffer, h/v terminal, comment | `mappings.lua` |
 
 LSP navigation (buffer-local, `configs/lsp.lua`): `gd` definition, `gD` declaration, `gy` type definition, `gh` lspsaga finder (definition + references + implementation), `K` hover, `]d`/`[d` diagnostics — all lspsaga except `gD`. Do **not** map bare `gr`: Neovim 0.11+ ships native `grr/grn/gra/gri/grt/grx` and a `gr` map delays every one of them by `timeoutlen`.
 

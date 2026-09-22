@@ -30,6 +30,9 @@ map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window" })
 
+-- undotree
+map("n", "<leader>u", "<cmd>UndotreeToggle<CR>", { desc = "undotree toggle" })
+
 -- telescope
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
@@ -42,6 +45,7 @@ map("n", "<leader>fs", "<cmd>Telescope git_status<CR>", { desc = "telescope git 
 map("n", "<leader>ft", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "<leader>fa", "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>", { desc = "telescope find all files" })
+map("n", "<leader>fj", function() require("configs.jumplist").project() end, { desc = "telescope jumplist (project)" })
 
 -- telescope projects
 map("n", "<leader>pl", "<cmd>NeovimProjectLoadRecent<CR>", { desc = "Projects Open Last" })

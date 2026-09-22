@@ -11,6 +11,17 @@ return {
     end,
   },
 
+  -- Undo history tree
+  {
+    "mbbill/undotree",
+    cmd = { "UndotreeToggle", "UndotreeShow", "UndotreeFocus" },
+    init = function()
+      vim.g.undotree_WindowLayout = 2 -- tree left, diff panel full-width at the bottom
+      vim.g.undotree_SetFocusWhenToggle = 1 -- land in the tree so J/K work immediately
+      vim.g.undotree_ShortIndicators = 1 -- "5 s" / "2 m" timestamps, 24-col panel
+    end,
+  },
+
   -- Syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
