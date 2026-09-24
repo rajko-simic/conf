@@ -86,7 +86,7 @@ Leader is `<Space>`, `timeoutlen = 400`. One prefix per domain; keep new maps in
 | `<leader>t` / `<leader>T` | Trouble (`tx`/`tX` diagnostics, `ts` symbols, `tL`/`tQ` loclist/qflist, `tl` lint buffer now) / neotest | `mappings.lua` |
 | `<leader>g` | git (`gw`/`gf` lazygit, `gb`/`gl` blame, `gd` deleted, `gc` commit) | `mappings.lua` |
 | `<leader>p` | projects (`pl`, `ph`, `pd*`) | `mappings.lua` |
-| `<leader>s` | settings/toggles (`sn`, `sr`, `sw`, `sp` precognition, `sc` cheatsheet, `st` theme) | `mappings.lua` |
+| `<leader>s` | settings/toggles (`sn`, `sr`, `sw`, `sp` precognition, `sa` inline completion, `sc` cheatsheet, `st` theme) | `mappings.lua` |
 | `<leader>w` | which-key (`wk`, `wK`) | `mappings.lua` |
 | `<leader>c` / `\` | project command picker (`configs/cmdpicker`) | `mappings.lua` |
 | `<leader>e`, `<leader>u`, `<leader>n`, `<leader>x`, `<leader>h`, `<leader>v`, `<leader>/` | singles: tree focus, undotree toggle, new buffer, close buffer, h/v terminal, comment | `mappings.lua` |
@@ -134,6 +134,7 @@ DevOps servers and their overrides:
 | `docker_language_server` | — | replaced `dockerls`; covers dockerfile, compose *and* bake HCL in one process |
 | `jinja_lsp` | — | validates *minijinja*, so `*.j2` Ansible templates show some false positives. Drop the name from `servers` to disable |
 | `rpmspec`, `systemd_lsp`, `tflint` | — | upstream defaults are fine |
+| `copilot` | `after/lsp/copilot.lua` | GitHub's `copilot-language-server`, no plugin. Upstream has no `filetypes`; the override's `root_dir` keeps it off secret-bearing paths (`.env*`, `*.tfvars`, keys, `~/.ssh`, `~/.aws`, `~/.kube`, …) and turns telemetry off. Sign in once with `:LspCopilotSignIn` |
 
 Shared behaviour (on-attach keymaps, blink capabilities, diagnostic config, semantic-token suppression) lives in `lua/configs/lsp.lua`. Inlay hints are enabled globally in `init.lua`.
 
@@ -146,6 +147,7 @@ Shared behaviour (on-attach keymaps, blink capabilities, diagnostic config, sema
 | LSP progress | NvChad statusline `lsp_msg` | noice `lsp.progress` |
 | diagnostics lists, document symbols | trouble.nvim (`<leader>t*`) | lspsaga outline not mapped |
 | completion | blink.cmp | — |
+| inline completion (ghost text) | native `vim.lsp.inline_completion` + `copilot` server; `<M-l>` accept, `<M-]>`/`<M-[>` cycle (`configs/lsp.lua` `LspAttach`) | no copilot.vim / copilot.lua / blink copilot source — do not add them alongside it |
 
 TypeScript is served by `ts_ls` (`lsp/ts_ls.lua`). Do not add `typescript-tools.nvim` alongside it — they conflict.
 

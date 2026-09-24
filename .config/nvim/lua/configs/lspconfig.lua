@@ -44,6 +44,9 @@ local servers = {
   "marksman",
   "taplo",
 
+  -- AI (inline completion; keymaps in configs/lsp.lua)
+  "copilot",
+
   -- Prose
   "harper_ls",
   "typos_lsp",

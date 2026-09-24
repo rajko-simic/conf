@@ -52,6 +52,20 @@ M.defaults = function()
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
       M.on_attach(_, args.buf)
+
+      -- Ghost-text inline completion (copilot). Tab stays blink's; <leader>sa toggles.
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client and client:supports_method("textDocument/inlineCompletion", args.buf) then
+        local ic = vim.lsp.inline_completion
+        ic.enable(true, { bufnr = args.buf })
+        map("i", "<M-l>", ic.get, { buffer = args.buf, desc = "LSP accept inline completion" })
+        map("i", "<M-]>", function()
+          ic.select { count = 1 }
+        end, { buffer = args.buf, desc = "LSP next inline completion" })
+        map("i", "<M-[>", function()
+          ic.select { count = -1 }
+        end, { buffer = args.buf, desc = "LSP prev inline completion" })
+      end
     end,
   })
 end

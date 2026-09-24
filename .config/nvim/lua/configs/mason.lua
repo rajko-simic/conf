@@ -69,6 +69,7 @@ M.opts = {
     "azure-pipelines-language-server",
     "bash-language-server",
     "bicep-lsp",
+    "copilot-language-server",
     -- cmake-language-server: installed outside mason (mason pins python <3.14, system is 3.14):
     --   pipx install cmake-language-server && pipx inject cmake-language-server "pygls<2"
     -- The pygls pin is required — 0.1.11 imports pygls.server.LanguageServer, removed in pygls 2.

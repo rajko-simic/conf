@@ -137,6 +137,7 @@ map("n", "<leader>sp", "<cmd>Precognition toggle<cr>", { desc = "general toggle 
 map("n", "<leader>sn", "<cmd>set nu!<CR>", { desc = "general toggle line number" })
 map("n", "<leader>sr", "<cmd>set rnu!<CR>", { desc = "general toggle relative number" })
 map("n", "<leader>sw", "<cmd>set wrap!<CR>", { desc = "general toggle word wrap" })
+map("n", "<leader>sa", function() local f = { bufnr = 0 } vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled(f), f) end, { desc = "general toggle inline completion (copilot)" })
 map("n", "<leader>sc", "<cmd>NvCheatsheet<CR>", { desc = "general toggle nvcheatsheet" })
 map("n", "<leader>st", function() require("nvchad.themes").open() end, { desc = "telescope nvchad themes" })
 
