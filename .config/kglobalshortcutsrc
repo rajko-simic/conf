@@ -103,7 +103,7 @@ KrohnkiteToggleFloat=Meta+F,none,Krohnkite: Toggle Float
 KrohnkiteTreeColumnLayout=none,none,Krohnkite: Three Column Layout
 KrohnkitegrowWidth=Meta+Ctrl+L,none,Krohnkite: Grow Width
 KrohnkitetoggleDock=none,none,Krohnkite: Toggle Dock
-Mouse Tiler: Auto Tiler - Block Toggle=Ctrl+Alt+B,none,Mouse Tiler: Auto Tiler - Block Toggle
+Mouse Tiler: Auto Tiler - Block Toggle=none,none,Mouse Tiler: Auto Tiler - Block Toggle
 Mouse Tiler: Auto Tiler - Decrease Scroll Position=none,none,Mouse Tiler: Auto Tiler - Scroll To Previous Window
 Mouse Tiler: Auto Tiler - Increase Scroll Position=Ctrl+Alt+Right,none,Mouse Tiler: Auto Tiler - Scroll To Next Window
 Mouse Tiler: Change Mode=Meta+Ctrl+Space,none,Mouse Tiler: Change Mode
@@ -373,25 +373,25 @@ switch to previous activity=none,none,Switch to Previous Activity
 toggle do not disturb=none,none,Toggle do not disturb
 
 [services][btop.desktop]
-_launch=Meta+Shift+B
+_launch=Ctrl+Alt+B
 
 [services][com.bitwarden.desktop.desktop]
-_launch=Meta+Shift+W
+_launch=Ctrl+Alt+K
 
 [services][io.github.mrvladus.List.desktop]
-_launch=Meta+Shift+T
+_launch=Ctrl+Alt+N
 
 [services][md.obsidian.Obsidian.desktop]
-_launch=Meta+Shift+O
+_launch=Ctrl+Alt+O
 
 [services][net.local.flatpak.desktop]
 _launch=Meta+N
 
 [services][nvim.desktop]
-_launch=Meta+Shift+V
+_launch=Ctrl+Alt+M
 
 [services][org.kde.discover.desktop]
-_launch=Alt+Shift+D
+_launch=Ctrl+Alt+P
 
 [services][org.kde.krunner.desktop]
 _launch=Meta\tSearch\tAlt+Space\tAlt+F2

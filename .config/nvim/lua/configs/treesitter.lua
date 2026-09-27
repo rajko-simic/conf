@@ -12,6 +12,7 @@ M.ensure_installed = {
   "vim",
   "vimdoc",
   "c_sharp",
+  "caddy",
   "css",
   "bash",
   "dart",

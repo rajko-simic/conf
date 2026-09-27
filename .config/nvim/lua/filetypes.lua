@@ -86,6 +86,9 @@ local pattern = {
   ["Dockerfile%..*"] = "dockerfile",
   [".*%.[dD]ockerfile"] = "dockerfile",
 
+  -- Caddyfile variants, e.g. Caddyfile.dev
+  ["Caddyfile%..*"] = "caddy",
+
   -- Podman quadlets. Only `.container` is unambiguous enough for a bare extension rule
   -- (below); the rest are path-scoped so they cannot hijack unrelated files. Real
   -- /containers/systemd/ and /etc/containers/systemd/ paths are already builtin.
@@ -110,6 +113,7 @@ vim.filetype.add {
     ["docker-compose.yml"] = "yaml.docker-compose",
     ["docker-compose.yaml"] = "yaml.docker-compose",
     ["ansible.cfg"] = "dosini",
+    ["Caddyfile"] = "caddy",
     ["values.yml"] = helm_values,
     ["values.yaml"] = helm_values,
   },
@@ -134,6 +138,9 @@ vim.filetype.add {
 
     -- dnf/yum repository files
     repo = "dosini",
+
+    -- Caddy snippets pulled in with `import`
+    caddy = "caddy",
 
     -- MSBuild fragments. nvim already detects .csproj and .slnx as xml, but not these,
     -- so they get no filetype and therefore no lemminx / typos_lsp at all.
