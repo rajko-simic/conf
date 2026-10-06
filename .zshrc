@@ -66,6 +66,9 @@ alias lsa='ls -a'
 alias lt='eza --tree --level=2 --long --icons=auto --group-directories-first --git --octal-permissions'
 alias lta='lt -a'
 alias ..='cd ..'
+alias vpnup='sudo env PATH="/opt/homebrew/bin:$PATH" wg-quick up wg0'
+alias vpndown='sudo env PATH="/opt/homebrew/bin:$PATH" wg-quick down wg0'
+alias vpnstat='sudo wg show'
 
 # cd noargs go home, else to dir
 if command -v zoxide &> /dev/null; then
@@ -113,7 +116,7 @@ add-zsh-hook precmd __osc7_cwd
 # ---- Terminal-following colors ----
 # Everything below references the terminal's 16 ANSI slots, never hex, so the
 # whole CLI stack retints when the Konsole colorscheme changes.
-[ -f ~/.dircolors ] && eval "$(dircolors -b ~/.dircolors)"
+# [ -f ~/.dircolors ] && eval "$(dircolors -b ~/.dircolors)"
 
 export FZF_DEFAULT_OPTS="--color=16 \
 --color=fg:-1,bg:-1,gutter:-1,query:-1 \
