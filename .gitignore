@@ -3,3 +3,4 @@
 
 *.log
 .local/state/yazi/
+**/lazy-lock.json

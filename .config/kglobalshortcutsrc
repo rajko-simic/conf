@@ -103,6 +103,8 @@ KrohnkiteToggleFloat=Meta+F,none,Krohnkite: Toggle Float
 KrohnkiteTreeColumnLayout=none,none,Krohnkite: Three Column Layout
 KrohnkitegrowWidth=Meta+Ctrl+L,none,Krohnkite: Grow Width
 KrohnkitetoggleDock=none,none,Krohnkite: Toggle Dock
+MinimizeAll=Meta+Shift+D,none,Minimize all windows
+MinimizeAllActiveScreen=none,none,Minimize all windows in active screen
 Mouse Tiler: Auto Tiler - Block Toggle=none,none,Mouse Tiler: Auto Tiler - Block Toggle
 Mouse Tiler: Auto Tiler - Decrease Scroll Position=none,none,Mouse Tiler: Auto Tiler - Scroll To Previous Window
 Mouse Tiler: Auto Tiler - Increase Scroll Position=Ctrl+Alt+Right,none,Mouse Tiler: Auto Tiler - Scroll To Next Window
@@ -297,6 +299,8 @@ Window to Screen 6=none,none,Move Window to Screen 6
 Window to Screen 7=none,none,Move Window to Screen 7
 _k_friendly_name=KWin
 disableInputCapture=Meta+Shift+Esc,Meta+Shift+Esc,Disable Active Input Capture
+minimizeAllOthers=Meta+Shift+O,none,Minimize all other windows
+minimizeAllOthersActiveScreen=none,none,Minimize all other windows in active screen
 view_actual_size=none,Meta+0,Zoom to Actual Size
 view_zoom_in=Meta++\tMeta+=,Meta++\tMeta+=,Zoom In
 view_zoom_out=Meta+-,Meta+-,Zoom Out
@@ -348,8 +352,10 @@ activate task manager entry 8=none,Meta+8,Activate Task Manager Entry 8
 activate task manager entry 9=none,Meta+9,Activate Task Manager Entry 9
 activate widget 1148=Meta+Shift+A,none,Activate Audio Volume Widget
 activate widget 1202=none,none,Activate Plasma Gnome Pager Widget
+activate widget 1203=Meta+Shift+V,none,Activate KVitals Widget
 activate widget 1348=Meta+Shift+A,none,Activate Audio Volume Widget
 activate widget 1385=Meta+Shift+A,none,Activate Audio Volume Widget
+activate widget 1399=Meta+Shift+V,none,Activate KVitals Widget
 activate widget 255=none,none,Activate Digital Clock Widget
 activate widget 854=none,none,Activate Application Launcher Widget
 activate widget 895=none,none,Activate Calendar with Agenda Widget
@@ -377,9 +383,6 @@ _launch=Ctrl+Alt+B
 
 [services][com.bitwarden.desktop.desktop]
 _launch=Ctrl+Alt+K
-
-[services][io.github.mrvladus.List.desktop]
-_launch=Ctrl+Alt+N
 
 [services][md.obsidian.Obsidian.desktop]
 _launch=Ctrl+Alt+O
